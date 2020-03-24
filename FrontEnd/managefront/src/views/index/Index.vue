@@ -1,5 +1,5 @@
 <template>
-    $END$
+  <div id="index">我是首页啊</div>
 </template>
 
 <script>
@@ -8,6 +8,6 @@
     }
 </script>
 
-<style scoped>
+<style>
 
 </style>
