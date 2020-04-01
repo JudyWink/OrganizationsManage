@@ -1,13 +1,13 @@
-package org.jude.manageback;
+package org.jude.managefront;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ManagebackApplication {
+public class ManagefrontApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ManagebackApplication.class, args);
+        SpringApplication.run(ManagefrontApplication.class, args);
     }
 
 }
