@@ -1,4 +1,4 @@
-package org.jude.managefront.listener;
+package org.jude.manageBack.listener;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

@@ -1,4 +1,4 @@
-package org.jude.managefront.filter;
+package org.jude.manageBack.filter;
 
 
 import javax.servlet.*;

@@ -1,6 +1,6 @@
-package org.jude.managefront.config;
+package org.jude.manageBack.config;
 
-import org.jude.managefront.filter.HelloFilter;
+import org.jude.manageBack.filter.HelloFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

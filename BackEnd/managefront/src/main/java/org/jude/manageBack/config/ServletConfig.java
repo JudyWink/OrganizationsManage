@@ -1,6 +1,6 @@
-package org.jude.managefront.config;
+package org.jude.manageBack.config;
 
-import org.jude.managefront.servlet.HelloServlet;
+import org.jude.manageBack.servlet.HelloServlet;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package org.jude.managefront.servlet;
+package org.jude.manageBack.servlet;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

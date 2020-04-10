@@ -1,6 +1,6 @@
-package org.jude.managefront.config;
+package org.jude.manageBack.config;
 
-import org.jude.managefront.listener.HelloListener;
+import org.jude.manageBack.listener.HelloListener;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
