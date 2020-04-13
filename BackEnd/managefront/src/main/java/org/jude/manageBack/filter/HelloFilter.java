@@ -19,17 +19,18 @@ public class HelloFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         //允许跨域请求
-        String []  allowDomain= {"http://localhost:8020","http://127.0.0.1:8020"};
-        Set<String> allowedOrigins= new HashSet<String>(Arrays.asList(allowDomain));
-        String originHeader=((HttpServletRequest) servletRequest).getHeader("Origin");
-        if (allowedOrigins.contains(originHeader)) {
-            response.setHeader("Access-Control-Allow-Origin", originHeader); //  这里最好明确的写允许的域名
+//        String []  allowDomain= {"http://localhost:8020","http://127.0.0.1:8020"};
+//        Set<String> allowedOrigins= new HashSet<String>(Arrays.asList(allowDomain));
+//        String originHeader=((HttpServletRequest) servletRequest).getHeader("Origin");
+//        if (allowedOrigins.contains(originHeader)) {
+//            response.setHeader("Access-Control-Allow-Origin", originHeader);
+            response.setHeader("Access-Control-Allow-Origin", "*");
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
             response.setHeader("Access-Control-Max-Age", "3600");
             response.setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,Authorization,ybg");
             filterChain.doFilter(servletRequest, servletResponse);
             System.out.println("I'm filter");
-        }
+//        }
     }
 
     @Override
