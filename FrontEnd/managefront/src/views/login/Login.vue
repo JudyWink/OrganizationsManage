@@ -1,6 +1,5 @@
-<template class="login">
+<template>
   <div class="login_box">
-
     <div class="login">
       <br>
       <h1>
@@ -43,8 +42,10 @@
         },
         methods: {
             login() {
-                // eslint-disable-next-line no-unused-vars
                 this.$router.push('/index')
+            },
+            regist() {
+                this.$router.push('/regist')
             }
         }
     }

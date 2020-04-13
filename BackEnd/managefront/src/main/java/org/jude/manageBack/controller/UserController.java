@@ -26,6 +26,7 @@ public class UserController {
     //添加用户
     @RequestMapping("/addUser")
     public String addUser(Users users){
+
         try{
             this.userService.addUser(users);
         } catch (Exception e) {

@@ -11,7 +11,7 @@ public class FilterConfig {
     @Bean
     public FilterRegistrationBean getFilterRegistrationBean(){
         FilterRegistrationBean bean = new FilterRegistrationBean(new HelloFilter());
-        bean.addUrlPatterns("/hello");
+        bean.addUrlPatterns("/*");
         return bean;
     }
 }

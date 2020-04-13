@@ -2,23 +2,38 @@ package org.jude.manageBack.filter;
 
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HelloFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        System.out.println("初始化filter");
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("enter");
-        filterChain.doFilter(servletRequest, servletResponse);
-        System.out.println("leave");
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        //允许跨域请求
+        String []  allowDomain= {"http://localhost:8020","http://127.0.0.1:8020"};
+        Set<String> allowedOrigins= new HashSet<String>(Arrays.asList(allowDomain));
+        String originHeader=((HttpServletRequest) servletRequest).getHeader("Origin");
+        if (allowedOrigins.contains(originHeader)) {
+            response.setHeader("Access-Control-Allow-Origin", originHeader); //  这里最好明确的写允许的域名
+            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
+            response.setHeader("Access-Control-Max-Age", "3600");
+            response.setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,Authorization,ybg");
+            filterChain.doFilter(servletRequest, servletResponse);
+            System.out.println("I'm filter");
+        }
     }
 
     @Override
     public void destroy() {
-
+        System.out.println("销毁filter");
     }
 }

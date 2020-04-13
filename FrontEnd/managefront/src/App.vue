@@ -2,7 +2,6 @@
   <div id="app">
     <TopMenu v-if="$route.meta.keepalive"></TopMenu>
     <router-view/>
-
   </div>
 </template>
 
