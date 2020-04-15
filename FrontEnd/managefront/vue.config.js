@@ -1,6 +1,6 @@
 module.exports = {
   devServer: {
-    open: true, //浏览器自动打开页面
+    open: false, //浏览器自动打开页面
     host: "localhost",
     port: 8020,
     https: false,

@@ -12,7 +12,7 @@ public class JsonResponseBody<T> {
     private String userId;
     private String token;
     private String userType;
-    private String responseTimeStamp;
+    private String TimeStamp;
     private String responseCode;
     private String errorCode;
     private T responseData;

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +35,16 @@ public class UserController {
 
     //添加用户
     @RequestMapping("/addUser")
-    public String addUser(Users users){
-
+    @ResponseBody
+    public String addUser(@RequestBody JsonRequestBody requestBody,HttpServletRequest request){
         try{
+            Users users = new Users();
+            HashMap<String, String>  jsondata = requestBody.getJsonDate();
+            System.out.println(requestBody);
+            users.setUseracount(jsondata.get("userAcount"));
+            users.setUserpassword(jsondata.get("userPassword"));
+            SimpleDateFormat nowtime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//
+            users.setCreatetime(nowtime.parse(nowtime.format(new Date())));
             this.userService.addUser(users);
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +62,7 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("/testResAndReq")
-    public String  testResAndReq(@RequestBody(required=false) JsonRequestBody<Map<String, Object>> requestBody,
+    public String  testResAndReq(@RequestBody(required=false) JsonRequestBody requestBody,
                                  HttpServletRequest request, HttpServletResponse response) {
         String jsonString = null;
         Users usr = new Users();
