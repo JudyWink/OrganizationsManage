@@ -4,6 +4,7 @@ import router from "./router";
 import ElementUI from 'element-ui';
 import {Loading,Message} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+// import store from './store/index';
 import axios from 'axios';
 
 // 配置axios
@@ -16,9 +17,8 @@ var loadingInstace;
 axios.interceptors.request.use(
   config => {
     loadingInstace = Loading.service({fullscreen: true});
-    // const token = sessionStorage.getItem('token')
-    // if (token ) { // 判断是否存在token，如果存在的话，则每个http header都加上token
-    //   config.headers.authorization = token  //请求头加上token
+    // if(store.state.token){
+    //   config.headers.common['XX-Token']=store.state.token   //此处的XX-Token要根据登录接口中请求头的名字来写
     // }
     return config
   },
@@ -48,5 +48,6 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router, // 在vue中使用router
+  // store,// 在vue中使用store
   render: h => h(App)
 })

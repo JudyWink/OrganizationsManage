@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,43 +28,55 @@ public class UserController {
     //查询全部用户
     @RequestMapping("/findAllUsers")
     @ResponseBody
-    public List<Users> findAllUsers() throws Exception {
-            List<Users> usersList = this.userService.findAllUsers();
-            System.out.println(usersList);
+    public List<Users> findAllUsers(HttpServletResponse response) throws Exception {
+        List<Users> usersList = this.userService.findAllUsers();
         return usersList;
+    }
+
+    @RequestMapping("/findOneUser")
+    @ResponseBody
+    public String findOneUser(@RequestParam String userAcount) throws Exception {
+        String isCan = "";
+        List<Users> usersList = this.userService.findAllUsers();
+        for (Users user : usersList) {
+            if (user.getUseracount().equals(userAcount)) {
+                isCan = "false";
+                break;
+            }
+        }
+        return isCan;
     }
 
     //添加用户
     @RequestMapping("/addUser")
     @ResponseBody
-    public String addUser(@RequestBody JsonRequestBody requestBody,HttpServletRequest request){
-        try{
+    public String addUser(@RequestBody JsonRequestBody requestBody) {
+        try {
             Users users = new Users();
-            HashMap<String, String>  jsondata = requestBody.getJsonDate();
-            System.out.println(requestBody);
+            HashMap<String, String> jsondata = requestBody.getJsonDate();
             users.setUseracount(jsondata.get("userAcount"));
             users.setUserpassword(jsondata.get("userPassword"));
-            SimpleDateFormat nowtime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//
+            SimpleDateFormat nowtime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             users.setCreatetime(nowtime.parse(nowtime.format(new Date())));
             this.userService.addUser(users);
         } catch (Exception e) {
             e.printStackTrace();
             return "error";
         }
-        return "ok";
+        return "注册成功";
     }
 
     //更新用户
     @RequestMapping("/updateUser")
-    public String updateUser(Users users){
+    public String updateUser(Users users) {
         return null;
     }
 
 
     @ResponseBody
     @RequestMapping("/testResAndReq")
-    public String  testResAndReq(@RequestBody(required=false) JsonRequestBody requestBody,
-                                 HttpServletRequest request, HttpServletResponse response) {
+    public String testResAndReq(@RequestBody(required = false) JsonRequestBody requestBody,
+                                HttpServletRequest request, HttpServletResponse response) {
         String jsonString = null;
         Users usr = new Users();
         usr.setUseracount("12132434324");

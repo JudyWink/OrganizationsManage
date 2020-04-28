@@ -8,11 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "core-js": "^3.6.4",
-    "element-ui": "^2.13.0",
-    "vue": "^2.6.11",
     "axios": "latest",
-    "qs": "latest"
+    "core-js": "^3.6.4",
+    "el-table-infinite-scroll": "^1.0.10",
+    "element-ui": "^2.13.0",
+    "qs": "latest",
+    "vue": "^2.6.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",
