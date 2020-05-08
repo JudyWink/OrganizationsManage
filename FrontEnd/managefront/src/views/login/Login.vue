@@ -13,7 +13,7 @@
         <el-input placeholder="请输入密码" v-model="userPassword" show-password class="input_style"></el-input>
       </div>
       <div style="width: 95%; margin-top: 10px;margin-bottom: 40px">
-        <input type="checkbox" id="rememberMe">
+        <input type="checkbox" v-model="rememberINPUT" id="rememberMe">
         <span class="rember-me">记住密码</span>
         <span class="forget-key"><a href="/forgetPassword">忘记密码</a></span>
       </div>
@@ -25,7 +25,7 @@
       </div>
 
       <div style="margin-top: 10px">
-        <a href="./index">游客进入</a>
+        <el-link @click="noPower">游客进入</el-link>
       </div>
 
     </div>
@@ -33,50 +33,106 @@
 </template>
 
 <script>
+    import {mapMutations} from 'vuex';
 
     export default {
         name: "Login",
         data() {
             return {
+                rememberINPUT: '',
                 userAcount: '',
                 userPassword: '',
                 error: {
                     userAcount: '',
                     userPassword: ''
-                }
+                },
+                token : '',
             }
         },
         methods: {
+            ...mapMutations(['changeLogin']),
             async login() {
-
-                // let _this = this;
-                // let userData = {
-                //     userAcount: this.userAcount,
-                //     userPassword: this.userPassword,
-                // }
+                let _this = this;
+                let data = {
+                    data: {
+                        "userAcount": this.userAcount,
+                        "userPassword": this.userPassword,
+                    }
+                }
                 if (this.userAcount.length == 0) {
                     await this.$message.error('账号不能为空');
                 }
                 if (this.userPassword.length == 0) {
                     await this.$message.error('密码不能为空');
                 } else {
-                    // this.$axios.post('/login', JSON.stringify(userData))
-                    //     .then(function (response) {
-                    //         console.log(response)
-                    //     })
-                    //     .catch(function (error) {
-                    //         console.log(error)
-                    //     });
-                    this.$router.push('/index')
+                    this.$axios.post('/Login', JSON.stringify(data))
+                        .then(function (response) {
+                            if (response.data.code == 1) {
+                                _this.$notify.warning({
+                                    title: '提示',
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                            }
+                            if (response.data.code == 0) {
+                                _this.token = response.data.data.token;
+                                _this.userName = response.data.data.userName;
+                                _this.userType = response.data.data.userType;
+                                if (_this.rememberINPUT == true){
+                                    _this.$store.commit("REMEMBER_ACCOUNT",_this.userAcount);
+                                    _this.$store.commit("REMEMBER_PASSWORD",_this.userPassword);
+                                }else if (_this.rememberINPUT == false){
+                                    _this.$store.commit("NO_REMEMBER");
+                                }
+                                    //保存token
+                                    _this.$store.commit("SET_TOKEN", _this.token);
+                                    //保存用户名字
+                                    _this.$store.commit("SET_NAME", _this.userName);
+                                    //保存用户类型
+                                    _this.$store.commit("SET_TYPE", _this.userType);
+                                _this.$notify.success({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 3000,
+                                });
+                                _this.$router.push('/index');
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
                 }
             },
             regist() {
                 this.$router.push('/regist')
+            },
+            noPower(){
+                this.$store.commit("SET_TOKEN", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiLmuLjlrqIifQ.oA44T_HJGQBdVkaN-NFaykRM7rureZT2bsr93QlEpTk");
+                this.$store.commit( "SET_NAME", "游客");
+                this.$store.commit( "SET_TYPE","游客");
+                this.$router.push('/index')
             }
         },
-        // created() {
-        //     //如果登录了，直接进入首页
-        // }
+        created() {
+            //如果登录了，直接进入首页
+            let token = this.$store.state.token ? this.$store.state.token : window.sessionStorage.getItem('token');
+            let name = this.$store.state.userName ? this.$store.state.userName : window.sessionStorage.getItem('userName');
+            let userAccount = window.localStorage.getItem('account')
+            let userPassword = window.localStorage.getItem('password')
+            if(userAccount != null) {
+                this.userAcount = userAccount;
+                this.userPassword = userPassword;
+            }
+            if (token != null) {
+                this.$notify.success({
+                    message: name+",欢迎回来",
+                    showClose: false,
+                    duration: 3000,
+                });
+                this.$router.push('/index')
+            }
+        }
     }
 </script>
 
@@ -103,24 +159,28 @@
     width: 300px;
   }
 
-  #rememberMe{
+  #rememberMe {
     float: left;
 
   }
-  .rember-me{
+
+  .rember-me {
     float: left;
     font-size: 12px;
 
   }
-  .forget-key{
+
+  .forget-key {
     float: right;
     font-size: 12px;
   }
-  .forget-key a{
+
+  .forget-key a {
     text-decoration: none;
     color: #349cf2;
   }
-  .forget-key a:hover{
+
+  .forget-key a:hover {
     cursor: pointer;
     color: #0b7edc;
   }

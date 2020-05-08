@@ -9,7 +9,7 @@
         <br>
 <!--        <label>登陆账户</label>-->
         <el-input clearable type="text" v-model="userAcount" placeholder="请输入账号" @blur="checkAcount"></el-input>
-        <span class="tiShi">{{errormsg.acount}}</span><br>
+        <span ref="Acounttishi" class="tiShi">{{errormsg.acount}}</span><br>
 <!--        <label>密码</label>-->
         <el-input type="password" v-model="userPassword1" placeholder="请输入密码" @blur="checkPassword1"></el-input>
         <span class="tiShi">{{errormsg.password1}}</span><br>
@@ -54,6 +54,11 @@
             checkAcount() {
                 var _this = this;
                 this.errormsg.acount = '';
+                let data = {
+                    data: {
+                        "userAcount": this.userAcount,
+                    }
+                }
                 var regEn = /[`~!@#$%^&*()_+<>?:"{},.\\/;'[\]]/im,
                     regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im;
                 if (this.userAcount.length == 0) {
@@ -64,18 +69,24 @@
                 if(this.userAcount.length >20){
                     this.errormsg.acount = '用户名过长';
                 }
-                this.$axios.post('/findOneUser?userAcount=' + this.userAcount)
-                    .then(function (response) {
-                        if (response.data === false) {
-                            _this.errormsg.acount = "该账号已经注册"
-                            _this.successful.acount = false
-                        }else {
-                            _this.successful.acount = true
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error)
-                    });
+                if(this.userAcount.length != 0) {
+                    this.$axios.post('/findOneUser', JSON.stringify(data))
+                        .then(function (response) {
+                            if (response.data.code == 1) {
+                                _this.$refs.Acounttishi.style.color = "#FF0000";
+                                _this.successful.acount = false;
+                            }
+                            if (response.data.code == 0) {
+                                _this.$refs.Acounttishi.style.color = "#008000";
+                                _this.successful.acount = true;
+                            }
+                            _this.errormsg.acount = response.data.msg;
+                            console.log(response.data.msg);
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
+                }
             },
             //密码判断
             checkPassword1() {
@@ -96,34 +107,39 @@
             },
             //注册按钮
             regist() {
+                var _this = this;
                 var nowTime = new Date();
                 let data = {
-                    timestamp: nowTime,
-                    userId: "abcde",
-                    token: "dsadasasdasdasdasdasdasdsadasdasdasdas",
-                    userType: "123456",
-                    jsonDate: {
+                    data: {
+                        "timestamp": nowTime,
                         "userAcount": this.userAcount,
                         "userPassword": this.userPassword2,
-                        "createTime": nowTime
                     }
                 }
-
                 if (this.successful.acount && this.successful.password1 && this.successful.password2) {
-                    this.$axios.post('/addUser', JSON.stringify(data))
+                    this.$axios.post('/regist', JSON.stringify(data))
                         .then(function (response) {
-                            console.log(response)
+                            if(response.data.code == 1){
+                                _this.$notify.warning({
+                                    title: '提示',
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                            }
+                            if(response.data.code == 0){
+                                _this.$notify.success({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 3000,
+                                });
+                                _this.$router.push('/login');
+                            }
                         })
                         .catch(function (error) {
                             console.log(error)
                         });
-                    this.$notify.success({
-                        title: 'Info',
-                        message: '注册成功',
-                        showClose: false,
-                        duration: 1500,
-                    });
-                     this.$router.push('/login');
+
                 } else {
                     this.$message.error('请填写正确信息');
                 }

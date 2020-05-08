@@ -4,24 +4,60 @@
              mode="horizontal" background-color="#4ACA6D" text-color="#fff"
              active-text-color="#fff">
       <el-menu-item index="/index">首页</el-menu-item>
-      <el-submenu index="">
+      <el-submenu index="1" v-if="userType === '社团负责人'">
+        <template slot="title">成员管理</template>
+        <el-menu-item index="/members">社团成员</el-menu-item>
+        <el-menu-item index="/signupMembers">报名学生</el-menu-item>
+      </el-submenu>
+      <el-submenu index="2" v-if="userType === '社团负责人'">
+        <template slot="title">活动管理</template>
+        <el-menu-item index="/myActivities">我的活动</el-menu-item>
+        <el-menu-item index="/PublishActivities">发布活动</el-menu-item>
+      </el-submenu>
+      <el-menu-item v-if="userType === '学生'" index="/myorganization">社团信息</el-menu-item>
+      <el-submenu index="3" v-if="userType === '学生'">
+        <template slot="title">社团信息</template>
+        <el-menu-item index="/allOrganizations">所有社团</el-menu-item>
+        <el-menu-item index="/myorganization">我的社团</el-menu-item>
+      </el-submenu>
+      <el-menu-item v-if="userType === '游客'" index="/allOrganizations">所有社团</el-menu-item>
+      <el-submenu index="4" v-if="userType === '学生'">
+        <template slot="title">活动中心</template>
+        <el-menu-item index="/allActivities">所有活动</el-menu-item>
+        <el-menu-item index="/ActivitiesProgress">参加的活动</el-menu-item>
+      </el-submenu>
+      <el-menu-item  v-if="userType === '游客'" index="/allActivities">所有活动</el-menu-item>
+      <el-submenu  index="5" v-if="userType === '系统管理员'">
         <template slot="title">权限管理</template>
         <el-menu-item index="/signupMembers">无组织学生</el-menu-item>
         <el-menu-item index="/members">社团学生</el-menu-item>
       </el-submenu>
-      <el-submenu>
+      <el-submenu index="6" v-if="userType === '系统管理员'">
         <template slot="title">活动管理</template>
         <el-menu-item index="/publishActivities">发布活动</el-menu-item>
         <el-menu-item index="/myActivities">参加的活动</el-menu-item>
       </el-submenu>
-      <el-menu-item index="/message"><el-badge :is-dot=isDot class="item">
+      <el-menu-item v-if="userType != '游客'" index="/message"><el-badge :is-dot=isDot class="item">
         消息中心
       </el-badge></el-menu-item>
-      <el-menu-item index="/indexManager">首页管理</el-menu-item>
-      <el-menu-item index="/document">文件管理</el-menu-item>
+      <el-submenu index="7" v-if="userType === '社团负责人'">
+        <template slot="title">社团信息</template>
+        <el-menu-item index="/OrganizationSetting">修改社团信息</el-menu-item>
+        <el-menu-item index="/organizationInfo">社团信息</el-menu-item>
+      </el-submenu>
+
+      <el-menu-item v-if="userType === '学生'" index="/personalInfo">个人信息</el-menu-item>
+      <el-menu-item v-if="userType === '学生'|| userType === '游客'" index="/Document">文件下载</el-menu-item>
+      <el-menu-item  v-if="userType === '系统管理员'" index="/indexManager">首页管理</el-menu-item>
+      <el-submenu index="8" v-if="userType === '系统管理员' || userType === '社团负责人'">
+        <template  slot="title">文件管理</template>
+        <el-menu-item index="/document">文件下载</el-menu-item>
+        <el-menu-item index="/uploadDocument">文件上传</el-menu-item>
+      </el-submenu>
+
       <el-menu-item index="/calendar">社团日历</el-menu-item>
       <el-menu-item style="float: right;" @click="signout"><i class="el-icon-switch-button"></i></el-menu-item>
-      <el-menu-item style="float: right;" index="/personalInfo">你好，{{userName}}</el-menu-item>
+      <el-menu-item style="float: right;" index="/personalInfo">你好，【{{userType}}】{{userName}}</el-menu-item>
     </el-menu>
 
   </div>
@@ -32,14 +68,21 @@
         name: "Menu",
         data() {
             return {
-                userName: '系统管理员',
+                userName: window.sessionStorage.getItem('userName'),
+                userType: window.sessionStorage.getItem('userType'),
                 count: 3,
             }
         },
         methods: {
             //退出登录
             signout(){
-                this.$router.push('/login')
+                this.$router.push('/login');
+                this.$store.commit("LOGOUT");
+                this.$notify.success({
+                    message: "退出成功",
+                    showClose: false,
+                    duration: 3000,
+                });
             }
         },
         created() {

@@ -52,6 +52,7 @@
             <el-button v-if="scope.row.orgName!='佛大话剧团'"
               type="success"
               size="mini"
+                       :disabled="userType ==='游客' ? true : false"
               @click="SignUp">报名
             </el-button>
             <el-button v-if="scope.row.orgName=='佛大话剧团'"
@@ -63,12 +64,14 @@
             <el-button
               type="danger"
               size="mini"
+              :disabled="userType ==='游客' ? true : false"
               @click="Feedback">意见反馈
             </el-button>
             <el-button
               icon="el-icon-view"
               size="mini"
               type="primary"
+              :disabled="userType ==='游客' ? true : false"
               @click="openMsg">详情
             </el-button>
           </template>
@@ -88,6 +91,7 @@
         name: "allActivities",
         data() {
             return {
+                userType: window.sessionStorage.getItem('userType'),
                 msgCount: 1,
                 tableData: [
                     {

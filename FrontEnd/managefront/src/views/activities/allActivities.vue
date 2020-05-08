@@ -63,12 +63,14 @@
             <el-button v-if="scope.row.activitityName!='校园十大歌手'&& scope.row.activitityName!='我是歌手'"
               type="success"
               size="mini"
+                       :disabled="userType ==='游客' ? true : false"
               @click="openMsg">报名
             </el-button>
             <el-button
               icon="el-icon-view"
               size="mini"
               type="primary"
+              :disabled="userType ==='游客' ? true : false"
               @click="openMsg">详情
             </el-button>
           </template>
@@ -88,6 +90,7 @@
         name: "allActivities",
         data() {
             return {
+                userType: window.sessionStorage.getItem('userType'),
                 msgCount: 1,
                 tableData: [{
                     activitityStartTime: '2016-05-02',

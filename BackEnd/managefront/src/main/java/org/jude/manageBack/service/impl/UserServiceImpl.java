@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.util.List;
 
 @Service
@@ -16,26 +15,35 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UsersMapper usersMapper;
 
-    //查询所有用户
+    //通过账户查找用户
     @Override
+    public List<Users> selectByuserAcount(String userAcount) throws Exception {
+        UsersExample usersExample = new UsersExample();
+        usersExample.createCriteria().andUseracountEqualTo(userAcount);
+        return this.usersMapper.selectByExample(usersExample);
+    }
+
+    //添加用户
+    @Override
+    @Transactional
+    public void regist(Users user) throws Exception {
+        this.usersMapper.insert(user);
+    }
+
+    //查询所有用户
+//    @Override
     public List<Users> findAllUsers() throws Exception {
         UsersExample usersExample = new UsersExample();
         return this.usersMapper.selectByExample(usersExample);
     }
 
-    //增加用户
-    @Override
-    @Transactional
-    public void addUser(Users user) throws Exception {
-        this.usersMapper.insert(user);
-    }
 
-    @Override
+//    @Override
     public void updateUser(Users user) throws Exception {
     }
 
 
-    @Override
+//    @Override
     public void deleteUser(Integer userid) throws Exception {
 
     }

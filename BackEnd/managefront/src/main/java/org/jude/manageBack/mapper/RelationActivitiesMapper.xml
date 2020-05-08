@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jude.manageBack.mapper.RelationActivitiesMapper">
+  <resultMap id="BaseResultMap" type="org.jude.manageBack.pojo.RelationActivities">
+    <id column="relation_activities_id" jdbcType="INTEGER" property="relationActivitiesId" />
+    <result column="orgId" jdbcType="INTEGER" property="orgid" />
+    <result column="userId" jdbcType="INTEGER" property="userid" />
+    <result column="sinUpTime" jdbcType="TIMESTAMP" property="sinuptime" />
+    <result column="Admission" jdbcType="VARCHAR" property="admission" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    relation_activities_id, orgId, userId, sinUpTime, Admission
+  </sql>
+  <select id="selectByExample" parameterType="org.jude.manageBack.pojo.RelationActivitiesExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from "relation_activities"
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from "relation_activities"
+    where relation_activities_id = #{relationActivitiesId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from "relation_activities"
+    where relation_activities_id = #{relationActivitiesId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.jude.manageBack.pojo.RelationActivitiesExample">
+    delete from "relation_activities"
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.jude.manageBack.pojo.RelationActivities">
+    insert into "relation_activities" (relation_activities_id, orgId, userId, 
+      sinUpTime, Admission)
+    values (#{relationActivitiesId,jdbcType=INTEGER}, #{orgid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, 
+      #{sinuptime,jdbcType=TIMESTAMP}, #{admission,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.jude.manageBack.pojo.RelationActivities">
+    insert into "relation_activities"
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="relationActivitiesId != null">
+        relation_activities_id,
+      </if>
+      <if test="orgid != null">
+        orgId,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="sinuptime != null">
+        sinUpTime,
+      </if>
+      <if test="admission != null">
+        Admission,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="relationActivitiesId != null">
+        #{relationActivitiesId,jdbcType=INTEGER},
+      </if>
+      <if test="orgid != null">
+        #{orgid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="sinuptime != null">
+        #{sinuptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="admission != null">
+        #{admission,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.jude.manageBack.pojo.RelationActivitiesExample" resultType="java.lang.Long">
+    select count(*) from "relation_activities"
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update "relation_activities"
+    <set>
+      <if test="record.relationActivitiesId != null">
+        relation_activities_id = #{record.relationActivitiesId,jdbcType=INTEGER},
+      </if>
+      <if test="record.orgid != null">
+        orgId = #{record.orgid,jdbcType=INTEGER},
+      </if>
+      <if test="record.userid != null">
+        userId = #{record.userid,jdbcType=INTEGER},
+      </if>
+      <if test="record.sinuptime != null">
+        sinUpTime = #{record.sinuptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.admission != null">
+        Admission = #{record.admission,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update "relation_activities"
+    set relation_activities_id = #{record.relationActivitiesId,jdbcType=INTEGER},
+      orgId = #{record.orgid,jdbcType=INTEGER},
+      userId = #{record.userid,jdbcType=INTEGER},
+      sinUpTime = #{record.sinuptime,jdbcType=TIMESTAMP},
+      Admission = #{record.admission,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.jude.manageBack.pojo.RelationActivities">
+    update "relation_activities"
+    <set>
+      <if test="orgid != null">
+        orgId = #{orgid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="sinuptime != null">
+        sinUpTime = #{sinuptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="admission != null">
+        Admission = #{admission,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where relation_activities_id = #{relationActivitiesId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.jude.manageBack.pojo.RelationActivities">
+    update "relation_activities"
+    set orgId = #{orgid,jdbcType=INTEGER},
+      userId = #{userid,jdbcType=INTEGER},
+      sinUpTime = #{sinuptime,jdbcType=TIMESTAMP},
+      Admission = #{admission,jdbcType=VARCHAR}
+    where relation_activities_id = #{relationActivitiesId,jdbcType=INTEGER}
+  </update>
+</mapper>

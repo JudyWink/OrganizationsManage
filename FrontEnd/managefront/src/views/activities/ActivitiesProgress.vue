@@ -30,7 +30,7 @@
           </tr>
         </table>
         <div v-if="isenrol">
-        <el-button style="margin-top: 10px" type="success">活动报名</el-button>
+        <el-button :disabled="userType ==='游客' ? true : false" style="margin-top: 10px" type="success">活动报名</el-button>
         </div>
         <div v-else>
           <el-button style="margin-top: 10px" disabled type="success">已报名</el-button>
@@ -45,7 +45,8 @@
         name: "ActivitiesProgress",
         data() {
             return {
-                isenrol:false,
+                userType: window.sessionStorage.getItem('userType'),
+                isenrol:true,
                 org:"茶水部",
                 place:"仙溪湖",
                 info:"少时诵诗书所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所所",

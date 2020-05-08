@@ -15,7 +15,7 @@
         },
         //实现跨域
         created() {
-            this.$axios.post('/testResAndReq')
+            this.$axios.post('/mb')
                 .then(res =>{
                     console.log(res)
                 })

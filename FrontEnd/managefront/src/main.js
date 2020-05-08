@@ -4,7 +4,7 @@ import router from "./router";
 import ElementUI from 'element-ui';
 import {Loading,Message} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-// import store from './store/index';
+import store from './store/index';
 import axios from 'axios';
 
 // 配置axios
@@ -14,12 +14,14 @@ axios.defaults.timeout = 5000;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 // http request 拦截器
 var loadingInstace;
+var token
 axios.interceptors.request.use(
   config => {
     loadingInstace = Loading.service({fullscreen: true});
-    // if(store.state.token){
-    //   config.headers.common['XX-Token']=store.state.token   //此处的XX-Token要根据登录接口中请求头的名字来写
-    // }
+    token = store.state.token ? store.state.token : window.sessionStorage.getItem('token');
+    if (localStorage.getItem('token')) {
+      config.headers.common['Token'] = token;
+    }
     return config
   },
   error => {
@@ -48,6 +50,6 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router, // 在vue中使用router
-  // store,// 在vue中使用store
+  store,// 在vue中使用store
   render: h => h(App)
 })

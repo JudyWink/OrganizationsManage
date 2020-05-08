@@ -3,9 +3,24 @@
 <mapper namespace="org.jude.manageBack.mapper.UsersMapper">
   <resultMap id="BaseResultMap" type="org.jude.manageBack.pojo.Users">
     <id column="userId" jdbcType="INTEGER" property="userid" />
+    <result column="userName" jdbcType="VARCHAR" property="username" />
     <result column="userAcount" jdbcType="VARCHAR" property="useracount" />
     <result column="userPassword" jdbcType="VARCHAR" property="userpassword" />
-    <result column="createTime" jdbcType="TIME" property="createtime" />
+    <result column="userType" jdbcType="VARCHAR" property="usertype" />
+    <result column="userSex" jdbcType="VARCHAR" property="usersex" />
+    <result column="userPhone" jdbcType="VARCHAR" property="userphone" />
+    <result column="userNumber" jdbcType="VARCHAR" property="usernumber" />
+    <result column="userAcademy" jdbcType="VARCHAR" property="useracademy" />
+    <result column="userClass" jdbcType="VARCHAR" property="userclass" />
+    <result column="userHobby" jdbcType="VARCHAR" property="userhobby" />
+    <result column="userEmail" jdbcType="VARCHAR" property="useremail" />
+    <result column="userQQ" jdbcType="VARCHAR" property="userqq" />
+    <result column="userWeChat" jdbcType="VARCHAR" property="userwechat" />
+    <result column="userPhoto" jdbcType="VARCHAR" property="userphoto" />
+    <result column="defultOrg" jdbcType="VARCHAR" property="defultorg" />
+    <result column="dormitory" jdbcType="VARCHAR" property="dormitory" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +81,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    userId, userAcount, userPassword, createTime
+    userId, userName, userAcount, userPassword, userType, userSex, userPhone, userNumber, 
+    userAcademy, userClass, userHobby, userEmail, userQQ, userWeChat, userPhoto, defultOrg, 
+    dormitory, createTime, updateTime
   </sql>
   <select id="selectByExample" parameterType="org.jude.manageBack.pojo.UsersExample" resultMap="BaseResultMap">
     select
@@ -99,10 +116,20 @@
     </if>
   </delete>
   <insert id="insert" parameterType="org.jude.manageBack.pojo.Users">
-    insert into users (userId, userAcount, userPassword, 
-      createTime)
-    values (#{userid,jdbcType=INTEGER}, #{useracount,jdbcType=VARCHAR}, #{userpassword,jdbcType=VARCHAR}, 
-      #{createtime,jdbcType=TIME})
+    insert into users (userId, userName, userAcount, 
+      userPassword, userType, userSex, 
+      userPhone, userNumber, userAcademy, 
+      userClass, userHobby, userEmail, 
+      userQQ, userWeChat, userPhoto, 
+      defultOrg, dormitory, createTime, 
+      updateTime)
+    values (#{userid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{useracount,jdbcType=VARCHAR}, 
+      #{userpassword,jdbcType=VARCHAR}, #{usertype,jdbcType=VARCHAR}, #{usersex,jdbcType=VARCHAR}, 
+      #{userphone,jdbcType=VARCHAR}, #{usernumber,jdbcType=VARCHAR}, #{useracademy,jdbcType=VARCHAR}, 
+      #{userclass,jdbcType=VARCHAR}, #{userhobby,jdbcType=VARCHAR}, #{useremail,jdbcType=VARCHAR}, 
+      #{userqq,jdbcType=VARCHAR}, #{userwechat,jdbcType=VARCHAR}, #{userphoto,jdbcType=VARCHAR}, 
+      #{defultorg,jdbcType=VARCHAR}, #{dormitory,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="org.jude.manageBack.pojo.Users">
     insert into users
@@ -110,19 +137,67 @@
       <if test="userid != null">
         userId,
       </if>
+      <if test="username != null">
+        userName,
+      </if>
       <if test="useracount != null">
         userAcount,
       </if>
       <if test="userpassword != null">
         userPassword,
       </if>
+      <if test="usertype != null">
+        userType,
+      </if>
+      <if test="usersex != null">
+        userSex,
+      </if>
+      <if test="userphone != null">
+        userPhone,
+      </if>
+      <if test="usernumber != null">
+        userNumber,
+      </if>
+      <if test="useracademy != null">
+        userAcademy,
+      </if>
+      <if test="userclass != null">
+        userClass,
+      </if>
+      <if test="userhobby != null">
+        userHobby,
+      </if>
+      <if test="useremail != null">
+        userEmail,
+      </if>
+      <if test="userqq != null">
+        userQQ,
+      </if>
+      <if test="userwechat != null">
+        userWeChat,
+      </if>
+      <if test="userphoto != null">
+        userPhoto,
+      </if>
+      <if test="defultorg != null">
+        defultOrg,
+      </if>
+      <if test="dormitory != null">
+        dormitory,
+      </if>
       <if test="createtime != null">
         createTime,
+      </if>
+      <if test="updatetime != null">
+        updateTime,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="userid != null">
         #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
       </if>
       <if test="useracount != null">
         #{useracount,jdbcType=VARCHAR},
@@ -130,8 +205,50 @@
       <if test="userpassword != null">
         #{userpassword,jdbcType=VARCHAR},
       </if>
+      <if test="usertype != null">
+        #{usertype,jdbcType=VARCHAR},
+      </if>
+      <if test="usersex != null">
+        #{usersex,jdbcType=VARCHAR},
+      </if>
+      <if test="userphone != null">
+        #{userphone,jdbcType=VARCHAR},
+      </if>
+      <if test="usernumber != null">
+        #{usernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="useracademy != null">
+        #{useracademy,jdbcType=VARCHAR},
+      </if>
+      <if test="userclass != null">
+        #{userclass,jdbcType=VARCHAR},
+      </if>
+      <if test="userhobby != null">
+        #{userhobby,jdbcType=VARCHAR},
+      </if>
+      <if test="useremail != null">
+        #{useremail,jdbcType=VARCHAR},
+      </if>
+      <if test="userqq != null">
+        #{userqq,jdbcType=VARCHAR},
+      </if>
+      <if test="userwechat != null">
+        #{userwechat,jdbcType=VARCHAR},
+      </if>
+      <if test="userphoto != null">
+        #{userphoto,jdbcType=VARCHAR},
+      </if>
+      <if test="defultorg != null">
+        #{defultorg,jdbcType=VARCHAR},
+      </if>
+      <if test="dormitory != null">
+        #{dormitory,jdbcType=VARCHAR},
+      </if>
       <if test="createtime != null">
-        #{createtime,jdbcType=TIME},
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -147,14 +264,59 @@
       <if test="record.userid != null">
         userId = #{record.userid,jdbcType=INTEGER},
       </if>
+      <if test="record.username != null">
+        userName = #{record.username,jdbcType=VARCHAR},
+      </if>
       <if test="record.useracount != null">
         userAcount = #{record.useracount,jdbcType=VARCHAR},
       </if>
       <if test="record.userpassword != null">
         userPassword = #{record.userpassword,jdbcType=VARCHAR},
       </if>
+      <if test="record.usertype != null">
+        userType = #{record.usertype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usersex != null">
+        userSex = #{record.usersex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userphone != null">
+        userPhone = #{record.userphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usernumber != null">
+        userNumber = #{record.usernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useracademy != null">
+        userAcademy = #{record.useracademy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userclass != null">
+        userClass = #{record.userclass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userhobby != null">
+        userHobby = #{record.userhobby,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useremail != null">
+        userEmail = #{record.useremail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userqq != null">
+        userQQ = #{record.userqq,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userwechat != null">
+        userWeChat = #{record.userwechat,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userphoto != null">
+        userPhoto = #{record.userphoto,jdbcType=VARCHAR},
+      </if>
+      <if test="record.defultorg != null">
+        defultOrg = #{record.defultorg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dormitory != null">
+        dormitory = #{record.dormitory,jdbcType=VARCHAR},
+      </if>
       <if test="record.createtime != null">
-        createTime = #{record.createtime,jdbcType=TIME},
+        createTime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatetime != null">
+        updateTime = #{record.updatetime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null">
@@ -164,9 +326,24 @@
   <update id="updateByExample" parameterType="map">
     update users
     set userId = #{record.userid,jdbcType=INTEGER},
+      userName = #{record.username,jdbcType=VARCHAR},
       userAcount = #{record.useracount,jdbcType=VARCHAR},
       userPassword = #{record.userpassword,jdbcType=VARCHAR},
-      createTime = #{record.createtime,jdbcType=TIME}
+      userType = #{record.usertype,jdbcType=VARCHAR},
+      userSex = #{record.usersex,jdbcType=VARCHAR},
+      userPhone = #{record.userphone,jdbcType=VARCHAR},
+      userNumber = #{record.usernumber,jdbcType=VARCHAR},
+      userAcademy = #{record.useracademy,jdbcType=VARCHAR},
+      userClass = #{record.userclass,jdbcType=VARCHAR},
+      userHobby = #{record.userhobby,jdbcType=VARCHAR},
+      userEmail = #{record.useremail,jdbcType=VARCHAR},
+      userQQ = #{record.userqq,jdbcType=VARCHAR},
+      userWeChat = #{record.userwechat,jdbcType=VARCHAR},
+      userPhoto = #{record.userphoto,jdbcType=VARCHAR},
+      defultOrg = #{record.defultorg,jdbcType=VARCHAR},
+      dormitory = #{record.dormitory,jdbcType=VARCHAR},
+      createTime = #{record.createtime,jdbcType=TIMESTAMP},
+      updateTime = #{record.updatetime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -174,23 +351,83 @@
   <update id="updateByPrimaryKeySelective" parameterType="org.jude.manageBack.pojo.Users">
     update users
     <set>
+      <if test="username != null">
+        userName = #{username,jdbcType=VARCHAR},
+      </if>
       <if test="useracount != null">
         userAcount = #{useracount,jdbcType=VARCHAR},
       </if>
       <if test="userpassword != null">
         userPassword = #{userpassword,jdbcType=VARCHAR},
       </if>
+      <if test="usertype != null">
+        userType = #{usertype,jdbcType=VARCHAR},
+      </if>
+      <if test="usersex != null">
+        userSex = #{usersex,jdbcType=VARCHAR},
+      </if>
+      <if test="userphone != null">
+        userPhone = #{userphone,jdbcType=VARCHAR},
+      </if>
+      <if test="usernumber != null">
+        userNumber = #{usernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="useracademy != null">
+        userAcademy = #{useracademy,jdbcType=VARCHAR},
+      </if>
+      <if test="userclass != null">
+        userClass = #{userclass,jdbcType=VARCHAR},
+      </if>
+      <if test="userhobby != null">
+        userHobby = #{userhobby,jdbcType=VARCHAR},
+      </if>
+      <if test="useremail != null">
+        userEmail = #{useremail,jdbcType=VARCHAR},
+      </if>
+      <if test="userqq != null">
+        userQQ = #{userqq,jdbcType=VARCHAR},
+      </if>
+      <if test="userwechat != null">
+        userWeChat = #{userwechat,jdbcType=VARCHAR},
+      </if>
+      <if test="userphoto != null">
+        userPhoto = #{userphoto,jdbcType=VARCHAR},
+      </if>
+      <if test="defultorg != null">
+        defultOrg = #{defultorg,jdbcType=VARCHAR},
+      </if>
+      <if test="dormitory != null">
+        dormitory = #{dormitory,jdbcType=VARCHAR},
+      </if>
       <if test="createtime != null">
-        createTime = #{createtime,jdbcType=TIME},
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where userId = #{userid,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="org.jude.manageBack.pojo.Users">
     update users
-    set userAcount = #{useracount,jdbcType=VARCHAR},
+    set userName = #{username,jdbcType=VARCHAR},
+      userAcount = #{useracount,jdbcType=VARCHAR},
       userPassword = #{userpassword,jdbcType=VARCHAR},
-      createTime = #{createtime,jdbcType=TIME}
+      userType = #{usertype,jdbcType=VARCHAR},
+      userSex = #{usersex,jdbcType=VARCHAR},
+      userPhone = #{userphone,jdbcType=VARCHAR},
+      userNumber = #{usernumber,jdbcType=VARCHAR},
+      userAcademy = #{useracademy,jdbcType=VARCHAR},
+      userClass = #{userclass,jdbcType=VARCHAR},
+      userHobby = #{userhobby,jdbcType=VARCHAR},
+      userEmail = #{useremail,jdbcType=VARCHAR},
+      userQQ = #{userqq,jdbcType=VARCHAR},
+      userWeChat = #{userwechat,jdbcType=VARCHAR},
+      userPhoto = #{userphoto,jdbcType=VARCHAR},
+      defultOrg = #{defultorg,jdbcType=VARCHAR},
+      dormitory = #{dormitory,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP}
     where userId = #{userid,jdbcType=INTEGER}
   </update>
 </mapper>

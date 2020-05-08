@@ -44,6 +44,15 @@
         </javaClientGenerator>
 
         <!-- 指定数据库表,根据不同的数据表再新增更多的table-->
-        <table tableName="users"></table>
+<!--        <table tableName="users"></table>-->
+<!--        <table tableName="roles"></table>-->
+<!--        <table tableName="orgs"></table>-->
+<!--        <table tableName="activities"></table>-->
+<!--        <table tableName="messages"></table>-->
+<!--        <table tableName="documents"></table>-->
+<!--        <table tableName="indeximgs"></table>-->
+<!--        <table tableName="relation_orgs"></table>-->
+<!--        <table tableName=" relation_activities"></table>-->
+<!--        <table tableName=" relation_position"></table>-->
     </context>
 </generatorConfiguration>

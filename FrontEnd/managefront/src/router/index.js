@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'  // 引入vue-router
+import store from '../store/index';
 
 // 引入要跳转的vue组件
 import Login from "../views/login/Login";
@@ -208,6 +209,23 @@ var router = new VueRouter({
   'mode': 'history',
   routes
 })
+
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login' || to.path === '/regist' || to.path === '/forgetPassword') {
+    next();
+  }
+   else {
+    let token = store.state.token ? store.state.token : window.sessionStorage.getItem('token');
+    if (token === null || token === '') {
+        alert("你还没登录！")
+        next('/login');
+    } else {
+      next();
+    }
+  }
+});
+
 
 // 导出路由
 export default router;

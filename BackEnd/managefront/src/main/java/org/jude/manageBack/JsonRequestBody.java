@@ -1,21 +1,23 @@
 package org.jude.manageBack;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Date;
-import java.util.HashMap;
+
 
 
 @Data
 @Getter
 @Setter
 public class JsonRequestBody{
+    //时间戳
     private Date timestamp;
-    private String userId;
+    //用户账号
+    private String userAcount;
+    //token验证
     private String token;
-    //0:游客;1学生;2老师
-    private String userType;
-    private HashMap jsonDate;
+    //数据
+    private JSONObject data;
 }

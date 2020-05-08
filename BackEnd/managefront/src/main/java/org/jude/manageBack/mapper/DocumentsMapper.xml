@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jude.manageBack.mapper.DocumentsMapper">
+  <resultMap id="BaseResultMap" type="org.jude.manageBack.pojo.Documents">
+    <id column="documentId" jdbcType="INTEGER" property="documentid" />
+    <result column="documentName" jdbcType="VARCHAR" property="documentname" />
+    <result column="documentOwner" jdbcType="VARCHAR" property="documentowner" />
+    <result column="documentType" jdbcType="VARCHAR" property="documenttype" />
+    <result column="documentUploadTime" jdbcType="TIMESTAMP" property="documentuploadtime" />
+    <result column="DownloadCount" jdbcType="INTEGER" property="downloadcount" />
+    <result column="documentUrl" jdbcType="VARCHAR" property="documenturl" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    documentId, documentName, documentOwner, documentType, documentUploadTime, DownloadCount, 
+    documentUrl
+  </sql>
+  <select id="selectByExample" parameterType="org.jude.manageBack.pojo.DocumentsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from documents
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from documents
+    where documentId = #{documentid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from documents
+    where documentId = #{documentid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.jude.manageBack.pojo.DocumentsExample">
+    delete from documents
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.jude.manageBack.pojo.Documents">
+    insert into documents (documentId, documentName, documentOwner, 
+      documentType, documentUploadTime, DownloadCount, 
+      documentUrl)
+    values (#{documentid,jdbcType=INTEGER}, #{documentname,jdbcType=VARCHAR}, #{documentowner,jdbcType=VARCHAR}, 
+      #{documenttype,jdbcType=VARCHAR}, #{documentuploadtime,jdbcType=TIMESTAMP}, #{downloadcount,jdbcType=INTEGER}, 
+      #{documenturl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.jude.manageBack.pojo.Documents">
+    insert into documents
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="documentid != null">
+        documentId,
+      </if>
+      <if test="documentname != null">
+        documentName,
+      </if>
+      <if test="documentowner != null">
+        documentOwner,
+      </if>
+      <if test="documenttype != null">
+        documentType,
+      </if>
+      <if test="documentuploadtime != null">
+        documentUploadTime,
+      </if>
+      <if test="downloadcount != null">
+        DownloadCount,
+      </if>
+      <if test="documenturl != null">
+        documentUrl,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="documentid != null">
+        #{documentid,jdbcType=INTEGER},
+      </if>
+      <if test="documentname != null">
+        #{documentname,jdbcType=VARCHAR},
+      </if>
+      <if test="documentowner != null">
+        #{documentowner,jdbcType=VARCHAR},
+      </if>
+      <if test="documenttype != null">
+        #{documenttype,jdbcType=VARCHAR},
+      </if>
+      <if test="documentuploadtime != null">
+        #{documentuploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="downloadcount != null">
+        #{downloadcount,jdbcType=INTEGER},
+      </if>
+      <if test="documenturl != null">
+        #{documenturl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.jude.manageBack.pojo.DocumentsExample" resultType="java.lang.Long">
+    select count(*) from documents
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update documents
+    <set>
+      <if test="record.documentid != null">
+        documentId = #{record.documentid,jdbcType=INTEGER},
+      </if>
+      <if test="record.documentname != null">
+        documentName = #{record.documentname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.documentowner != null">
+        documentOwner = #{record.documentowner,jdbcType=VARCHAR},
+      </if>
+      <if test="record.documenttype != null">
+        documentType = #{record.documenttype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.documentuploadtime != null">
+        documentUploadTime = #{record.documentuploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.downloadcount != null">
+        DownloadCount = #{record.downloadcount,jdbcType=INTEGER},
+      </if>
+      <if test="record.documenturl != null">
+        documentUrl = #{record.documenturl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update documents
+    set documentId = #{record.documentid,jdbcType=INTEGER},
+      documentName = #{record.documentname,jdbcType=VARCHAR},
+      documentOwner = #{record.documentowner,jdbcType=VARCHAR},
+      documentType = #{record.documenttype,jdbcType=VARCHAR},
+      documentUploadTime = #{record.documentuploadtime,jdbcType=TIMESTAMP},
+      DownloadCount = #{record.downloadcount,jdbcType=INTEGER},
+      documentUrl = #{record.documenturl,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.jude.manageBack.pojo.Documents">
+    update documents
+    <set>
+      <if test="documentname != null">
+        documentName = #{documentname,jdbcType=VARCHAR},
+      </if>
+      <if test="documentowner != null">
+        documentOwner = #{documentowner,jdbcType=VARCHAR},
+      </if>
+      <if test="documenttype != null">
+        documentType = #{documenttype,jdbcType=VARCHAR},
+      </if>
+      <if test="documentuploadtime != null">
+        documentUploadTime = #{documentuploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="downloadcount != null">
+        DownloadCount = #{downloadcount,jdbcType=INTEGER},
+      </if>
+      <if test="documenturl != null">
+        documentUrl = #{documenturl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where documentId = #{documentid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.jude.manageBack.pojo.Documents">
+    update documents
+    set documentName = #{documentname,jdbcType=VARCHAR},
+      documentOwner = #{documentowner,jdbcType=VARCHAR},
+      documentType = #{documenttype,jdbcType=VARCHAR},
+      documentUploadTime = #{documentuploadtime,jdbcType=TIMESTAMP},
+      DownloadCount = #{downloadcount,jdbcType=INTEGER},
+      documentUrl = #{documenturl,jdbcType=VARCHAR}
+    where documentId = #{documentid,jdbcType=INTEGER}
+  </update>
+</mapper>
