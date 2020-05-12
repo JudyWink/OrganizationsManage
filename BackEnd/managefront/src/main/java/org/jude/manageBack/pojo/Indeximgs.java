@@ -1,11 +1,13 @@
 package org.jude.manageBack.pojo;
 
+import java.util.Date;
+
 public class Indeximgs {
     private Integer indeximgid;
 
     private String indeximgurl;
 
-    private String indeximgcreatetime;
+    private Date indeximgcreatetime;
 
     private Integer indeximgownerorg;
 
@@ -27,12 +29,12 @@ public class Indeximgs {
         this.indeximgurl = indeximgurl == null ? null : indeximgurl.trim();
     }
 
-    public String getIndeximgcreatetime() {
+    public Date getIndeximgcreatetime() {
         return indeximgcreatetime;
     }
 
-    public void setIndeximgcreatetime(String indeximgcreatetime) {
-        this.indeximgcreatetime = indeximgcreatetime == null ? null : indeximgcreatetime.trim();
+    public void setIndeximgcreatetime(Date indeximgcreatetime) {
+        this.indeximgcreatetime = indeximgcreatetime;
     }
 
     public Integer getIndeximgownerorg() {

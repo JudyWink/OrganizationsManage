@@ -1,7 +1,10 @@
 <template>
   <el-carousel :interval="2000" type="card" height="550px">
-    <el-carousel-item class="carousel-item" v-for="url in urls"  v-bind:key="url"  >
-      <img class="carousel-img" :src="url">
+    <el-carousel-item class="carousel-item" v-for="url in urls"  v-bind:key="url">
+      <el-image
+        class="carousel-img"
+        :src=url
+      ></el-image>
     </el-carousel-item>
   </el-carousel>
 </template>
@@ -13,18 +16,31 @@
         name: "Index",
         data() {
             return {
-                urls: [
-                    require('../../assets/img/index/1.jpg'),
-                    require('../../assets/img/index/2.jpg'),
-                    require('../../assets/img/index/3.jpg'),
-                    require('../../assets/img/index/4.jpg'),
-                    require('../../assets/img/index/5.jpg'),
-                    // require('../../assets/img/index/6.jpg'),
-                    require('../../assets/img/index/7.jpg'),
-                    require('../../assets/img/index/8.jpg'),
-                ]
+                urls: [],
             }
         },
+        created() {
+            let _this = this;
+            this.$axios.post('/findAllIndexImgs')
+                .then(function (response) {
+                    if (response.data.code == 1) {
+                        _this.$notify.warning({
+                            title: '提示',
+                            message: response.data.msg,
+                            showClose: false,
+                            duration: 1500,
+                        });
+                    }
+                    if (response.data.code == 0) {
+                        _this.urls = response.data.data.IndexImgsUrls;
+
+
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
+        }
     }
 </script>
 

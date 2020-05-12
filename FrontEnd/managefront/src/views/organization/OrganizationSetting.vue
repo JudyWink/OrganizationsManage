@@ -1,267 +1,247 @@
 <template>
-  <div id="personalInfo_box">
-
-    <div id="personalInfo">
-      <table class="table">
-        <collapse>基本信息</collapse>
-        <tr>
-          <td style="border-bottom: solid 1px #d1d1d1;" colspan="5"></td>
-        </tr>
-        <tr>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">姓名</el-tag>
-          </td>
-          <td>
-            <el-input/>
-          </td>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px"  type="success">账户</el-tag>
-          <td>
-            <el-input/>
-          </td>
-
-        </tr>
-        <tr>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">所属社团</el-tag>
-          <td>
-            <el-select style="width: 100%" v-model="value" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </td>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">职位</el-tag>
-          <td>
-            <el-input disabled="true"></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">默认登录组织</el-tag>
-          <td>
-            <el-select style="width: 100%" v-model="value" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </td>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">类型</el-tag>
-          <td>
-            <el-input disabled="true"></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">学院</el-tag>
-          <td colspan="2">
-            <el-select style="width: 100%" v-model="value" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </td>
-          <td><el-button type="warning" icon="el-icon-edit" onclick="" plain>修改密码</el-button></td>
-        </tr>
-        <tr>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">班级</el-tag>
-          <td>
-            <el-input/>
-          </td>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">学号</el-tag>
-          <td>
-            <el-input/>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">微信</el-tag>
-          <td>
-            <el-input/>
-          </td>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">Q Q</el-tag>
-          <td>
-            <el-input/>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">宿舍</el-tag>
-          <td>
-            <el-input/>
-          </td>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">邮箱</el-tag>
-          <td>
-            <el-input/>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">手机</el-tag>
-          <td>
-            <el-input/>
-          </td>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">性别</el-tag>
-          <td>
-            <el-input/>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">爱好</el-tag>
-          <td colspan="3">
-            <el-input type="textarea"></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="4">
-            <el-avatar shape="square" :size="100" :fit="fit" :src="url"></el-avatar>
-            <el-upload
-              class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="4">
-            <el-button type="success">保存</el-button>
-            <el-button type="warning">取消</el-button>
-          </td>
-        </tr>
-      </table>
+  <div id="OrgIndexManager_box">
+    <div id="OrgIndexManager">
+      <el-form :model="form">
+        <el-form-item>
+          <el-upload
+            action="http://up.imgapi.com/"
+            ref="upload"
+            :data="myHeaders"
+            accept="image/png,image/jpg,image/jpeg"
+            list-type="picture-card"
+            :multiple="true"
+            :limit=limitNum
+            :auto-upload="false"
+            :on-exceed="handleExceed"
+            :before-upload="handleBeforeUpload"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+            :on-change="fileChange">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
+        </el-form-item>
+        <el-form-item>
+          <span>一次只能上传9张以内的jpeg/jpg/png文件，且一张不超过10M</span>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" type="success" @click="uploadFile">立即上传</el-button>
+        </el-form-item>
+      </el-form>
+      <div>
+        <el-carousel :interval="2000" :autoplay="false" type="card" height="200px">
+          <el-carousel-item class="carousel-item" v-for="url in urls"  v-bind:key="url">
+            <el-image @click="deleteImg(url)"
+                      :src=url
+            ></el-image>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
     </div>
-
   </div>
 </template>
 
 <script>
     export default {
-        name: "PersonalInfo",
+
+        name: "OrganizationSetting",
+        inject:['reload'],
         data() {
-            return {
-                successful: {
-                    acount: false,
-                    password1: false,
-                    password2: false,
+            return{
+                myHeaders: {
+                    Token: "6191e057f3e239d7d0f3b7914eb2debd79cba8ab:UCZGBboJTpw8F3IhsWi0kPi3SLk=:eyJkZWFkbGluZSI6MTU4OTIxMzA3MiwiYWN0aW9uIjoiZ2V0IiwidWlkIjoiNzE4NTk3IiwiYWlkIjoiMTY4Nzg5OCIsImZyb20iOiJmaWxlIn0="
                 },
-                errormsg: {
-                    acount: '',
-                    password1: '',
-                    password2: '',
+                dialogImageUrl: '',
+                dialogVisible: false,
+                limitNum: 9,
+                form: {
                 },
-                userAcount: '',
-                userPassword1: '',
-                userPassword2: '',
+                fileList:[],
+                urls: [],
             }
         },
         methods: {
-            //账号判断
-            checkAcount() {
-                this.errormsg.acount = '';
-                var regEn = /[`~!@#$%^&*()_+<>?:"{},.\\/;'[\]]/im,
-                    regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im;
-                if (this.userAcount.length == 0) {
-                    this.errormsg.acount = '用户名不能为空';
-                } else if (regEn.test(this.userAcount) || regCn.test(this.userAcount)) {
-                    this.errormsg.acount = "账户不能包含特殊字符";
-                } else {
-                    this.successful.acount = true;
+            // 上传文件之前的钩子
+            handleBeforeUpload(file){
+                if(!(file.type === 'image/png' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
+                    this.$notify.error({
+                        message: '请上传格式为image/png, image/jpg, image/jpeg的图片'
+                    })
+                }
+                let size = file.size / 1024 / 1024 / 11
+                if(size > 2) {
+                    this.$notify.error({
+                        message: '图片大小必须小于10M'
+                    })
                 }
             },
-            //密码判断
-            checkPassword1() {
-                this.errormsg.password1 = '';
-                if (this.userPassword1.length > 16 || this.userPassword1.length < 0) {
-                    this.errormsg.password1 = '密码长度要在6~16位';
-                } else {
-                    this.successful.password1 = true;
-                }
+            // 文件超出个数限制时的钩子
+            handleExceed(files, fileList) {
+                this.$notify.error(`一次只能上传9张图片，你已经选择了${files.length + fileList.length}张图片`);
+                console.log(files, fileList);
             },
-            checkPassword2() {
-                this.errormsg.password2 = '';
-                if (this.userPassword1 !== this.userPassword2) {
-                    this.errormsg.password2 = '两次输入密码不对';
-                } else {
-                    this.successful.password2 = true;
-                }
+            // 文件列表移除文件时的钩子
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
             },
-            //注册按钮
-            regist() {
-                var nowTime = new Date();
+            // 点击文件列表中已上传的文件时的钩子
+            handlePictureCardPreview(file) {
+                this.dialogImageUrl = file.url;
+                this.dialogVisible = true;
+            },
+            //文件改变时的钩子
+            fileChange(file){
+                this.fileList.push(file.raw);//上传文件变化时将文件对象push进files数组
+            },
 
-                let data = {
-                    timestamp: nowTime,
-                    userId: "abcde",
-                    token: "dsadasasdasdasdasdasdasdsadasdasdasdas",
-                    userType: "123456",
-                    jsonDate: {
-                        "userAcount": this.userAcount,
-                        "userPassword": this.userPassword2,
-                        "createTime": nowTime
-                    }
-
+            async uploadFile() {
+                if(this.fileList.length < 1){
+                    this.$notify.error({
+                        message: "请选择图片",
+                        showClose: false,
+                        duration: 1500,
+                    });
+                    return;
                 }
-
-                if (this.successful.acount && this.successful.password1 && this.successful.password2) {
-                    this.$axios.post('/addUser', JSON.stringify(data))
+                const _this = this;
+                let formData = new FormData();
+                formData.append("Token","6191e057f3e239d7d0f3b7914eb2debd79cba8ab:Q1KVz_lUdYeiBdmJrRvb6x4hzVQ=:eyJkZWFkbGluZSI6MTU4OTIxMzY1OSwiYWN0aW9uIjoiZ2V0IiwidWlkIjoiNzE4NTk3IiwiYWlkIjoiMTY4Nzg5OCIsImZyb20iOiJmaWxlIn0=");
+                for (let i = 0; i< this.fileList.length;i++){
+                    formData.delete('file');
+                    formData.set('file',this.fileList[i]);
+                    this.$store.commit("SB", "1");
+                    await this.$axios.post('http://up.imgapi.com/', formData)
                         .then(function (response) {
-                            console.log(response);
+                            if (response.status === 200) {
+                                console.log("图片上传到贴图库成功");
+                                _this.$refs.upload.clearFiles();
+                                let userAccount = window.sessionStorage.getItem('userID')
+                                let orgID = window.sessionStorage.getItem("orgID");
+                                let data = {
+                                    data: {
+                                        "url": response.data.linkurl,
+                                        "userAccount":userAccount,
+                                        "orgID":orgID,
+                                    }
+                                }
+                                _this.$store.commit("SB", "cao");
+                                _this.$axios.post('/upLoadOrgImgs', JSON.stringify(data))
+                                    .then(function (response) {
+                                        if (response.data.code == 0) {
+                                            _this.$notify.success({
+                                                message: response.data.msg,
+                                                showClose: false,
+                                                duration: 2000,
+                                            });
+                                        }
+                                        if (response.data.code == 1) {
+                                            _this.$notify.error({
+                                                message: response.data.msg,
+                                                showClose: false,
+                                                duration: 2000,
+                                            });
+                                        }
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error)
+                                    });
+                            }
+                            if (response.status != 200) {
+                                console.log("图片上传到贴图库失败")
+                            }
                         })
                         .catch(function (error) {
-                            console.log(error);
+                            console.log(error)
                         });
-                    // this.$router.push('/login');
-                } else {
-                    this.$message.error('请填写正确信息');
                 }
+                _this.reload();
             },
-            //登录按钮
-            login() {
-                this.$router.push('/login')
+
+            deleteImg(value){
+
+                this.$confirm('此操作将从社团主页删除该图片, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let _this = this;
+                    let data = {
+                        data: {
+                            "url": value,
+                        }
+                    };
+                    this.$axios.post('/deleteIndexImgs', JSON.stringify(data))
+                        .then(function (response) {
+                            if (response.data.code == 1) {
+                                _this.$notify.warning({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                            }
+                            if (response.data.code == 0) {
+                                _this.$notify.success({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                                _this.reload();
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+
             },
+        },
+        created() {
+            let _this = this;
+            let data = {
+                data: {
+                    "orgID": sessionStorage.getItem("orgID"),
+                }
+            };
+            this.$axios.post('/findAllOrgImgs', JSON.stringify(data))
+                .then(function (response) {
+                    if (response.data.code == 1) {
+                        _this.$notify.warning({
+                            title: '提示',
+                            message: response.data.msg,
+                            showClose: false,
+                            duration: 1500,
+                        });
+                    }
+                    if (response.data.code == 0) {
+                        _this.urls = response.data.data.IndexImgsUrls;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
         }
     }
 </script>
 
-
-<style type="text/css">
-
-  .table {
-    border-spacing: 10px 15px;
-    border: solid 1px #d1d1d1;
+<style>
+  #OrgIndexManager_box {
     margin: auto;
+    width: 50%;
+    height: auto;
+    position: center;
+    margin-top: 50px;
     background-color: white;
   }
 
-  #personalInfo {
+  #OrgIndexManager {
     width: 80%;
-    margin: 10px auto;
-  }
-
-  #personalInfo_box {
-    height: 400px;
-    width: 90%;
     margin: auto;
   }
 

@@ -305,62 +305,52 @@ public class OrgsExample {
             return (Criteria) this;
         }
 
-        public Criteria andOrgleaderEqualTo(String value) {
+        public Criteria andOrgleaderEqualTo(Integer value) {
             addCriterion("orgLeader =", value, "orgleader");
             return (Criteria) this;
         }
 
-        public Criteria andOrgleaderNotEqualTo(String value) {
+        public Criteria andOrgleaderNotEqualTo(Integer value) {
             addCriterion("orgLeader <>", value, "orgleader");
             return (Criteria) this;
         }
 
-        public Criteria andOrgleaderGreaterThan(String value) {
+        public Criteria andOrgleaderGreaterThan(Integer value) {
             addCriterion("orgLeader >", value, "orgleader");
             return (Criteria) this;
         }
 
-        public Criteria andOrgleaderGreaterThanOrEqualTo(String value) {
+        public Criteria andOrgleaderGreaterThanOrEqualTo(Integer value) {
             addCriterion("orgLeader >=", value, "orgleader");
             return (Criteria) this;
         }
 
-        public Criteria andOrgleaderLessThan(String value) {
+        public Criteria andOrgleaderLessThan(Integer value) {
             addCriterion("orgLeader <", value, "orgleader");
             return (Criteria) this;
         }
 
-        public Criteria andOrgleaderLessThanOrEqualTo(String value) {
+        public Criteria andOrgleaderLessThanOrEqualTo(Integer value) {
             addCriterion("orgLeader <=", value, "orgleader");
             return (Criteria) this;
         }
 
-        public Criteria andOrgleaderLike(String value) {
-            addCriterion("orgLeader like", value, "orgleader");
-            return (Criteria) this;
-        }
-
-        public Criteria andOrgleaderNotLike(String value) {
-            addCriterion("orgLeader not like", value, "orgleader");
-            return (Criteria) this;
-        }
-
-        public Criteria andOrgleaderIn(List<String> values) {
+        public Criteria andOrgleaderIn(List<Integer> values) {
             addCriterion("orgLeader in", values, "orgleader");
             return (Criteria) this;
         }
 
-        public Criteria andOrgleaderNotIn(List<String> values) {
+        public Criteria andOrgleaderNotIn(List<Integer> values) {
             addCriterion("orgLeader not in", values, "orgleader");
             return (Criteria) this;
         }
 
-        public Criteria andOrgleaderBetween(String value1, String value2) {
+        public Criteria andOrgleaderBetween(Integer value1, Integer value2) {
             addCriterion("orgLeader between", value1, value2, "orgleader");
             return (Criteria) this;
         }
 
-        public Criteria andOrgleaderNotBetween(String value1, String value2) {
+        public Criteria andOrgleaderNotBetween(Integer value1, Integer value2) {
             addCriterion("orgLeader not between", value1, value2, "orgleader");
             return (Criteria) this;
         }
@@ -712,6 +702,76 @@ public class OrgsExample {
 
         public Criteria andOrgcampusNotBetween(String value1, String value2) {
             addCriterion("orgCampus not between", value1, value2, "orgcampus");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameIsNull() {
+            addCriterion("LeaderName is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameIsNotNull() {
+            addCriterion("LeaderName is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameEqualTo(String value) {
+            addCriterion("LeaderName =", value, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameNotEqualTo(String value) {
+            addCriterion("LeaderName <>", value, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameGreaterThan(String value) {
+            addCriterion("LeaderName >", value, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameGreaterThanOrEqualTo(String value) {
+            addCriterion("LeaderName >=", value, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameLessThan(String value) {
+            addCriterion("LeaderName <", value, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameLessThanOrEqualTo(String value) {
+            addCriterion("LeaderName <=", value, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameLike(String value) {
+            addCriterion("LeaderName like", value, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameNotLike(String value) {
+            addCriterion("LeaderName not like", value, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameIn(List<String> values) {
+            addCriterion("LeaderName in", values, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameNotIn(List<String> values) {
+            addCriterion("LeaderName not in", values, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameBetween(String value1, String value2) {
+            addCriterion("LeaderName between", value1, value2, "leadername");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeadernameNotBetween(String value1, String value2) {
+            addCriterion("LeaderName not between", value1, value2, "leadername");
             return (Criteria) this;
         }
     }

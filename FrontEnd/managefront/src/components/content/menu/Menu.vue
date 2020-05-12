@@ -14,7 +14,6 @@
         <el-menu-item index="/myActivities">我的活动</el-menu-item>
         <el-menu-item index="/PublishActivities">发布活动</el-menu-item>
       </el-submenu>
-      <el-menu-item v-if="userType === '学生'" index="/myorganization">社团信息</el-menu-item>
       <el-submenu index="3" v-if="userType === '学生'">
         <template slot="title">社团信息</template>
         <el-menu-item index="/allOrganizations">所有社团</el-menu-item>
@@ -29,20 +28,20 @@
       <el-menu-item  v-if="userType === '游客'" index="/allActivities">所有活动</el-menu-item>
       <el-submenu  index="5" v-if="userType === '系统管理员'">
         <template slot="title">权限管理</template>
-        <el-menu-item index="/signupMembers">无组织学生</el-menu-item>
+        <el-menu-item index="/userPower">无组织学生</el-menu-item>
         <el-menu-item index="/members">社团学生</el-menu-item>
       </el-submenu>
       <el-submenu index="6" v-if="userType === '系统管理员'">
         <template slot="title">活动管理</template>
         <el-menu-item index="/publishActivities">发布活动</el-menu-item>
-        <el-menu-item index="/myActivities">参加的活动</el-menu-item>
+        <el-menu-item index="/allActivities">所有活动</el-menu-item>
       </el-submenu>
       <el-menu-item v-if="userType != '游客'" index="/message"><el-badge :is-dot=isDot class="item">
         消息中心
       </el-badge></el-menu-item>
       <el-submenu index="7" v-if="userType === '社团负责人'">
         <template slot="title">社团信息</template>
-        <el-menu-item index="/OrganizationSetting">修改社团信息</el-menu-item>
+        <el-menu-item index="/OrganizationSetting">社团主页图片</el-menu-item>
         <el-menu-item index="/organizationInfo">社团信息</el-menu-item>
       </el-submenu>
 

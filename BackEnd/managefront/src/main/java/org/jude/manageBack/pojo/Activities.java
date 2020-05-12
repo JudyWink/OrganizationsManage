@@ -23,6 +23,8 @@ public class Activities {
 
     private String activititystatus;
 
+    private String orgname;
+
     public Integer getActivitityid() {
         return activitityid;
     }
@@ -101,5 +103,13 @@ public class Activities {
 
     public void setActivititystatus(String activititystatus) {
         this.activititystatus = activititystatus == null ? null : activititystatus.trim();
+    }
+
+    public String getOrgname() {
+        return orgname;
+    }
+
+    public void setOrgname(String orgname) {
+        this.orgname = orgname == null ? null : orgname.trim();
     }
 }

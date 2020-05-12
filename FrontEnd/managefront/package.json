@@ -12,6 +12,7 @@
     "core-js": "^3.6.4",
     "el-table-infinite-scroll": "^1.0.10",
     "element-ui": "^2.13.0",
+    "moment": "^2.25.3",
     "qs": "latest",
     "vue": "^2.6.11"
   },

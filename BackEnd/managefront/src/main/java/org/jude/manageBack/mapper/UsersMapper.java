@@ -6,7 +6,6 @@ import org.jude.manageBack.pojo.Users;
 import org.jude.manageBack.pojo.UsersExample;
 
 public interface UsersMapper {
-
     long countByExample(UsersExample example);
 
     int deleteByExample(UsersExample example);

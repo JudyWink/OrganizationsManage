@@ -2,7 +2,7 @@
 <div id="UserPower_box">
   <div id="UserPower">
     <el-table
-      :data="tableData"
+      :data="usersList"
       stripe
       style="width: 100%"
       v-el-table-infinite-scroll
@@ -15,25 +15,25 @@
       <el-table-column
         label="学生名"
         width="160px"
-        prop="userName">
+        prop="username">
       </el-table-column>
       <el-table-column
         label="学院"
-        prop="userAcademy"
+        prop="useracademy"
         width="240px">
       </el-table-column>
       <el-table-column
         label="班级"
-        prop="userClass"
+        prop="userclass"
         width="240px">
       </el-table-column>
       <el-table-column
-        prop="phone"
+        prop="userphone"
         label="联系方式"
         width="200px">
       </el-table-column>
       <el-table-column
-        prop="userNumber"
+        prop="usernumber"
         label="学号"
         width="200px">
       </el-table-column>
@@ -77,37 +77,8 @@
         name: "UserPower",
         data() {
             return {
-                userCount: '4',
-                tableData: [
-                    {
-                        userName: '张三',
-                        userAcademy: '电子信息工程学院',
-                        userClass: '16网络工程4',
-                        phone: '12345678910',
-                        userNumber: '20160390406',
-                    },
-                    {
-                        userName: '李四',
-                        userAcademy: '电子信息工程学院',
-                        userClass: '16网络工程4',
-                        phone: '12345678910',
-                        userNumber: '20160390406',
-                    },
-                    {
-                        userName: '吴三',
-                        userAcademy: '电子信息工程学院',
-                        userClass: '16网络工程4',
-                        phone: '12345678910',
-                        userNumber: '20160390406',
-                    },
-                    {
-                        userName: '吴四',
-                        userAcademy: '电子信息工程学院',
-                        userClass: '16网络工程4',
-                        phone: '12345678910',
-                        userNumber: '20160390406',
-                    },
-                ],
+                usersList:[],
+                userCount: '',
                 multipleSelection: [],
             }
         },
@@ -121,6 +92,28 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
+        },
+        created() {
+            const _this = this;
+            this.$axios.post("/findAllUsers")
+                .then(function (response) {
+                    if (response.data.code == 1) {
+                        _this.$notify.warning({
+                            message: response.data.msg,
+                            showClose: false,
+                            duration: 1500,
+                        });
+                    }
+                    if (response.data.code == 0) {
+                        _this.usersList = response.data.data.usersList
+                        _this.userCount = _this.usersList.length,
+                        console.log(response.data.msg)
+                        console.log(_this.usersList)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
         }
     }
 </script>

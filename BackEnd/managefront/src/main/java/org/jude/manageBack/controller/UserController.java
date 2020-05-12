@@ -47,6 +47,7 @@ public class UserController {
                     result.put("token", token);
                     result.put("userType",user.getUsertype());
                     result.put("userName",user.getUsername());
+                    result.put("userID",user.getUserid());
                     code = 0;
                     msg = "登录成功";
                 } else {
@@ -115,21 +116,26 @@ public class UserController {
     }
 
 
-//
-//    //查询全部用户
-//    @RequestMapping("/findAllUsers")
-//    @ResponseBody
-//    public JsonResponseBody findAllUsers() throws Exception {
-//        List<Users> usersList = this.userService.findAllUsers();
-//        JsonResponseBody responseBody = new JsonResponseBody();
-//        JSONObject result = new JSONObject();
-//        result.put("status", "登录成功");
-//        result.put("token", "token");
-//        result.put("user",usersList);
-//        responseBody.setData(result);
-//        return responseBody;
-//    }
-//
+
+    //查询全部用户
+    @RequestMapping("/findAllUsers")
+    @ResponseBody
+    @UserLoginToken
+    public JsonResponseBody findAllUsers() throws Exception {
+        List<Users> usersList = this.userService.findAllUsers();
+        String msg = null;
+        Integer code = null;
+        JsonResponseBody responseBody = new JsonResponseBody();
+        JSONObject result = new JSONObject();
+        result.put("usersList",usersList);
+        msg = "查询成功";
+        code = 0;
+        responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
 
 
     //模板
@@ -143,8 +149,8 @@ public class UserController {
         JsonResponseBody responseBody = new JsonResponseBody();
         JSONObject result = new JSONObject();
         result.put("sb","sb");
-        msg = "nis";
-        code = 2;
+        msg = "成功";
+        code = 0;
 
         responseBody.setData(result);
         responseBody.setMsg(msg);

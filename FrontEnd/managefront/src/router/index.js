@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'  // 引入vue-router
 import store from '../store/index';
+import ElementUI from 'element-ui';
 
 // 引入要跳转的vue组件
 import Login from "../views/login/Login";
@@ -30,6 +31,8 @@ import UploadDocument from "../views/document/UploadDocument";
 
 // 在vue中注入Router
 Vue.use(VueRouter)
+
+Vue.use(ElementUI);
 
 // 配置路由路径
 const routes =[
@@ -138,6 +141,7 @@ const routes =[
   {
     path: '/organizationInfo',
     component: OrganizationInfo,
+    name:"OrganizationInfo",
     meta:{
       keepalive:true
     }
@@ -218,7 +222,10 @@ router.beforeEach((to, from, next) => {
    else {
     let token = store.state.token ? store.state.token : window.sessionStorage.getItem('token');
     if (token === null || token === '') {
-        alert("你还没登录！")
+    let v = new Vue();
+      v.$notify.error({
+        message: '你还未登录'
+      });
         next('/login');
     } else {
       next();

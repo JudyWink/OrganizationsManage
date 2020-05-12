@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="org.jude.manageBack.pojo.Indeximgs">
     <id column="indeximgId" jdbcType="INTEGER" property="indeximgid" />
     <result column="indeximgUrl" jdbcType="VARCHAR" property="indeximgurl" />
-    <result column="indeximgCreateTime" jdbcType="VARCHAR" property="indeximgcreatetime" />
+    <result column="indeximgCreateTime" jdbcType="TIMESTAMP" property="indeximgcreatetime" />
     <result column="indeximgOwnerOrg" jdbcType="INTEGER" property="indeximgownerorg" />
     <result column="indeximgOwner" jdbcType="VARCHAR" property="indeximgowner" />
   </resultMap>
@@ -102,7 +102,7 @@
   <insert id="insert" parameterType="org.jude.manageBack.pojo.Indeximgs">
     insert into indeximgs (indeximgId, indeximgUrl, indeximgCreateTime, 
       indeximgOwnerOrg, indeximgOwner)
-    values (#{indeximgid,jdbcType=INTEGER}, #{indeximgurl,jdbcType=VARCHAR}, #{indeximgcreatetime,jdbcType=VARCHAR}, 
+    values (#{indeximgid,jdbcType=INTEGER}, #{indeximgurl,jdbcType=VARCHAR}, #{indeximgcreatetime,jdbcType=TIMESTAMP}, 
       #{indeximgownerorg,jdbcType=INTEGER}, #{indeximgowner,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="org.jude.manageBack.pojo.Indeximgs">
@@ -132,7 +132,7 @@
         #{indeximgurl,jdbcType=VARCHAR},
       </if>
       <if test="indeximgcreatetime != null">
-        #{indeximgcreatetime,jdbcType=VARCHAR},
+        #{indeximgcreatetime,jdbcType=TIMESTAMP},
       </if>
       <if test="indeximgownerorg != null">
         #{indeximgownerorg,jdbcType=INTEGER},
@@ -158,7 +158,7 @@
         indeximgUrl = #{record.indeximgurl,jdbcType=VARCHAR},
       </if>
       <if test="record.indeximgcreatetime != null">
-        indeximgCreateTime = #{record.indeximgcreatetime,jdbcType=VARCHAR},
+        indeximgCreateTime = #{record.indeximgcreatetime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.indeximgownerorg != null">
         indeximgOwnerOrg = #{record.indeximgownerorg,jdbcType=INTEGER},
@@ -175,7 +175,7 @@
     update indeximgs
     set indeximgId = #{record.indeximgid,jdbcType=INTEGER},
       indeximgUrl = #{record.indeximgurl,jdbcType=VARCHAR},
-      indeximgCreateTime = #{record.indeximgcreatetime,jdbcType=VARCHAR},
+      indeximgCreateTime = #{record.indeximgcreatetime,jdbcType=TIMESTAMP},
       indeximgOwnerOrg = #{record.indeximgownerorg,jdbcType=INTEGER},
       indeximgOwner = #{record.indeximgowner,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -189,7 +189,7 @@
         indeximgUrl = #{indeximgurl,jdbcType=VARCHAR},
       </if>
       <if test="indeximgcreatetime != null">
-        indeximgCreateTime = #{indeximgcreatetime,jdbcType=VARCHAR},
+        indeximgCreateTime = #{indeximgcreatetime,jdbcType=TIMESTAMP},
       </if>
       <if test="indeximgownerorg != null">
         indeximgOwnerOrg = #{indeximgownerorg,jdbcType=INTEGER},
@@ -203,7 +203,7 @@
   <update id="updateByPrimaryKey" parameterType="org.jude.manageBack.pojo.Indeximgs">
     update indeximgs
     set indeximgUrl = #{indeximgurl,jdbcType=VARCHAR},
-      indeximgCreateTime = #{indeximgcreatetime,jdbcType=VARCHAR},
+      indeximgCreateTime = #{indeximgcreatetime,jdbcType=TIMESTAMP},
       indeximgOwnerOrg = #{indeximgownerorg,jdbcType=INTEGER},
       indeximgOwner = #{indeximgowner,jdbcType=VARCHAR}
     where indeximgId = #{indeximgid,jdbcType=INTEGER}

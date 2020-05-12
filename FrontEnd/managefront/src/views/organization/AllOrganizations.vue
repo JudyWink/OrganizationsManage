@@ -2,42 +2,41 @@
   <div id="allActivities_box">
     <div id="allActivities">
       <el-table
-        :data="tableData"
+        :data="orgsList"
         stripe
         style="width: 100%"
         v-el-table-infinite-scroll
         infinite-scroll-immediate=false
         @selection-change="handleSelectionChange">
         <el-table-column
-          type="index"
-          :index="indexMethod">
+          type="index">
         </el-table-column>
         <el-table-column
           label="社团名称"
-          width="180px"
-          prop="orgName">
+          width="200px"
+          prop="orgname">
           <template slot-scope="scope">
-            <el-link @click="openMsg" type="primary">{{ scope.row.orgName }}</el-link>
+            <el-link @click="openOrgInfo(scope.row)" type="primary">{{ scope.row.orgname }}</el-link>
           </template>
         </el-table-column>
         <el-table-column
           label="社团口号"
-          prop="orgSlogan"
-          width="290px">
+          prop="orgslogan"
+          width="270px">
         </el-table-column>
         <el-table-column
           label="所在校区"
-          prop="orgCampus"
+          prop="orgcampus"
           width="130px">
         </el-table-column>
         <el-table-column
-          prop="orgType"
+          prop="orgtype"
           label="社团类型"
           width="130px">
         </el-table-column>
         <el-table-column
           label="社团负责人"
-          prop="orgLeader"
+          prop="leadername"
           width="130px">
         </el-table-column>
         <el-table-column
@@ -71,8 +70,7 @@
               icon="el-icon-view"
               size="mini"
               type="primary"
-              :disabled="userType ==='游客' ? true : false"
-              @click="openMsg">详情
+              @click="openOrgInfo(scope.row)">详情
             </el-button>
           </template>
         </el-table-column>
@@ -91,85 +89,9 @@
         name: "allActivities",
         data() {
             return {
+                orgsList:[],
                 userType: window.sessionStorage.getItem('userType'),
-                msgCount: 1,
-                tableData: [
-                    {
-                        orgName: '佛山科学技术学院学生会',
-                        orgSlogan: '提升自我，服务大家',
-                        orgCampus: '仙溪',
-                        orgType: '校级机构',
-                        orgLeader: '张三',
-                        orgMmuberCount: '200',
-                    },
-                    {
-                        orgName: '佛山科学技术学院社团联合会',
-                        orgSlogan: '服务社团，服务同学',
-                        orgCampus: '仙溪',
-                        orgType: '校级机构',
-                        orgLeader: '李四',
-                        orgMmuberCount: '150',
-                    }, {
-                        orgName: '佛大话剧团',
-                        orgSlogan: '一个演员的自我修养',
-                        orgCampus: '仙溪',
-                        orgType: '社团',
-                        orgLeader: '小明',
-                        orgMmuberCount: '80',
-                    }, {
-                        orgName: '吉他协会',
-                        orgSlogan: '用音乐创造快乐',
-                        orgCampus: '仙溪',
-                        orgType: '社团',
-                        orgLeader: '六叔',
-                        orgMmuberCount: '50',
-                    }, {
-                        orgName: '墨韵书画社',
-                        orgSlogan: '书出个性，画出张扬',
-                        orgCampus: '仙溪',
-                        orgType: '社团',
-                        orgLeader: '张三',
-                        orgMmuberCount: '120',
-                    }, {
-                        orgName: 'XXXX',
-                        orgSlogan: 'XXXXXXXX',
-                        orgCampus: '仙溪',
-                        orgType: '社团',
-                        orgLeader: '张三',
-                        orgMmuberCount: '100',
-                    },
-                    {
-                        orgName: 'XXXX',
-                        orgSlogan: 'XXXXXXXX',
-                        orgCampus: '仙溪',
-                        orgType: '社团',
-                        orgLeader: '张三',
-                        orgMmuberCount: '100',
-                    },
-                    {
-                        orgName: 'XXXX',
-                        orgSlogan: 'XXXXXXXX',
-                        orgCampus: '仙溪',
-                        orgType: '社团',
-                        orgLeader: '张三',
-                        orgMmuberCount: '100',
-                    },
-                    {
-                        orgName: 'XXXX',
-                        orgSlogan: 'XXXXXXXX',
-                        orgCampus: '仙溪',
-                        orgType: '社团',
-                        orgLeader: '张三',
-                        orgMmuberCount: '100',
-                    },
-                    {
-                        orgName: 'XXXX',
-                        orgSlogan: 'XXXXXXXX',
-                        orgCampus: '仙溪',
-                        orgType: '社团',
-                        orgLeader: '张三',
-                        orgMmuberCount: '100',
-                    }],
+                Count: 1,
                 multipleSelection: [],
             }
         },
@@ -180,16 +102,41 @@
             Feedback(){
                 this.$message.error('意见反馈');
             },
-            openMsg() {
-                this.$router.push('/myOrganization')
-                // this.$message.error('打开社团界面');
+            openOrgInfo(row) {
+                sessionStorage.setItem("orgID", row.orgid);
+                this.$router.push({
+                        name:"OrganizationInfo",
+                        params: {
+                            org: row,
+                        }
+                })
+
             },
+
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            // load() {
-            //     // this.$message.success('加载下一页');
-            // }
+        },
+        created() {
+            const _this = this;
+            this.$axios.post("/findAllOrgs")
+                .then(function (response) {
+                    if (response.data.code == 1) {
+                        _this.$notify.warning({
+                            message: response.data.msg,
+                            showClose: false,
+                            duration: 1500,
+                        });
+                    }
+                    if (response.data.code == 0) {
+                        _this.orgsList = response.data.data.orgsList
+                        _this.Count = _this.orgsList.length,
+                            console.log(response.data.msg)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
         }
     }
 </script>

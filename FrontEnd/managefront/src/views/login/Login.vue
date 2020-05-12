@@ -42,6 +42,7 @@
                 rememberINPUT: '',
                 userAcount: '',
                 userPassword: '',
+                userID:'',
                 error: {
                     userAcount: '',
                     userPassword: ''
@@ -79,6 +80,7 @@
                                 _this.token = response.data.data.token;
                                 _this.userName = response.data.data.userName;
                                 _this.userType = response.data.data.userType;
+                                _this.userID = response.data.data.userID;
                                 if (_this.rememberINPUT == true){
                                     _this.$store.commit("REMEMBER_ACCOUNT",_this.userAcount);
                                     _this.$store.commit("REMEMBER_PASSWORD",_this.userPassword);
@@ -91,6 +93,9 @@
                                     _this.$store.commit("SET_NAME", _this.userName);
                                     //保存用户类型
                                     _this.$store.commit("SET_TYPE", _this.userType);
+                                    //保存用户ID
+                                    _this.$store.commit("SET_USERID", _this.userID);
+
                                 _this.$notify.success({
                                     message: response.data.msg,
                                     showClose: false,

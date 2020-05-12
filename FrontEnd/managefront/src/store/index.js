@@ -8,11 +8,18 @@ const store = new Vuex.Store({
     token: window.sessionStorage.getItem('token'),
     userName: window.sessionStorage.getItem('userName'),
     userType: window.sessionStorage.getItem('userType'),
+    userID : window.sessionStorage.getItem('userID'),
     password: window.localStorage.getItem('password'),
     account : window.localStorage.getItem('account'),
+    sb : window.sessionStorage.getItem('sb'),
   },
 
   mutations: {
+    SB(state, value){
+      state.sb = value;
+       window.sessionStorage.setItem('sb',value);
+    },
+
     SET_TOKEN (state, value) {
       state.token = value;
       window.sessionStorage.setItem('token',value);
@@ -27,6 +34,11 @@ const store = new Vuex.Store({
     state.userType = value;
     window.sessionStorage.setItem('userType',value);
     },
+
+    SET_USERID(state,value){
+        state.userID = value;
+        window.sessionStorage.setItem('userID',value);
+        },
 
     REMEMBER_ACCOUNT(state,account){
     state.account = account;

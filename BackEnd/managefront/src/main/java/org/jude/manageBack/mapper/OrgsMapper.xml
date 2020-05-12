@@ -5,12 +5,13 @@
     <id column="orgId" jdbcType="INTEGER" property="orgid" />
     <result column="orgName" jdbcType="VARCHAR" property="orgname" />
     <result column="orgCreateTime" jdbcType="TIMESTAMP" property="orgcreatetime" />
-    <result column="orgLeader" jdbcType="VARCHAR" property="orgleader" />
+    <result column="orgLeader" jdbcType="INTEGER" property="orgleader" />
     <result column="orgType" jdbcType="VARCHAR" property="orgtype" />
     <result column="orgSlogan" jdbcType="VARCHAR" property="orgslogan" />
     <result column="orgIntroduce" jdbcType="VARCHAR" property="orgintroduce" />
     <result column="orgHistory" jdbcType="VARCHAR" property="orghistory" />
     <result column="orgCampus" jdbcType="VARCHAR" property="orgcampus" />
+    <result column="LeaderName" jdbcType="VARCHAR" property="leadername" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,7 +73,7 @@
   </sql>
   <sql id="Base_Column_List">
     orgId, orgName, orgCreateTime, orgLeader, orgType, orgSlogan, orgIntroduce, orgHistory, 
-    orgCampus
+    orgCampus, LeaderName
   </sql>
   <select id="selectByExample" parameterType="org.jude.manageBack.pojo.OrgsExample" resultMap="BaseResultMap">
     select
@@ -107,12 +108,12 @@
   <insert id="insert" parameterType="org.jude.manageBack.pojo.Orgs">
     insert into orgs (orgId, orgName, orgCreateTime, 
       orgLeader, orgType, orgSlogan, 
-      orgIntroduce, orgHistory, orgCampus
-      )
+      orgIntroduce, orgHistory, orgCampus, 
+      LeaderName)
     values (#{orgid,jdbcType=INTEGER}, #{orgname,jdbcType=VARCHAR}, #{orgcreatetime,jdbcType=TIMESTAMP}, 
-      #{orgleader,jdbcType=VARCHAR}, #{orgtype,jdbcType=VARCHAR}, #{orgslogan,jdbcType=VARCHAR}, 
-      #{orgintroduce,jdbcType=VARCHAR}, #{orghistory,jdbcType=VARCHAR}, #{orgcampus,jdbcType=VARCHAR}
-      )
+      #{orgleader,jdbcType=INTEGER}, #{orgtype,jdbcType=VARCHAR}, #{orgslogan,jdbcType=VARCHAR}, 
+      #{orgintroduce,jdbcType=VARCHAR}, #{orghistory,jdbcType=VARCHAR}, #{orgcampus,jdbcType=VARCHAR}, 
+      #{leadername,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="org.jude.manageBack.pojo.Orgs">
     insert into orgs
@@ -144,6 +145,9 @@
       <if test="orgcampus != null">
         orgCampus,
       </if>
+      <if test="leadername != null">
+        LeaderName,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orgid != null">
@@ -156,7 +160,7 @@
         #{orgcreatetime,jdbcType=TIMESTAMP},
       </if>
       <if test="orgleader != null">
-        #{orgleader,jdbcType=VARCHAR},
+        #{orgleader,jdbcType=INTEGER},
       </if>
       <if test="orgtype != null">
         #{orgtype,jdbcType=VARCHAR},
@@ -172,6 +176,9 @@
       </if>
       <if test="orgcampus != null">
         #{orgcampus,jdbcType=VARCHAR},
+      </if>
+      <if test="leadername != null">
+        #{leadername,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -194,7 +201,7 @@
         orgCreateTime = #{record.orgcreatetime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.orgleader != null">
-        orgLeader = #{record.orgleader,jdbcType=VARCHAR},
+        orgLeader = #{record.orgleader,jdbcType=INTEGER},
       </if>
       <if test="record.orgtype != null">
         orgType = #{record.orgtype,jdbcType=VARCHAR},
@@ -211,6 +218,9 @@
       <if test="record.orgcampus != null">
         orgCampus = #{record.orgcampus,jdbcType=VARCHAR},
       </if>
+      <if test="record.leadername != null">
+        LeaderName = #{record.leadername,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -221,12 +231,13 @@
     set orgId = #{record.orgid,jdbcType=INTEGER},
       orgName = #{record.orgname,jdbcType=VARCHAR},
       orgCreateTime = #{record.orgcreatetime,jdbcType=TIMESTAMP},
-      orgLeader = #{record.orgleader,jdbcType=VARCHAR},
+      orgLeader = #{record.orgleader,jdbcType=INTEGER},
       orgType = #{record.orgtype,jdbcType=VARCHAR},
       orgSlogan = #{record.orgslogan,jdbcType=VARCHAR},
       orgIntroduce = #{record.orgintroduce,jdbcType=VARCHAR},
       orgHistory = #{record.orghistory,jdbcType=VARCHAR},
-      orgCampus = #{record.orgcampus,jdbcType=VARCHAR}
+      orgCampus = #{record.orgcampus,jdbcType=VARCHAR},
+      LeaderName = #{record.leadername,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -241,7 +252,7 @@
         orgCreateTime = #{orgcreatetime,jdbcType=TIMESTAMP},
       </if>
       <if test="orgleader != null">
-        orgLeader = #{orgleader,jdbcType=VARCHAR},
+        orgLeader = #{orgleader,jdbcType=INTEGER},
       </if>
       <if test="orgtype != null">
         orgType = #{orgtype,jdbcType=VARCHAR},
@@ -258,6 +269,9 @@
       <if test="orgcampus != null">
         orgCampus = #{orgcampus,jdbcType=VARCHAR},
       </if>
+      <if test="leadername != null">
+        LeaderName = #{leadername,jdbcType=VARCHAR},
+      </if>
     </set>
     where orgId = #{orgid,jdbcType=INTEGER}
   </update>
@@ -265,12 +279,13 @@
     update orgs
     set orgName = #{orgname,jdbcType=VARCHAR},
       orgCreateTime = #{orgcreatetime,jdbcType=TIMESTAMP},
-      orgLeader = #{orgleader,jdbcType=VARCHAR},
+      orgLeader = #{orgleader,jdbcType=INTEGER},
       orgType = #{orgtype,jdbcType=VARCHAR},
       orgSlogan = #{orgslogan,jdbcType=VARCHAR},
       orgIntroduce = #{orgintroduce,jdbcType=VARCHAR},
       orgHistory = #{orghistory,jdbcType=VARCHAR},
-      orgCampus = #{orgcampus,jdbcType=VARCHAR}
+      orgCampus = #{orgcampus,jdbcType=VARCHAR},
+      LeaderName = #{leadername,jdbcType=VARCHAR}
     where orgId = #{orgid,jdbcType=INTEGER}
   </update>
 </mapper>

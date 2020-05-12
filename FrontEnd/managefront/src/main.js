@@ -6,9 +6,12 @@ import {Loading,Message} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import store from './store/index';
 import axios from 'axios';
+import moment from 'moment'
 
 // 配置axios
 Vue.prototype.$axios = axios;
+//时间控件
+Vue.prototype.$moment = moment
 axios.defaults.baseURL = 'http://127.0.0.1:8021';//全局配置跨域url地址
 axios.defaults.timeout = 5000;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -19,8 +22,11 @@ axios.interceptors.request.use(
   config => {
     loadingInstace = Loading.service({fullscreen: true});
     token = store.state.token ? store.state.token : window.sessionStorage.getItem('token');
-    if (localStorage.getItem('token')) {
-      config.headers.common['Token'] = token;
+    if (token != null && token != "") {
+      if(window.sessionStorage.getItem('sb') != "1"){
+        config.headers.common['Token'] = token;
+      }
+
     }
     return config
   },

@@ -9,7 +9,7 @@ public class Orgs {
 
     private Date orgcreatetime;
 
-    private String orgleader;
+    private Integer orgleader;
 
     private String orgtype;
 
@@ -20,6 +20,8 @@ public class Orgs {
     private String orghistory;
 
     private String orgcampus;
+
+    private String leadername;
 
     public Integer getOrgid() {
         return orgid;
@@ -45,12 +47,12 @@ public class Orgs {
         this.orgcreatetime = orgcreatetime;
     }
 
-    public String getOrgleader() {
+    public Integer getOrgleader() {
         return orgleader;
     }
 
-    public void setOrgleader(String orgleader) {
-        this.orgleader = orgleader == null ? null : orgleader.trim();
+    public void setOrgleader(Integer orgleader) {
+        this.orgleader = orgleader;
     }
 
     public String getOrgtype() {
@@ -91,5 +93,13 @@ public class Orgs {
 
     public void setOrgcampus(String orgcampus) {
         this.orgcampus = orgcampus == null ? null : orgcampus.trim();
+    }
+
+    public String getLeadername() {
+        return leadername;
+    }
+
+    public void setLeadername(String leadername) {
+        this.leadername = leadername == null ? null : leadername.trim();
     }
 }

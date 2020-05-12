@@ -22,6 +22,10 @@ public class UserServiceImpl implements UserService {
         usersExample.createCriteria().andUseracountEqualTo(userAcount);
         return this.usersMapper.selectByExample(usersExample);
     }
+    //通过id查找用户
+    public Users selectByuserID(int userID) throws Exception {
+        return this.usersMapper.selectByPrimaryKey(userID);
+    }
 
     //添加用户
     @Override
@@ -31,7 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //查询所有用户
-//    @Override
+    @Override
     public List<Users> findAllUsers() throws Exception {
         UsersExample usersExample = new UsersExample();
         return this.usersMapper.selectByExample(usersExample);

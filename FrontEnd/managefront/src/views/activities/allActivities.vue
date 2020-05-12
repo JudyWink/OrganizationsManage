@@ -2,7 +2,7 @@
   <div id="allActivities_box">
     <div id="allActivities">
       <el-table
-        :data="tableData"
+        :data="ActivitiesList"
         stripe
         style="width: 100%"
         v-el-table-infinite-scroll
@@ -13,41 +13,43 @@
           :index="indexMethod">
         </el-table-column>
         <el-table-column
-          prop="activitityStartTime"
+          prop="activititystarttime"
           label="开始时间"
           sortable
+          :formatter="dateFormat"
           width="130px">
         </el-table-column>
         <el-table-column
-          prop="activitityEndTime"
+          prop="activitityendtime"
           label="结束时间"
           sortable
+          :formatter="dateFormat"
           width="130px">
         </el-table-column>
         <el-table-column
-          prop="activitityName"
+          prop="activitityname"
           label="活动名"
-          width="250px">
+          width="180px">
           <template slot-scope="scope">
-            <el-link icon="el-icon-view" @click="openMsg" type="primary">{{ scope.row.activitityName }}</el-link>
+            <el-link icon="el-icon-view" @click="openMsg" type="primary">{{ scope.row.activitityname }}</el-link>
           </template>
         </el-table-column>
         <el-table-column
-          prop="activitityType"
+          prop="activititytype"
           label="活动类型"
-          width="130px">
+          width="100px">
         </el-table-column>
         <el-table-column
           label="举办组织"
-          prop="activitityOwnerOrg"
-          width="180px">
+          prop="orgname"
+          width="230px">
         </el-table-column>
         <el-table-column
-          prop="activitityStatus"
+          prop="activititystatus"
           label="活动状态">
         </el-table-column>
         <el-table-column
-          prop="activititysCount"
+          prop="activitityscount"
           label="人数"
           width="130px">
         </el-table-column>
@@ -82,6 +84,7 @@
 
 <script>
     import elTableInfiniteScroll from 'el-table-infinite-scroll';
+    import moment from 'moment'
 
     export default {
         directives: {
@@ -92,89 +95,46 @@
             return {
                 userType: window.sessionStorage.getItem('userType'),
                 msgCount: 1,
-                tableData: [{
-                    activitityStartTime: '2016-05-02',
-                    activitityEndTime: '2016-05-02',
-                    activitityName: '校园十大歌手',
-                    activitityType: '娱乐',
-                    activitityOwnerOrg: '佛山科学技术学院学生会',
-                    activitityStatus: '进行中',
-                    activititysCount: '20/60',
-                }, {
-                    activitityStartTime: '2016-05-02',
-                    activitityEndTime: '2016-05-02',
-                    activitityName: '摄影大赛',
-                    activitityType: '娱乐',
-                    activitityOwnerOrg: '佛山科学技术学院学生会',
-                    activitityStatus: '进行中',
-                    activititysCount: '20/60',
-                }, {
-                    activitityStartTime: '2016-05-02',
-                    activitityEndTime: '2016-05-02',
-                    activitityName: '我是歌手',
-                    activitityType: '娱乐',
-                    activitityOwnerOrg: '佛山科学技术学院学生会',
-                    activitityStatus: '进行中',
-                    activititysCount: '20/60',
-                }, {
-                    activitityStartTime: '2016-05-02',
-                    activitityEndTime: '2016-05-02',
-                    activitityName: '荧光夜跑',
-                    activitityType: '娱乐',
-                    activitityOwnerOrg: '佛山科学技术学院学生会',
-                    activitityStatus: '进行中',
-                    activititysCount: '20/60',
-                }, {
-                    activitityStartTime: '2016-05-02',
-                    activitityEndTime: '2016-05-02',
-                    activitityName: '食堂开放日',
-                    activitityType: '娱乐',
-                    activitityOwnerOrg: '佛山科学技术学院学生会',
-                    activitityStatus: '进行中',
-                    activititysCount: '20/60',
-                }, {
-                    activitityStartTime: '2016-05-02',
-                    activitityEndTime: '2016-05-02',
-                    activitityName: '物理知识讲座',
-                    activitityType: '知识讲座',
-                    activitityOwnerOrg: '佛山科学技术学院学生会',
-                    activitityStatus: '进行中',
-                    activititysCount: '20/60',
-                }, {
-                    activitityStartTime: '2016-05-02',
-                    activitityEndTime: '2016-05-02',
-                    activitityName: '校长下午茶',
-                    activitityType: '知识讲座',
-                    activitityOwnerOrg: '佛山科学技术学院学生会',
-                    activitityStatus: '进行中',
-                    activititysCount: '20/60',
-                }, {
-                    activitityStartTime: '2016-05-02',
-                    activitityEndTime: '2016-05-02',
-                    activitityName: '50KM徒步',
-                    activitityType: '娱乐',
-                    activitityOwnerOrg: '佛山科学技术学院学生会',
-                    activitityStatus: '进行中',
-                    activititysCount: '20/60',
-                }, {
-                    activitityStartTime: '2016-05-02',
-                    activitityEndTime: '2016-05-02',
-                    activitityName: '校园十大歌手',
-                    activitityType: '娱乐',
-                    activitityOwnerOrg: '佛山科学技术学院学生会',
-                    activitityStatus: '进行中',
-                    activititysCount: '20/60',
-                },],
+                ActivitiesList:[],
                 multipleSelection: [],
             }
         },
         methods: {
+            dateFormat(row, column){
+                let date = row[column.property]
+                if (date == undefined) {
+                    return ''
+                }
+                return moment(date).format("YYYY-MM-DD hh:mm")
+            },
+
             openMsg() {
                 this.$router.push('/ActivitiesProgress')
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
+        },
+        created() {
+            const _this = this;
+            this.$axios.post("/findAllActivities")
+                .then(function (response) {
+                    if (response.data.code == 1) {
+                        _this.$notify.warning({
+                            message: response.data.msg,
+                            showClose: false,
+                            duration: 1500,
+                        });
+                    }
+                    if (response.data.code == 0) {
+                        _this.ActivitiesList = response.data.data.ActivitiesList
+                            console.log(response.data.msg)
+                        console.log(_this.ActivitiesList)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
         }
     }
 </script>

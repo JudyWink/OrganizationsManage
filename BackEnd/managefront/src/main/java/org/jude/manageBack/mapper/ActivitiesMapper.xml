@@ -12,6 +12,7 @@
     <result column="activitityDescribe" jdbcType="VARCHAR" property="activititydescribe" />
     <result column="activitityPlace" jdbcType="VARCHAR" property="activitityplace" />
     <result column="activitityStatus" jdbcType="VARCHAR" property="activititystatus" />
+    <result column="orgName" jdbcType="VARCHAR" property="orgname" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,7 +74,7 @@
   </sql>
   <sql id="Base_Column_List">
     activitityId, activitityName, activitityStartTime, activitityEndTime, orgId, activititysCount, 
-    activitityType, activitityDescribe, activitityPlace, activitityStatus
+    activitityType, activitityDescribe, activitityPlace, activitityStatus, orgName
   </sql>
   <select id="selectByExample" parameterType="org.jude.manageBack.pojo.ActivitiesExample" resultMap="BaseResultMap">
     select
@@ -109,11 +110,11 @@
     insert into activities (activitityId, activitityName, activitityStartTime, 
       activitityEndTime, orgId, activititysCount, 
       activitityType, activitityDescribe, activitityPlace, 
-      activitityStatus)
+      activitityStatus, orgName)
     values (#{activitityid,jdbcType=INTEGER}, #{activitityname,jdbcType=VARCHAR}, #{activititystarttime,jdbcType=TIMESTAMP}, 
       #{activitityendtime,jdbcType=TIMESTAMP}, #{orgid,jdbcType=INTEGER}, #{activitityscount,jdbcType=INTEGER}, 
       #{activititytype,jdbcType=VARCHAR}, #{activititydescribe,jdbcType=VARCHAR}, #{activitityplace,jdbcType=VARCHAR}, 
-      #{activititystatus,jdbcType=VARCHAR})
+      #{activititystatus,jdbcType=VARCHAR}, #{orgname,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="org.jude.manageBack.pojo.Activities">
     insert into activities
@@ -148,6 +149,9 @@
       <if test="activititystatus != null">
         activitityStatus,
       </if>
+      <if test="orgname != null">
+        orgName,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="activitityid != null">
@@ -179,6 +183,9 @@
       </if>
       <if test="activititystatus != null">
         #{activititystatus,jdbcType=VARCHAR},
+      </if>
+      <if test="orgname != null">
+        #{orgname,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -221,6 +228,9 @@
       <if test="record.activititystatus != null">
         activitityStatus = #{record.activititystatus,jdbcType=VARCHAR},
       </if>
+      <if test="record.orgname != null">
+        orgName = #{record.orgname,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -237,7 +247,8 @@
       activitityType = #{record.activititytype,jdbcType=VARCHAR},
       activitityDescribe = #{record.activititydescribe,jdbcType=VARCHAR},
       activitityPlace = #{record.activitityplace,jdbcType=VARCHAR},
-      activitityStatus = #{record.activititystatus,jdbcType=VARCHAR}
+      activitityStatus = #{record.activititystatus,jdbcType=VARCHAR},
+      orgName = #{record.orgname,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -272,6 +283,9 @@
       <if test="activititystatus != null">
         activitityStatus = #{activititystatus,jdbcType=VARCHAR},
       </if>
+      <if test="orgname != null">
+        orgName = #{orgname,jdbcType=VARCHAR},
+      </if>
     </set>
     where activitityId = #{activitityid,jdbcType=INTEGER}
   </update>
@@ -285,7 +299,8 @@
       activitityType = #{activititytype,jdbcType=VARCHAR},
       activitityDescribe = #{activititydescribe,jdbcType=VARCHAR},
       activitityPlace = #{activitityplace,jdbcType=VARCHAR},
-      activitityStatus = #{activititystatus,jdbcType=VARCHAR}
+      activitityStatus = #{activititystatus,jdbcType=VARCHAR},
+      orgName = #{orgname,jdbcType=VARCHAR}
     where activitityId = #{activitityid,jdbcType=INTEGER}
   </update>
 </mapper>

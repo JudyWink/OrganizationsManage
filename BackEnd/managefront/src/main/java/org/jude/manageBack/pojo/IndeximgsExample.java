@@ -1,6 +1,7 @@
 package org.jude.manageBack.pojo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class IndeximgsExample {
@@ -244,62 +245,52 @@ public class IndeximgsExample {
             return (Criteria) this;
         }
 
-        public Criteria andIndeximgcreatetimeEqualTo(String value) {
+        public Criteria andIndeximgcreatetimeEqualTo(Date value) {
             addCriterion("indeximgCreateTime =", value, "indeximgcreatetime");
             return (Criteria) this;
         }
 
-        public Criteria andIndeximgcreatetimeNotEqualTo(String value) {
+        public Criteria andIndeximgcreatetimeNotEqualTo(Date value) {
             addCriterion("indeximgCreateTime <>", value, "indeximgcreatetime");
             return (Criteria) this;
         }
 
-        public Criteria andIndeximgcreatetimeGreaterThan(String value) {
+        public Criteria andIndeximgcreatetimeGreaterThan(Date value) {
             addCriterion("indeximgCreateTime >", value, "indeximgcreatetime");
             return (Criteria) this;
         }
 
-        public Criteria andIndeximgcreatetimeGreaterThanOrEqualTo(String value) {
+        public Criteria andIndeximgcreatetimeGreaterThanOrEqualTo(Date value) {
             addCriterion("indeximgCreateTime >=", value, "indeximgcreatetime");
             return (Criteria) this;
         }
 
-        public Criteria andIndeximgcreatetimeLessThan(String value) {
+        public Criteria andIndeximgcreatetimeLessThan(Date value) {
             addCriterion("indeximgCreateTime <", value, "indeximgcreatetime");
             return (Criteria) this;
         }
 
-        public Criteria andIndeximgcreatetimeLessThanOrEqualTo(String value) {
+        public Criteria andIndeximgcreatetimeLessThanOrEqualTo(Date value) {
             addCriterion("indeximgCreateTime <=", value, "indeximgcreatetime");
             return (Criteria) this;
         }
 
-        public Criteria andIndeximgcreatetimeLike(String value) {
-            addCriterion("indeximgCreateTime like", value, "indeximgcreatetime");
-            return (Criteria) this;
-        }
-
-        public Criteria andIndeximgcreatetimeNotLike(String value) {
-            addCriterion("indeximgCreateTime not like", value, "indeximgcreatetime");
-            return (Criteria) this;
-        }
-
-        public Criteria andIndeximgcreatetimeIn(List<String> values) {
+        public Criteria andIndeximgcreatetimeIn(List<Date> values) {
             addCriterion("indeximgCreateTime in", values, "indeximgcreatetime");
             return (Criteria) this;
         }
 
-        public Criteria andIndeximgcreatetimeNotIn(List<String> values) {
+        public Criteria andIndeximgcreatetimeNotIn(List<Date> values) {
             addCriterion("indeximgCreateTime not in", values, "indeximgcreatetime");
             return (Criteria) this;
         }
 
-        public Criteria andIndeximgcreatetimeBetween(String value1, String value2) {
+        public Criteria andIndeximgcreatetimeBetween(Date value1, Date value2) {
             addCriterion("indeximgCreateTime between", value1, value2, "indeximgcreatetime");
             return (Criteria) this;
         }
 
-        public Criteria andIndeximgcreatetimeNotBetween(String value1, String value2) {
+        public Criteria andIndeximgcreatetimeNotBetween(Date value1, Date value2) {
             addCriterion("indeximgCreateTime not between", value1, value2, "indeximgcreatetime");
             return (Criteria) this;
         }
