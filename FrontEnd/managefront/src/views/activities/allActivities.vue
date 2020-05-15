@@ -46,6 +46,7 @@
         </el-table-column>
         <el-table-column
           prop="activititystatus"
+          width="130px"
           label="活动状态">
         </el-table-column>
         <el-table-column
@@ -56,16 +57,16 @@
         <el-table-column
           label="操作">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.activitityName=='校园十大歌手'|| scope.row.activitityName=='我是歌手'"
-                       type="success"
+            <el-button v-if="scope.row.activitityname=='校园十大歌手'|| scope.row.activitityname=='我是歌手'"
+                       type="warning"
                        size="mini"
                        disabled
                        @click="openMsg">已报名
             </el-button>
-            <el-button v-if="scope.row.activitityName!='校园十大歌手'&& scope.row.activitityName!='我是歌手'"
+            <el-button v-if="scope.row.activitityname!='校园十大歌手'&& scope.row.activitityname!='我是歌手'"
               type="success"
               size="mini"
-                       :disabled="userType ==='游客' ? true : false"
+                       :disabled="userType ==='游客' || userType ==='系统管理员' || scope.row.activititystatus != '报名中' ? true : false"
               @click="openMsg">报名
             </el-button>
             <el-button

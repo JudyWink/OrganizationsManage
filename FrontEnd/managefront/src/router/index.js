@@ -28,6 +28,8 @@ import PublishActivities from "../views/activities/PublishActivities";
 import UserPower from "../views/UserManager/UserPower";
 import IndexManager from "../views/index/IndexManager";
 import UploadDocument from "../views/document/UploadDocument";
+import ModifyPassword from "../views/login/ModifyPassword"
+import MessageSended from "../views/message/MessageSended"
 
 // 在vue中注入Router
 Vue.use(VueRouter)
@@ -202,6 +204,20 @@ const routes =[
       keepalive:true
     }
   },
+    {
+      path: '/modifyPassword',
+      component: ModifyPassword,
+      meta:{
+        keepalive:false
+      }
+    },{
+            path: '/messageSended',
+            component: MessageSended,
+            meta:{
+              keepalive:true
+            }
+          },
+
   {
     path: '/menu',
     component: Menu,

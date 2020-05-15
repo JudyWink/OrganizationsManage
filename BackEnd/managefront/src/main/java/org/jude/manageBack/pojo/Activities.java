@@ -25,6 +25,10 @@ public class Activities {
 
     private String orgname;
 
+    private Date signuptime;
+
+    private Date signupendtime;
+
     public Integer getActivitityid() {
         return activitityid;
     }
@@ -111,5 +115,21 @@ public class Activities {
 
     public void setOrgname(String orgname) {
         this.orgname = orgname == null ? null : orgname.trim();
+    }
+
+    public Date getSignuptime() {
+        return signuptime;
+    }
+
+    public void setSignuptime(Date signuptime) {
+        this.signuptime = signuptime;
+    }
+
+    public Date getSignupendtime() {
+        return signupendtime;
+    }
+
+    public void setSignupendtime(Date signupendtime) {
+        this.signupendtime = signupendtime;
     }
 }

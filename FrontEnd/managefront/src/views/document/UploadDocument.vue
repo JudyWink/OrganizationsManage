@@ -93,37 +93,6 @@
                         documentType: '申请表',
                         documentDownloadCount:'10',
                     },
-                    {
-                        documentUploadTime: '2016-05-02',
-                        documentName: '社团组织招新时间表.word',
-                        documentOwner: '梁书记',
-                        documentType: '通知',
-                        documentDownloadCount:'76',
-                    },{
-                        documentUploadTime: '2016-05-02',
-                        documentName: '测试.word',
-                        documentOwner: '管理员',
-                        documentType: '申请表',
-                        documentDownloadCount:'2',
-                    },{
-                        documentUploadTime: '2016-05-02',
-                        documentName: '社团负责人申请表.word',
-                        documentOwner: '管理员',
-                        documentType: '申请表',
-                        documentDownloadCount:'138',
-                    },{
-                        documentUploadTime: '2016-05-02',
-                        documentName: '社团管理系统使用注意事项.pdf',
-                        documentOwner: '管理员',
-                        documentType: '文档',
-                        documentDownloadCount:'10',
-                    },{
-                        documentUploadTime: '2016-05-02',
-                        documentName: '社团管理系统操作手册.pdf',
-                        documentOwner: '管理员',
-                        documentType: '文档',
-                        documentDownloadCount:'80',
-                    },
                 ],
                 fileList: [{
                     name: '测试.word',

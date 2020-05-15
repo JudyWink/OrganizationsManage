@@ -70,6 +70,12 @@
                     "orgID": sessionStorage.getItem("orgID"),
                 }
             };
+            if (sessionStorage.getItem("orgID") === ""){
+                data = {
+                    data: {
+                    }
+                };
+            }
             this.$axios.post('/findOneOrg', JSON.stringify(data))
                 .then(function (response) {
                     if (response.data.code == 1) {
@@ -93,7 +99,6 @@
                 .then(function (response) {
                     if (response.data.code == 1) {
                         _this.$notify.warning({
-                            title: '提示',
                             message: response.data.msg,
                             showClose: false,
                             duration: 1500,

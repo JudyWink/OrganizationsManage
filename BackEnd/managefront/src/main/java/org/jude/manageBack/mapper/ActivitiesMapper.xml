@@ -13,6 +13,8 @@
     <result column="activitityPlace" jdbcType="VARCHAR" property="activitityplace" />
     <result column="activitityStatus" jdbcType="VARCHAR" property="activititystatus" />
     <result column="orgName" jdbcType="VARCHAR" property="orgname" />
+    <result column="signupTime" jdbcType="TIMESTAMP" property="signuptime" />
+    <result column="signupEndTime" jdbcType="TIMESTAMP" property="signupendtime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -74,7 +76,8 @@
   </sql>
   <sql id="Base_Column_List">
     activitityId, activitityName, activitityStartTime, activitityEndTime, orgId, activititysCount, 
-    activitityType, activitityDescribe, activitityPlace, activitityStatus, orgName
+    activitityType, activitityDescribe, activitityPlace, activitityStatus, orgName, signupTime, 
+    signupEndTime
   </sql>
   <select id="selectByExample" parameterType="org.jude.manageBack.pojo.ActivitiesExample" resultMap="BaseResultMap">
     select
@@ -110,11 +113,13 @@
     insert into activities (activitityId, activitityName, activitityStartTime, 
       activitityEndTime, orgId, activititysCount, 
       activitityType, activitityDescribe, activitityPlace, 
-      activitityStatus, orgName)
+      activitityStatus, orgName, signupTime, 
+      signupEndTime)
     values (#{activitityid,jdbcType=INTEGER}, #{activitityname,jdbcType=VARCHAR}, #{activititystarttime,jdbcType=TIMESTAMP}, 
       #{activitityendtime,jdbcType=TIMESTAMP}, #{orgid,jdbcType=INTEGER}, #{activitityscount,jdbcType=INTEGER}, 
       #{activititytype,jdbcType=VARCHAR}, #{activititydescribe,jdbcType=VARCHAR}, #{activitityplace,jdbcType=VARCHAR}, 
-      #{activititystatus,jdbcType=VARCHAR}, #{orgname,jdbcType=VARCHAR})
+      #{activititystatus,jdbcType=VARCHAR}, #{orgname,jdbcType=VARCHAR}, #{signuptime,jdbcType=TIMESTAMP}, 
+      #{signupendtime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="org.jude.manageBack.pojo.Activities">
     insert into activities
@@ -152,6 +157,12 @@
       <if test="orgname != null">
         orgName,
       </if>
+      <if test="signuptime != null">
+        signupTime,
+      </if>
+      <if test="signupendtime != null">
+        signupEndTime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="activitityid != null">
@@ -186,6 +197,12 @@
       </if>
       <if test="orgname != null">
         #{orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="signuptime != null">
+        #{signuptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signupendtime != null">
+        #{signupendtime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -231,6 +248,12 @@
       <if test="record.orgname != null">
         orgName = #{record.orgname,jdbcType=VARCHAR},
       </if>
+      <if test="record.signuptime != null">
+        signupTime = #{record.signuptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.signupendtime != null">
+        signupEndTime = #{record.signupendtime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -248,7 +271,9 @@
       activitityDescribe = #{record.activititydescribe,jdbcType=VARCHAR},
       activitityPlace = #{record.activitityplace,jdbcType=VARCHAR},
       activitityStatus = #{record.activititystatus,jdbcType=VARCHAR},
-      orgName = #{record.orgname,jdbcType=VARCHAR}
+      orgName = #{record.orgname,jdbcType=VARCHAR},
+      signupTime = #{record.signuptime,jdbcType=TIMESTAMP},
+      signupEndTime = #{record.signupendtime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -286,6 +311,12 @@
       <if test="orgname != null">
         orgName = #{orgname,jdbcType=VARCHAR},
       </if>
+      <if test="signuptime != null">
+        signupTime = #{signuptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signupendtime != null">
+        signupEndTime = #{signupendtime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where activitityId = #{activitityid,jdbcType=INTEGER}
   </update>
@@ -300,7 +331,9 @@
       activitityDescribe = #{activititydescribe,jdbcType=VARCHAR},
       activitityPlace = #{activitityplace,jdbcType=VARCHAR},
       activitityStatus = #{activititystatus,jdbcType=VARCHAR},
-      orgName = #{orgname,jdbcType=VARCHAR}
+      orgName = #{orgname,jdbcType=VARCHAR},
+      signupTime = #{signuptime,jdbcType=TIMESTAMP},
+      signupEndTime = #{signupendtime,jdbcType=TIMESTAMP}
     where activitityId = #{activitityid,jdbcType=INTEGER}
   </update>
 </mapper>

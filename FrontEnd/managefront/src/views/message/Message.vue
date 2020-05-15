@@ -8,55 +8,91 @@
         v-el-table-infinite-scroll
         infinite-scroll-immediate=false
         @selection-change="handleSelectionChange">
+        <template slot="empty">
+          暂时还没有人给你发消息哦
+        </template>
         <el-table-column
           type="selection"
           width="80px">
         </el-table-column>
         <el-table-column
-          prop="messageCreateTime"
+          prop="messagecreatetime"
           label="时间"
           sortable
+          :formatter="dateFormat"
           >
         </el-table-column>
         <el-table-column
-          prop="messageTitle"
-          label="消息内容"
-          width="500px">
+          prop="messagetitle"
+          label="消息主题"
+          width="450px">
           <template slot-scope="scope">
-            <el-link icon="el-icon-view" @click="openMsg" type="primary">{{ scope.row.messageTitle }}</el-link>
+            <el-link icon="el-icon-view" @click="openMsg(scope.row)" type="primary">{{ scope.row.messagetitle }}</el-link>
           </template>
         </el-table-column>
         <el-table-column
-          prop="messageType"
+          prop="messagetype"
           label="消息分类">
         </el-table-column>
         <el-table-column
           label="发送人"
-          prop="messageLaunch">
+          prop="messagelaunchname">
         </el-table-column>
         <el-table-column
-          prop="messageStatus"
+          prop="messagestatus"
           label="状态">
         </el-table-column>
         <el-table-column
-          prop="count"
           label="操作">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.messageTitle =='佛大话剧团即将开展元旦晚会表演'"
+            <el-button v-if="scope.row.messagestatus === '未读' "
               size="mini"
-                       disabled
-              @click="readMsg">已读
+              :disabled=false
+              type="success"
+              @click="readMsg(scope.row)">已读
             </el-button>
-            <el-button v-if="scope.row.messageTitle !='佛大话剧团即将开展元旦晚会表演'"
-                       size="mini"
-                       type="success"
-                       @click="readMsg">已读
+            <el-button v-if="scope.row.messagestatus === '已读'"
+              size="mini"
+              :disabled=true
+              @click="readMsg(scope.row)">已读
             </el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="deleteMsg">删除
+              @click="deleteMsg(scope.row)">删除
             </el-button>
+            <el-dialog ref="dialog"  :close-on-click-modal="false" width="700px" :visible.sync="dialogFormVisible">
+              <el-form>
+                <el-form-item>
+                  <h2>{{dialoMessagetitle}}</h2>
+                </el-form-item>
+                <el-form-item>
+                  <el-card class="box-card">
+                    <div>
+                      {{dialogMessagetext}}
+                    </div>
+                  </el-card>
+                </el-form-item>
+                <el-form-item>
+                  <el-button v-if="dialogMessagestatus === '已读'" disabled>已 读</el-button>
+                  <el-button v-if="dialogMessagestatus === '未读'" type="success" @click="readMsg(scope.row)">已 读</el-button>
+                  <el-button  type="primary" @click="reply">{{replytext}}</el-button>
+                </el-form-item>
+                <el-form-item v-if="input">
+                <el-input
+                  rows="4"
+                  v-model="replyMessagetext"
+                          type="textarea"
+                          placeholder="请输入内容"
+                          maxlength="100"
+                          show-word-limit
+                ></el-input>
+                  </el-form-item>
+                  <el-form-item v-if="input">
+                  <el-button  type="danger" @click="send">发 送</el-button>
+                </el-form-item>
+              </el-form>
+            </el-dialog>
           </template>
         </el-table-column>
       </el-table>
@@ -65,16 +101,13 @@
             选中:
       <el-tag size="mini">{{this.multipleSelection.length}}</el-tag>
       条
-      <el-button type="success" size="mini" @click="readMsg">一键已读</el-button>
-      <el-button
-        size="mini"
-        type="danger"
-        @click="deleteMsg">删除</el-button>
+      <el-button type="success" size="mini" @click="readAllMsgs()">一键已读</el-button>
     </span>
   </div>
 </template>
 
 <script>
+    import moment from 'moment'
     import elTableInfiniteScroll from 'el-table-infinite-scroll';
     export default {
         directives: {
@@ -83,48 +116,264 @@
         name: "Document",
         data() {
             return {
-                tableData: [{
-                    messageCreateTime: '2016-05-02',
-                    messageLaunch: '李四',
-                    messageTitle: '佛大话剧团即将开展元旦晚会表演',
-                    messageType: '邀请函',
-                    messageStatus:'已读',
-                }, {
-                    messageCreateTime: '2016-05-02',
-                    messageLaunch: '辅导员',
-                    messageTitle: '辅导员通知你社团活动取消',
-                    messageType: '通知',
-                    messageStatus:'未读',
-                }, {
-                    messageCreateTime: '2016-05-02',
-                    messageLaunch: '管理员',
-                    messageTitle: '管理员通知你修改密码',
-                    messageType: '通知',
-                    messageStatus:'未读',
-                }, {
-                    messageCreateTime: '2016-05-02',
-                    messageLaunch: '小明',
-                    messageTitle: '佛山科学技术学院学生会的一份邀请',
-                    messageType: '邀请函',
-                    messageStatus:'未读',
-                }],
+                tableData: [],
                 multipleSelection: [],
+                dialogFormVisible:false,
+                input : false,
+                replytext : "回 复",
+                replyMessagetext:"",
+                replyType : "",
+                dialoMessagetitle:"",
+                dialogMessagetext:"",
+                dialogMessagestatus:"",
             }
         },
         methods: {
-            readMsg() {
-                this.$message('已读');
+            dateFormat(row, column){
+                let date = row[column.property]
+                if (date == undefined) {
+                    return ''
+                }
+                return moment(date).format("YYYY-MM-DD hh:mm")
             },
-            openMsg(){
-                this.$message('消息详情');
+
+            readMsg(value) {
+                const _this = this;
+                let data={
+                    data:{
+                        "MessageID" :  value.messageid,
+                    }
+                }
+                this.$axios.post('/readMessage', JSON.stringify(data))
+                    .then(async function (response) {
+                        if (response.data.code == 1) {
+                            _this.$notify.error({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                        }
+                        if (response.data.code == 0) {
+                         await   _this.$notify.success({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                         await _this.$router.replace("/test");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
             },
-            deleteMsg(){
-                this.$message('删除消息');
+
+            readAllMsgs(){
+                let MessageIDs = [];
+                let Selection = this.multipleSelection;
+                    for(let i = 0 ; i < Selection.length; i++){
+                        MessageIDs.push(Selection[i].messageid)
+                        if(Selection[i].messagestatus === "已读"){
+                            this.$notify.warning({
+                                message: "请选择未读消息",
+                                showClose: false,
+                                duration: 1500,
+                            });
+                            return false;
+                        }
+                    }
+                const _this = this;
+                let data={
+                    data:{
+                        "MessageIDs" :  MessageIDs,
+                    }
+                }
+                this.$axios.post('/readMessages', JSON.stringify(data))
+                    .then(function (response) {
+                        if (response.data.code == 1) {
+                            _this.$notify.error({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                        }
+                        if (response.data.code == 0) {
+                               _this.$notify.success({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                            _this.$router.replace("/test");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
+
+
+            },
+
+
+            openMsg(value){
+                this.dialogFormVisible = true;
+                this.dialoMessagetitle = value.messagetitle;
+                this.dialogMessagetext = value.messagetext;
+                this.dialogMessagestatus = value.messagestatus;
+                this.dialogMessageUserID = value.messagelaunch;
+                this.input = false;
+                this.replytext = "回 复";
+            },
+
+            reply(){
+
+                if(this.replytext === "回 复") {
+                    this.input = true
+                    this.replytext = "取 消"
+                }else if(this.replytext === "取 消") {
+                    this.input = false
+                    this.replytext = "回 复"
+                }
+
+            },
+
+
+            deleteMsg(value){
+                let _this = this;
+                let data = {
+                    data:{
+                        "MessageID" : value.messageid,
+
+                    }
+                };
+                if (value.messagestatus === '未读'){
+                    this.$confirm('此消息还未读, 是否继续删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        _this.$axios.post('/deleteMessages', JSON.stringify(data))
+                            .then(async function (response) {
+                                if (response.data.code == 1) {
+                                    _this.$notify.error({
+                                        message: response.data.msg,
+                                        showClose: false,
+                                        duration: 1500,
+                                    });
+                                }
+                                if (response.data.code == 0) {
+                                    _this.$notify.success({
+                                        message: response.data.msg,
+                                        showClose: false,
+                                        duration: 1500,
+                                    });
+                                    _this.$router.replace("/test");
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error)
+                            });
+                    }).catch(() => {
+                        this.$notify.warning({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                }else {
+                    this.$axios.post('/deleteMessages', JSON.stringify(data))
+                        .then(async function (response) {
+                            if (response.data.code == 1) {
+                                _this.$notify.error({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                            }
+                            if (response.data.code == 0) {
+                                _this.$notify.success({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
+                }
+            },
+
+            send(){
+                if(this.replyMessagetext.length<1){
+                    this.$notify.warning({
+                        message: "请填写回复内容",
+                        showClose: false,
+                        duration: 1500,
+                    });
+                    return false;
+                }
+                    let _this = this;
+                    let data = {
+                        data:{
+                            "msg":{
+                              "text": this.replyMessagetext,
+                                "title": "回复【"+this.dialoMessagetitle+"】",
+                                "type" :"回复",
+                            },
+                            "ReceiveID":this.dialogMessageUserID,
+                            "userID": sessionStorage.getItem('userID'),
+                        }
+                    };
+                    this.$axios.post("/senddMessage",JSON.stringify(data))
+                        .then(function (response) {
+                            if (response.data.code == 1) {
+                                _this.$notify.warning({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                            }
+                            if (response.data.code == 0) {
+                                _this.$notify.success({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                                _this.dialogFormVisible = false;
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
             },
 
             handleSelectionChange(val){
                 this.multipleSelection = val;
             },
+        },
+        created() {
+            const _this = this;
+            let data={
+                data:{
+                    "userID" :  sessionStorage.getItem("userID"),
+                }
+            }
+            this.$axios.post('/findMessages', JSON.stringify(data))
+                .then(function (response) {
+                    if (response.data.code == 1) {
+                        _this.$notify.warning({
+                            message: response.data.msg,
+                            showClose: false,
+                            duration: 1500,
+                        });
+                    }
+                    if (response.data.code == 0) {
+                        console.log(response.data.msg);
+                        _this.tableData = response.data.data.tableData;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
+
         }
     }
 </script>

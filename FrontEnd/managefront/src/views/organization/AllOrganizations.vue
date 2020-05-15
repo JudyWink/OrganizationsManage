@@ -13,7 +13,7 @@
         </el-table-column>
         <el-table-column
           label="社团名称"
-          width="200px"
+          width="220px"
           prop="orgname">
           <template slot-scope="scope">
             <el-link @click="openOrgInfo(scope.row)" type="primary">{{ scope.row.orgname }}</el-link>
@@ -27,7 +27,7 @@
         <el-table-column
           label="所在校区"
           prop="orgcampus"
-          width="130px">
+          width="100px">
         </el-table-column>
         <el-table-column
           prop="orgtype"
@@ -42,7 +42,7 @@
         <el-table-column
           prop="orgMmuberCount"
           label="社团人数"
-          width="120px">
+          width="100px">
         </el-table-column>
         <el-table-column
           prop="count"

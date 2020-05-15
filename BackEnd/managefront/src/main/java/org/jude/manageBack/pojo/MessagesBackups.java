@@ -2,7 +2,7 @@ package org.jude.manageBack.pojo;
 
 import java.util.Date;
 
-public class Messages extends MessagesBackups {
+public class MessagesBackups {
     private Integer messageid;
 
     private String messagetext;

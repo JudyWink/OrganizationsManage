@@ -41,6 +41,8 @@ public class Users {
 
     private Date updatetime;
 
+    private String orgname;
+
     public Integer getUserid() {
         return userid;
     }
@@ -191,5 +193,13 @@ public class Users {
 
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
+    }
+
+    public String getOrgname() {
+        return orgname;
+    }
+
+    public void setOrgname(String orgname) {
+        this.orgname = orgname == null ? null : orgname.trim();
     }
 }

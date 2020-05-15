@@ -17,9 +17,12 @@ public interface UserService {
     //添加用户
     public void regist(Users user) throws Exception;
 
+    //查找所有用户
     public List<Users> findAllUsers() throws Exception;
-//
-//    public void updateUser(Users user) throws Exception;
-//
-//    public void deleteUser(Integer userid) throws Exception;
+
+    //更新用户
+    public void updateUser(Users user) throws Exception;
+
+    //修改用户的某个信息
+    public void updateUserOneInfo(Users user,int userID)throws Exception;
 }

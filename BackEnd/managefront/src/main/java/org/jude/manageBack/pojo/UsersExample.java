@@ -1404,6 +1404,76 @@ public class UsersExample {
             addCriterion("updateTime not between", value1, value2, "updatetime");
             return (Criteria) this;
         }
+
+        public Criteria andOrgnameIsNull() {
+            addCriterion("orgName is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameIsNotNull() {
+            addCriterion("orgName is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameEqualTo(String value) {
+            addCriterion("orgName =", value, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameNotEqualTo(String value) {
+            addCriterion("orgName <>", value, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameGreaterThan(String value) {
+            addCriterion("orgName >", value, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameGreaterThanOrEqualTo(String value) {
+            addCriterion("orgName >=", value, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameLessThan(String value) {
+            addCriterion("orgName <", value, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameLessThanOrEqualTo(String value) {
+            addCriterion("orgName <=", value, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameLike(String value) {
+            addCriterion("orgName like", value, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameNotLike(String value) {
+            addCriterion("orgName not like", value, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameIn(List<String> values) {
+            addCriterion("orgName in", values, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameNotIn(List<String> values) {
+            addCriterion("orgName not in", values, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameBetween(String value1, String value2) {
+            addCriterion("orgName between", value1, value2, "orgname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgnameNotBetween(String value1, String value2) {
+            addCriterion("orgName not between", value1, value2, "orgname");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

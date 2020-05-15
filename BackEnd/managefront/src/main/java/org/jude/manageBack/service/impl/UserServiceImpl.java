@@ -41,14 +41,19 @@ public class UserServiceImpl implements UserService {
         return this.usersMapper.selectByExample(usersExample);
     }
 
-
-//    @Override
+    //通过ID更新用户信息
+    @Override
     public void updateUser(Users user) throws Exception {
+        this.usersMapper.updateByPrimaryKey(user);
     }
 
-
-//    @Override
-    public void deleteUser(Integer userid) throws Exception {
-
+    //修改用户的某个信息
+    @Override
+    public void updateUserOneInfo(Users user,int userID)throws Exception {
+        UsersExample example = new UsersExample();
+        UsersExample.Criteria criteria = example.createCriteria();
+        criteria.andUseridEqualTo(userID);
+        this.usersMapper.updateByExampleSelective(user,example);
     }
+
 }

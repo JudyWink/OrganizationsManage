@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -36,6 +37,13 @@ public class OrgContorller {
     @ResponseBody
     public JsonResponseBody findAllOrgs() throws Exception {
         List<Orgs> orgsList = this.orgService.findAllOrgs();
+        Iterator<Orgs> iterator = orgsList.iterator();
+        while (iterator.hasNext()) {
+            Orgs orgs = iterator.next();
+            if (orgs.getOrgid() == 9999) {
+                iterator.remove();//使用迭代器的删除方法删除
+            }
+        }
         for(Orgs Org: orgsList){
             int useid = Org.getOrgleader();
             Users user = this.userService.selectByuserID(useid);
@@ -62,14 +70,31 @@ public class OrgContorller {
         JSONObject data = requestBody.getData();
         String msg = null;
         Integer code = null;
-        int orgID = data.getInteger("orgID");
-        Orgs org = this.orgService.selectByorgID(orgID);
         JsonResponseBody responseBody = new JsonResponseBody();
         JSONObject result = new JSONObject();
-        result.put("org",org);
-        msg = "根据ID查询社团成功";
-        code = 0;
-
+        try{
+            if (data.containsKey("orgID")) {
+                int orgID = data.getInteger("orgID");
+                Orgs org = this.orgService.selectByorgID(orgID);
+                result.put("org", org);
+                msg = "根据ID查询社团成功";
+                code = 0;
+            }else {
+                Orgs org = new Orgs();
+                org.setOrghistory("无");
+                org.setOrgintroduce("无");
+                org.setOrgname("你还没加入社团!");
+                result.put("org", org);
+                msg = "根据ID查询社团成功";
+                code = 0;
+            }
+        } catch (Exception e) {
+            msg = "根据ID查询社团失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
         responseBody.setData(result);
         responseBody.setMsg(msg);
         responseBody.setCode(code);
@@ -83,24 +108,37 @@ public class OrgContorller {
     public JsonResponseBody findAllOrgImgs(@RequestBody JsonRequestBody requestBody) throws Exception {
         String msg = null;
         Integer code = null;
-        int orgID = requestBody.getData().getInteger("orgID");
         JsonResponseBody responseBody = new JsonResponseBody();
         JSONObject result = new JSONObject();
-        List<Indeximgs> imgsINFO = this.indexService.findImgsbyOrg(orgID);
-        List<String> IndexImgsUrls = new ArrayList<String>();
-        if (!imgsINFO.isEmpty()) {
-            for (Indeximgs list : imgsINFO){
-                String url = list.getIndeximgurl();
-                IndexImgsUrls.add(url);
+        try {
+            if (requestBody.getData().containsKey("orgID")) {
+                int orgID = requestBody.getData().getInteger("orgID");
+                List<Indeximgs> imgsINFO = this.indexService.findImgsbyOrg(orgID);
+                List<String> IndexImgsUrls = new ArrayList<String>();
+                if (!imgsINFO.isEmpty()) {
+                    for (Indeximgs list : imgsINFO) {
+                        String url = list.getIndeximgurl();
+                        IndexImgsUrls.add(url);
+                    }
+                    result.put("IndexImgsUrls", IndexImgsUrls);
+                    result.put("count", imgsINFO.size());
+                    msg = "查找社团图片成功";
+                    code = 0;
+                } else {
+                    msg = "数据库中没找到社团图片信息";
+                    code = 1;
+                }
+            }else {
+                msg = "你还没加入社团";
+                code = 1;
             }
-            result.put("IndexImgsUrls",IndexImgsUrls);
-            result.put("count",imgsINFO.size());
-            msg = "查找社团图片成功";
-            code = 0;
-        }
-        else {
-            msg = "数据库中没找到社团图片信息";
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "查找社团图片失败";
             code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
         }
         responseBody.setData(result);
         responseBody.setMsg(msg);

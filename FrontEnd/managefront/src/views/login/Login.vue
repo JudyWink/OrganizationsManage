@@ -10,7 +10,7 @@
         <el-input placeholder="请输入用户名" v-model="userAcount" clearable class="input_style"></el-input>
       </div>
       <div>
-        <el-input placeholder="请输入密码" v-model="userPassword" show-password class="input_style"></el-input>
+        <el-input @keyup.enter.native="login()" placeholder="请输入密码" v-model="userPassword" show-password class="input_style"></el-input>
       </div>
       <div style="width: 95%; margin-top: 10px;margin-bottom: 40px">
         <input type="checkbox" v-model="rememberINPUT" id="rememberMe">
@@ -43,6 +43,7 @@
                 userAcount: '',
                 userPassword: '',
                 userID:'',
+                orgID:'',
                 error: {
                     userAcount: '',
                     userPassword: ''
@@ -69,8 +70,7 @@
                     this.$axios.post('/Login', JSON.stringify(data))
                         .then(function (response) {
                             if (response.data.code == 1) {
-                                _this.$notify.warning({
-                                    title: '提示',
+                                _this.$notify.error({
                                     message: response.data.msg,
                                     showClose: false,
                                     duration: 1500,
@@ -81,6 +81,7 @@
                                 _this.userName = response.data.data.userName;
                                 _this.userType = response.data.data.userType;
                                 _this.userID = response.data.data.userID;
+                                _this.orgID = response.data.data.orgID;
                                 if (_this.rememberINPUT == true){
                                     _this.$store.commit("REMEMBER_ACCOUNT",_this.userAcount);
                                     _this.$store.commit("REMEMBER_PASSWORD",_this.userPassword);
@@ -95,6 +96,8 @@
                                     _this.$store.commit("SET_TYPE", _this.userType);
                                     //保存用户ID
                                     _this.$store.commit("SET_USERID", _this.userID);
+                                    //保存用户社团
+                                    _this.$store.commit("SET_ORGID", _this.orgID);
 
                                 _this.$notify.success({
                                     message: response.data.msg,

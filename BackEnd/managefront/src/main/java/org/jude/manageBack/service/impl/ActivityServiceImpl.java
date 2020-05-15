@@ -20,4 +20,10 @@ public class ActivityServiceImpl implements ActivityService {
         ActivitiesExample orgsExample = new ActivitiesExample();
         return this.activitiesMapper.selectByExample(orgsExample);
     }
+
+    //发布活动
+    @Override
+    public void pushActivity(Activities activities) throws Exception{
+        this.activitiesMapper.insert(activities);
+    }
 }

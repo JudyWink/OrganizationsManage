@@ -1,7 +1,7 @@
 <template>
   <div id="publishActivities_box">
     <div id="publishActivities">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" class="demo-ruleForm">
         <el-form-item>
           <span id="top"><h1>活动发布</h1></span>
         </el-form-item>
@@ -11,35 +11,49 @@
         <el-form-item label="活动地点" prop="activitityPlace">
             <el-input v-model="ruleForm.activitityPlace"></el-input>
         </el-form-item>
+        <el-form-item label="报名时间" required>
+          <el-form-item prop="signupTime">
+          <el-col :span="1">
+          <el-date-picker
+            v-model="ruleForm.signupTime"
+            type="datetimerange"
+            value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"
+            start-placeholder="报名开始日期"
+            end-placeholder="报名结束日期">
+          </el-date-picker>
+          </el-col>
+          </el-form-item>
+        </el-form-item>
         <el-form-item label="活动时间" required>
-          <el-col :span="11">
-            <el-form-item prop="activitityStartTime">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.activitityStartTime" style="width: 100%;"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col class="line" :span="2">-</el-col>
-          <el-col :span="11">
-            <el-form-item prop="activitityEndTime">
-              <el-date-picker type="date" placeholder="选择时间" v-model="ruleForm.activitityEndTime" style="width: 100%;"></el-date-picker>
-            </el-form-item>
-          </el-col>
+          <el-form-item prop="activitityTime">
+            <el-col :span="1">
+              <el-date-picker
+                v-model="ruleForm.activitityTime"
+                value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"
+                type="datetimerange"
+                start-placeholder="活动开始日期"
+                end-placeholder="活动结束日期">
+              </el-date-picker>
+            </el-col>
+          </el-form-item>
         </el-form-item>
         <el-form-item label="活动允许人数" prop="activititysCount">
-          <el-input v-model="ruleForm.activititysCount"></el-input>
+          <el-input v-model.number="ruleForm.activititysCount"></el-input>
         </el-form-item>
-        <el-form-item label="活动类型" prop="activitityType">
-            <el-radio-group v-model="ruleForm.activitityType">
-              <el-radio label="招新" ></el-radio>
-              <el-radio label="娱乐"></el-radio>
-              <el-radio label="讲座"></el-radio>
-              <el-radio label="会议"></el-radio>
-            </el-radio-group>
+        <el-form-item label="活动类型">
+          <el-radio-group v-model="ruleForm.activitityType" >
+            <el-radio  label="娱乐"></el-radio>
+            <el-radio  label="讲座"></el-radio>
+            <el-radio  label="比赛"></el-radio>
+            <el-radio  label="公益活动"></el-radio>
+            <el-radio  label="表演"></el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="活动介绍" prop="activitityDescribe">
           <el-input type="textarea" v-model="ruleForm.activitityDescribe"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="success" @click="submitForm('ruleForm')">马上发布</el-button>
+          <el-button type="success" @click="submitForm()">马上发布</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -56,11 +70,12 @@
                 ruleForm: {
                     activitityName: '',
                     activitityPlace: '',
-                    activitityStartTime: '',
-                    activitityEndTime: '',
+                    signupTime:'',
+                    activitityTime: '',
                     activititysCount: '',
-                    activitityType: [],
-                    activitityDescribe: ''
+                    activitityType: '',
+                    activitityDescribe: '',
+                    orgID : '',
                 },
                 rules: {
                     activitityName: [
@@ -68,36 +83,55 @@
                         { min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur' }
                     ],
                     activitityPlace: [
-                        { type: 'array', required: true, message: '请输入活动地点', trigger: 'blur' }
+                        { required: true, message: '请输入活动地点', trigger: 'blur' }
                     ],
-                    activitityStartTime: [
-                        { type: 'date', required: true, message: '请选择日期', trigger: 'blur' }
+                    signupTime: [
+                        { type: 'date', required: true, message: '请选择报名时间', trigger: 'blur' }
                     ],
-                    activitityEndTime: [
-                        { type: 'date', required: true, message: '请选择时间', trigger: 'blur' }
+                    activitityTime: [
+                        { type: 'date', required: true, message: '请选择活动时间', trigger: 'blur' }
                     ],
                     activititysCount: [
-                        { type: 'array', required: true, message: '请输入活动人数', trigger: 'blur' }
+                        { type: 'number', required: true, message: '请输入正确的活动人数' }
                     ],
                     activitityType: [
                         { required: true, message: '请选择活动类型', trigger: 'change' }
                     ],
                     activitityDescribe: [
-                        { type: 'array', required: true, message: '请输入活动介绍', trigger: 'blur' }
+                        { required: true, message: '请输入活动介绍', trigger: 'blur' }
                     ]
                 }
             };
         },
         methods: {
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        alert('submit!');
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
+            submitForm() {
+                let _this = this
+                let data ={
+                    data:{
+                        orgID: window.sessionStorage.getItem("orgID"),
+                        Form:this.ruleForm,
+                    },
+                }
+                this.$axios.post('/pushActivity', JSON.stringify(data))
+                    .then(function (response) {
+                        if (response.data.code == 0) {
+                            _this.$notify.success({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 2000,
+                            });
+                        }
+                        if (response.data.code == 1) {
+                            _this.$notify.error({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 2000,
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
@@ -114,7 +148,7 @@
   }
 
   #publishActivities_box {
-    height: 550px;
+    height: 650px;
     width: 80%;
     margin: auto;
     background-color: white;

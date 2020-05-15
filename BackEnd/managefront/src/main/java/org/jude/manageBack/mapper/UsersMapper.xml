@@ -21,6 +21,7 @@
     <result column="dormitory" jdbcType="VARCHAR" property="dormitory" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
     <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="orgName" jdbcType="VARCHAR" property="orgname" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -83,7 +84,7 @@
   <sql id="Base_Column_List">
     userId, userName, userAcount, userPassword, userType, userSex, userPhone, userNumber, 
     userAcademy, userClass, userHobby, userEmail, userQQ, userWeChat, userPhoto, defultOrg, 
-    dormitory, createTime, updateTime
+    dormitory, createTime, updateTime, orgName
   </sql>
   <select id="selectByExample" parameterType="org.jude.manageBack.pojo.UsersExample" resultMap="BaseResultMap">
     select
@@ -122,14 +123,14 @@
       userClass, userHobby, userEmail, 
       userQQ, userWeChat, userPhoto, 
       defultOrg, dormitory, createTime, 
-      updateTime)
+      updateTime, orgName)
     values (#{userid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{useracount,jdbcType=VARCHAR}, 
       #{userpassword,jdbcType=VARCHAR}, #{usertype,jdbcType=VARCHAR}, #{usersex,jdbcType=VARCHAR}, 
       #{userphone,jdbcType=VARCHAR}, #{usernumber,jdbcType=VARCHAR}, #{useracademy,jdbcType=VARCHAR}, 
       #{userclass,jdbcType=VARCHAR}, #{userhobby,jdbcType=VARCHAR}, #{useremail,jdbcType=VARCHAR}, 
       #{userqq,jdbcType=VARCHAR}, #{userwechat,jdbcType=VARCHAR}, #{userphoto,jdbcType=VARCHAR}, 
       #{defultorg,jdbcType=VARCHAR}, #{dormitory,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
-      #{updatetime,jdbcType=TIMESTAMP})
+      #{updatetime,jdbcType=TIMESTAMP}, #{orgname,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="org.jude.manageBack.pojo.Users">
     insert into users
@@ -191,6 +192,9 @@
       <if test="updatetime != null">
         updateTime,
       </if>
+      <if test="orgname != null">
+        orgName,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="userid != null">
@@ -249,6 +253,9 @@
       </if>
       <if test="updatetime != null">
         #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgname != null">
+        #{orgname,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -318,6 +325,9 @@
       <if test="record.updatetime != null">
         updateTime = #{record.updatetime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.orgname != null">
+        orgName = #{record.orgname,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -343,7 +353,8 @@
       defultOrg = #{record.defultorg,jdbcType=VARCHAR},
       dormitory = #{record.dormitory,jdbcType=VARCHAR},
       createTime = #{record.createtime,jdbcType=TIMESTAMP},
-      updateTime = #{record.updatetime,jdbcType=TIMESTAMP}
+      updateTime = #{record.updatetime,jdbcType=TIMESTAMP},
+      orgName = #{record.orgname,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -405,6 +416,9 @@
       <if test="updatetime != null">
         updateTime = #{updatetime,jdbcType=TIMESTAMP},
       </if>
+      <if test="orgname != null">
+        orgName = #{orgname,jdbcType=VARCHAR},
+      </if>
     </set>
     where userId = #{userid,jdbcType=INTEGER}
   </update>
@@ -427,7 +441,8 @@
       defultOrg = #{defultorg,jdbcType=VARCHAR},
       dormitory = #{dormitory,jdbcType=VARCHAR},
       createTime = #{createtime,jdbcType=TIMESTAMP},
-      updateTime = #{updatetime,jdbcType=TIMESTAMP}
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      orgName = #{orgname,jdbcType=VARCHAR}
     where userId = #{userid,jdbcType=INTEGER}
   </update>
 </mapper>

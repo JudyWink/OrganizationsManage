@@ -1,9 +1,8 @@
 <template>
   <div id="personalInfo_box">
-
     <div id="personalInfo">
       <table class="table">
-        <collapse>基本信息</collapse>
+        <span>基本信息</span>
         <tr>
           <td style="border-bottom: solid 1px #d1d1d1;" colspan="5"></td>
         </tr>
@@ -12,49 +11,40 @@
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">姓名</el-tag>
           </td>
           <td>
-            <el-input name="info_input" v-model="userName"></el-input>
+            <el-input :disabled="isNotmodify" v-model="user.username"></el-input>
           </td>
           <td>
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">账户</el-tag>
           <td>
-            <el-input v-model="userAcount"></el-input>
+            <el-input :disabled="true" v-model="user.useracount"></el-input>
           </td>
 
         </tr>
         <tr>
           <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">默认登录组织</el-tag>
-          <td>
-            <el-select v-model="value" placeholder="请选择">
-              <el-option
-                v-for="item in defultOrg"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
+            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">社团</el-tag>
+          <td colspan="2">
+          <el-input  :disabled="true" v-model="user.orgname"></el-input>
           </td>
           <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">职位</el-tag>
-          <td>
-            <el-input disabled="true" v-model="position"></el-input>
+            <el-input :disabled="true" v-model="position"></el-input>
           </td>
         </tr>
         <tr>
           <td>
           <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">班级</el-tag>
           <td colspan="2">
-            <el-input v-model="userClass"></el-input>
+            <el-input :disabled="isNotmodify" v-model="user.userclass"></el-input>
           </td>
           <td>
-            <el-button type="warning" icon="el-icon-edit" onclick="" plain>修改密码</el-button>
+            <el-button type="warning" icon="el-icon-edit" @click="dialogFormVisible = true" plain>修改密码</el-button>
           </td>
         </tr>
         <tr>
           <td>
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">学院</el-tag>
           <td colspan="2">
-            <el-input v-model="userAcademy"></el-input>
+            <el-input :disabled="isNotmodify" v-model="user.useracademy"></el-input>
           </td>
 
         </tr>
@@ -63,80 +53,85 @@
           <td>
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">学号</el-tag>
           <td>
-            <el-input v-model="userNumber"></el-input>
+            <el-input maxlength="11" onkeyup="value=value.replace(/[^\d]/g,'')" :disabled="isNotmodify" v-model="user.usernumber"></el-input>
           </td>
           <td>
-            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">类型</el-tag>
+            <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">用户类型</el-tag>
           <td>
-            <el-input disabled="true" v-model="userType"></el-input>
+            <el-input :disabled="true" v-model="user.usertype"></el-input>
           </td>
         </tr>
         <tr>
           <td>
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">微信</el-tag>
           <td>
-            <el-input v-model="weChat"></el-input>
+            <el-input :disabled="isNotmodify" v-model="user.userwechat"></el-input>
           </td>
           <td>
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">Q Q</el-tag>
           <td>
-            <el-input v-model="QQ"></el-input>
+            <el-input onkeyup="value=value.replace(/[^\d]/g,'')" :disabled="isNotmodify" v-model="user.userqq"></el-input>
           </td>
         </tr>
         <tr>
           <td>
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">宿舍</el-tag>
           <td>
-            <el-input v-model="dormitory"></el-input>
+            <el-input :disabled="isNotmodify" v-model="user.dormitory"></el-input>
           </td>
           <td>
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">邮箱</el-tag>
           <td>
-            <el-input v-model="userEmail"></el-input>
+            <el-input :disabled="isNotmodify" v-model="user.useremail"></el-input>
           </td>
         </tr>
         <tr>
           <td>
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">手机</el-tag>
           <td>
-            <el-input v-model="phone"></el-input>
+            <el-input maxlength="11" onkeyup="value=value.replace(/[^\d]/g,'')" :disabled="isNotmodify" v-model="user.userphone"></el-input>
           </td>
           <td>
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">性别</el-tag>
           <td>
-            <el-input v-model="sex"></el-input>
+            <el-input :maxlength="1" :disabled="isNotmodify" v-model="user.usersex"></el-input>
           </td>
         </tr>
         <tr>
           <td>
             <el-tag style="width: 140px ;height: 40px;font-size: 14px" type="success">爱好</el-tag>
           <td colspan="3">
-            <el-input type="textarea" v-model="userHobby"></el-input>
+            <el-input :disabled="isNotmodify" type="textarea" v-model="user.userhobby"></el-input>
           </td>
         </tr>
         <tr>
           <td colspan="4">
-            <el-avatar shape="square" :size="100" :fit="fit" :src="url"></el-avatar>
-            <el-upload
-              class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="4">
+            <el-button type="primary" @click="modify">{{modifytext}}</el-button>
             <el-button type="success" @click="save">保存</el-button>
-            <el-button type="warning">取消</el-button>
           </td>
         </tr>
       </table>
-    </div>
 
+      <el-dialog :close-on-click-modal="false" @close="close" width="400px" title="密码修改" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item>
+            <el-input placeholder="请输入原密码" clearable v-model="form.pass" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input placeholder="请输入新密码" clearable v-model="form.password1" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input placeholder="请再次输入新密码" clearable v-model="form.password2" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="modifyPassword()">确 定</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+
+
+    </div>
   </div>
 </template>
 
@@ -145,35 +140,170 @@
         name: "PersonalInfo",
         data() {
             return {
-                userName: '张三',
-                userAcount: '123456',
-                ownOrgs: ['轮滑社',
-                    '吉他社'
-                ],
-                defultOrg: [
-                    '轮滑社',
-                    '吉他社'
-                ],
-                position: '',
-                userAcademy: '电子信息工程学院',
-                userClass: '16网络工程4班',
-                userNumber: '20160390406',
-                phone: '13250142334',
-                sex: '男',
-                userHobby: '打篮球',
-                userEmail: '1040984760@qq.com',
-                QQ: '1040984760',
-                weChat: '1040984760',
-                dormitory: 'D8-601',
-                userType: '学生'
+                wrongTip:"",
+                position:"",
+                user:"",
+                isNotmodify:true,
+                modifytext:"修改",
+                dialogFormVisible : false,
+                form: {
+                    pass:"",
+                    password1:"",
+                    password2:"",
+                },
             }
         },
         methods: {
+            close(){
+                this.form.pass = "";
+                this.form.password1 = "";
+                this.form.password2 = "";
+            },
+            async modifyPassword(){
+                let _this = this;
+                let data={
+                    data:{
+                        pass : this.form.pass,
+                        password : this.form.password2,
+                        userID : window.sessionStorage.getItem('userID'),
+                    }
+                }
+                if (this.form.password1.length > 16 || this.form.password1.length < 0) {
+                    this.$notify.error({
+                        message: "密码长度要在6~16位",
+                        showClose: false,
+                        duration: 1500,
+                    });
+                }else if(this.form.password1 !== this.form.password2){
+                    this.$notify.error({
+                        message: "两次输入密码不对",
+                        showClose: false,
+                        duration: 1500,
+                    });
+                }else {
+                    this.$axios.post("/modifyPassword", JSON.stringify(data))
+                        .then(async function (response) {
+                            if (response.data.code == 1) {
+                                _this.$notify.error({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                                console.log(response.data.msg)
+                            }
+                            if (response.data.code == 0) {
+                                _this.dialogFormVisible = false
+                                await _this.$notify.success({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 3000,
+                                });
+                                await _this.$notify.warning({
+                                    message: "修改密码后请重新登录",
+                                    showClose: false,
+                                    duration: 3000,
+                                });
+                                _this.$store.commit("LOGOUT");
+                                await _this.$router.push('/login')
+                                console.log(response.data.msg)
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
+                }
+            },
+
+            modify(){
+                if(this.modifytext === "修改"){
+                    this.isNotmodify = false;
+                    this.modifytext = "取消"
+                }else {
+                    this.isNotmodify = true;
+                    this.modifytext = "修改"
+                    const _this = this;
+                    const userID = window.sessionStorage.getItem('userID');
+                    let data={
+                        data:{
+                            userID:userID
+                        }
+                    }
+                    this.$axios.post("/findUserInfo", JSON.stringify(data))
+                        .then(function (response) {
+                            if (response.data.code == 1) {
+                                console.log(response.data.msg)
+                            }
+                            if (response.data.code == 0) {
+                                _this.user = response.data.data.user;
+                                console.log(response.data.msg)
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
+                }
+
+            },
+
             save() {
-                this.$message.error("保存");
+                if( this.modifytext != "修改") {
+                    const _this = this;
+                    let data = {
+                        data: {
+                            users: this.user
+                        }
+                    };
+                    this.$axios.post("/updateUser", JSON.stringify(data))
+                        .then(function (response) {
+                            if (response.data.code == 1) {
+                                console.log(response.data.msg)
+                            }
+                            if (response.data.code == 0) {
+                                _this.$notify.success({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 3000,
+                                });
+                                console.log(response.data.msg)
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
+                }else {
+                    this.$notify.warning({
+                        message: "你还没修改信息",
+                        showClose: false,
+                        duration: 3000,
+                    });
+                }
+                this.isNotmodify = true;
+                this.modifytext = "修改";
             }
 
         },
+        created() {
+            const _this = this;
+            const userID = window.sessionStorage.getItem('userID');
+            let data={
+                data:{
+                    userID:userID
+                }
+            }
+            this.$axios.post("/findUserInfo", JSON.stringify(data))
+                .then(function (response) {
+                    if (response.data.code == 1) {
+                        console.log(response.data.msg)
+                    }
+                    if (response.data.code == 0) {
+                        _this.user = response.data.data.user;
+                        console.log(response.data.msg)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
+        }
 
     }
 </script>

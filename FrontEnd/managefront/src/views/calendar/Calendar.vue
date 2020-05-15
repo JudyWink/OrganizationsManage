@@ -16,31 +16,52 @@
 </template>
 
 <script>
+    import moment from 'moment'
     export default {
         name: "Calendar",
         data() {
             return {
                 resDate: [
-                    {date:"2020-04-18",content:"篮球赛"},
-                    {date:"2020-04-19",content:"摄影大赛"},
-                    {date:"2020-04-11",content:"校园十大歌手"}
                 ],
                 value: new Date()
             }
         },
         methods: {
+            dateFormat(value){
+                let date = value
+                if (date == undefined) {
+                    return ''
+                }
+                return moment(date).format("YYYY-MM-DD")
+            },
+
             dealMyDate(v) {
-                console.log(v)
                 let len = this.resDate.length
                 let res = ""
                 for(let i=0; i<len; i++){
-                    if(this.resDate[i].date == v) {
+                    if(moment(this.resDate[i].date).format("YYYY-MM-DD") === v) {
                         res = this.resDate[i].content
                         break
                     }
                 }
                 return res
             }
+        },
+        created() {
+            const _this = this;
+            this.$axios.post("/CalendarFind")
+                .then(function (response) {
+                    if (response.data.code == 1) {
+                        console.log(response.data.msg)
+                    }
+                    if (response.data.code == 0) {
+                        let Date = response.data.data.resDate
+                        _this.resDate = Date
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
         }
     }
 </script>

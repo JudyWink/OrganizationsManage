@@ -11,13 +11,13 @@
       </el-submenu>
       <el-submenu index="2" v-if="userType === '社团负责人'">
         <template slot="title">活动管理</template>
-        <el-menu-item index="/myActivities">我的活动</el-menu-item>
         <el-menu-item index="/PublishActivities">发布活动</el-menu-item>
+        <el-menu-item index="/myActivities">我的活动</el-menu-item>
       </el-submenu>
       <el-submenu index="3" v-if="userType === '学生'">
         <template slot="title">社团信息</template>
         <el-menu-item index="/allOrganizations">所有社团</el-menu-item>
-        <el-menu-item index="/myorganization">我的社团</el-menu-item>
+        <el-menu-item index="/organizationInfo">我的社团</el-menu-item>
       </el-submenu>
       <el-menu-item v-if="userType === '游客'" index="/allOrganizations">所有社团</el-menu-item>
       <el-submenu index="4" v-if="userType === '学生'">
@@ -36,10 +36,21 @@
         <el-menu-item index="/publishActivities">发布活动</el-menu-item>
         <el-menu-item index="/allActivities">所有活动</el-menu-item>
       </el-submenu>
-      <el-menu-item v-if="userType != '游客'" index="/message"><el-badge :is-dot=isDot class="item">
-        消息中心
-      </el-badge></el-menu-item>
-      <el-submenu index="7" v-if="userType === '社团负责人'">
+
+
+      <el-submenu  v-if="userType != '游客'" index="7">
+        <template slot="title"><el-badge :is-dot=isDot class="item">消息中心 </el-badge></template>
+        <el-menu-item index="/message">
+          收信箱
+        </el-menu-item>
+        <el-menu-item index="/messageSended">
+          发信箱</el-menu-item>
+
+      </el-submenu>
+
+
+
+      <el-submenu index="8" v-if="userType === '社团负责人'">
         <template slot="title">社团信息</template>
         <el-menu-item index="/OrganizationSetting">社团主页图片</el-menu-item>
         <el-menu-item index="/organizationInfo">社团信息</el-menu-item>
@@ -48,11 +59,8 @@
       <el-menu-item v-if="userType === '学生'" index="/personalInfo">个人信息</el-menu-item>
       <el-menu-item v-if="userType === '学生'|| userType === '游客'" index="/Document">文件下载</el-menu-item>
       <el-menu-item  v-if="userType === '系统管理员'" index="/indexManager">首页管理</el-menu-item>
-      <el-submenu index="8" v-if="userType === '系统管理员' || userType === '社团负责人'">
-        <template  slot="title">文件管理</template>
-        <el-menu-item index="/document">文件下载</el-menu-item>
-        <el-menu-item index="/uploadDocument">文件上传</el-menu-item>
-      </el-submenu>
+      <el-menu-item v-if="userType === '系统管理员' || userType === '社团负责人'" index="/uploadDocument">文件管理</el-menu-item>
+
 
       <el-menu-item index="/calendar">社团日历</el-menu-item>
       <el-menu-item style="float: right;" @click="signout"><i class="el-icon-switch-button"></i></el-menu-item>
@@ -69,7 +77,7 @@
             return {
                 userName: window.sessionStorage.getItem('userName'),
                 userType: window.sessionStorage.getItem('userType'),
-                count: 3,
+                isDot : false,
             }
         },
         methods: {
@@ -86,9 +94,29 @@
         },
         created() {
             //消息中心小红点
-            if(this.count!= 0){
-                this.isDot = true;
+            const _this = this;
+            let data={
+                data:{
+                    "userID" :  sessionStorage.getItem("userID"),
+                }
             }
+            this.$axios.post('/MessagesIsDot', JSON.stringify(data))
+                .then(function (response) {
+                    if (response.data.code == 1) {
+                        _this.$notify.warning({
+                            message: response.data.msg,
+                            showClose: false,
+                            duration: 1500,
+                        });
+                    }
+                    if (response.data.code == 0) {
+                        console.log(response.data.msg);
+                        _this.isDot = response.data.data.isDot;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
         }
 
     }

@@ -84,6 +84,7 @@
             },
             // 文件列表移除文件时的钩子
             handleRemove(file, fileList) {
+                this.fileList.push(file.raw);
                 console.log(file, fileList);
             },
             // 点击文件列表中已上传的文件时的钩子

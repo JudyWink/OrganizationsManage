@@ -1,7 +1,5 @@
 <template>
   <div id="test">
-    <h3><router-link to="/test">test画面</router-link></h3>
-    <router-view/>
   </div>
 </template>
 
@@ -15,10 +13,7 @@
         },
         //实现跨域
         created() {
-            this.$axios.post('/mb')
-                .then(res =>{
-                    console.log(res)
-                })
+            this.$router.replace("/message");
         }
     }
 </script>

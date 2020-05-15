@@ -824,6 +824,126 @@ public class ActivitiesExample {
             addCriterion("orgName not between", value1, value2, "orgname");
             return (Criteria) this;
         }
+
+        public Criteria andSignuptimeIsNull() {
+            addCriterion("signupTime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeIsNotNull() {
+            addCriterion("signupTime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeEqualTo(Date value) {
+            addCriterion("signupTime =", value, "signuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeNotEqualTo(Date value) {
+            addCriterion("signupTime <>", value, "signuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeGreaterThan(Date value) {
+            addCriterion("signupTime >", value, "signuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("signupTime >=", value, "signuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeLessThan(Date value) {
+            addCriterion("signupTime <", value, "signuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeLessThanOrEqualTo(Date value) {
+            addCriterion("signupTime <=", value, "signuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeIn(List<Date> values) {
+            addCriterion("signupTime in", values, "signuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeNotIn(List<Date> values) {
+            addCriterion("signupTime not in", values, "signuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeBetween(Date value1, Date value2) {
+            addCriterion("signupTime between", value1, value2, "signuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignuptimeNotBetween(Date value1, Date value2) {
+            addCriterion("signupTime not between", value1, value2, "signuptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeIsNull() {
+            addCriterion("signupEndTime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeIsNotNull() {
+            addCriterion("signupEndTime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeEqualTo(Date value) {
+            addCriterion("signupEndTime =", value, "signupendtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeNotEqualTo(Date value) {
+            addCriterion("signupEndTime <>", value, "signupendtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeGreaterThan(Date value) {
+            addCriterion("signupEndTime >", value, "signupendtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("signupEndTime >=", value, "signupendtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeLessThan(Date value) {
+            addCriterion("signupEndTime <", value, "signupendtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeLessThanOrEqualTo(Date value) {
+            addCriterion("signupEndTime <=", value, "signupendtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeIn(List<Date> values) {
+            addCriterion("signupEndTime in", values, "signupendtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeNotIn(List<Date> values) {
+            addCriterion("signupEndTime not in", values, "signupendtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeBetween(Date value1, Date value2) {
+            addCriterion("signupEndTime between", value1, value2, "signupendtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignupendtimeNotBetween(Date value1, Date value2) {
+            addCriterion("signupEndTime not between", value1, value2, "signupendtime");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
