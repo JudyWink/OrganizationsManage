@@ -70,12 +70,14 @@
                     "orgID": sessionStorage.getItem("orgID"),
                 }
             };
-            if (sessionStorage.getItem("orgID") === ""){
-                data = {
+            if (sessionStorage.getItem("orgIDInfo") != null){
+                 data = {
                     data: {
+                        "orgID": sessionStorage.getItem("orgIDInfo"),
                     }
                 };
             }
+
             this.$axios.post('/findOneOrg', JSON.stringify(data))
                 .then(function (response) {
                     if (response.data.code == 1) {

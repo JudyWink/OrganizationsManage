@@ -6,6 +6,7 @@ import org.jude.manageBack.JsonResponseBody;
 import org.jude.manageBack.config.UserLoginToken;
 import org.jude.manageBack.pojo.Indeximgs;
 import org.jude.manageBack.pojo.Orgs;
+import org.jude.manageBack.pojo.RelationOrgs;
 import org.jude.manageBack.pojo.Users;
 import org.jude.manageBack.service.IndexService;
 import org.jude.manageBack.service.OrgService;
@@ -47,6 +48,9 @@ public class OrgContorller {
         for(Orgs Org: orgsList){
             int useid = Org.getOrgleader();
             Users user = this.userService.selectByuserID(useid);
+            int orgID = Org.getOrgid();
+            List<RelationOrgs> relationOrgs = this.orgService.selectRelByorgID(orgID);
+            Org.setorgMmuberCount(String.valueOf(relationOrgs.size()));
             Org.setLeadername(user.getUsername());
         }
         String msg = null;
@@ -63,7 +67,6 @@ public class OrgContorller {
     }
 
     //根据ID查询社团
-    //模板
     @RequestMapping("/findOneOrg")
     @ResponseBody
     public JsonResponseBody findOneOrg(@RequestBody JsonRequestBody requestBody) throws Exception {
@@ -170,6 +173,50 @@ public class OrgContorller {
         msg = "成功设置社团首页图片";
         code = 0;
 
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+    //查找社团成员
+    @UserLoginToken
+    @RequestMapping("/findOrgMembers")
+    @ResponseBody
+    public JsonResponseBody findOrgMembers(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        JsonResponseBody responseBody = new JsonResponseBody();
+        try {
+            List<JSONObject> usersList = new ArrayList<>();
+            int orgID = data.getInteger("orgID");
+            List<RelationOrgs> relationOrgs = this.orgService.selectRelByorgID(orgID);
+            for (RelationOrgs relationOrgsList : relationOrgs) {
+                int userID = relationOrgsList.getUserid();
+                Users users = this.userService.selectByuserID(userID);
+                JSONObject userObject = new JSONObject();
+                userObject.put("username",users.getUsername());
+                userObject.put("phone",users.getUserphone());
+                userObject.put("userid",users.getUserid());
+                userObject.put("department",relationOrgsList.getDepartment());
+                userObject.put("position",relationOrgsList.getPosition());
+                userObject.put("joinTime",relationOrgsList.getJointime());
+                usersList.add(userObject);
+            }
+            result.put("tableData",usersList);
+            result.put("membersCount",usersList.size());
+            msg = "查找社团成员成功";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "查找社团成员失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setData(result);
         responseBody.setMsg(msg);
         responseBody.setCode(code);
         return responseBody;

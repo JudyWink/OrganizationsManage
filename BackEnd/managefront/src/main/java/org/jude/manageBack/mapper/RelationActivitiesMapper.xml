@@ -7,6 +7,8 @@
     <result column="userId" jdbcType="INTEGER" property="userid" />
     <result column="sinUpTime" jdbcType="TIMESTAMP" property="sinuptime" />
     <result column="Admission" jdbcType="VARCHAR" property="admission" />
+    <result column="activitiesId" jdbcType="INTEGER" property="activitiesid" />
+    <result column="actName" jdbcType="VARCHAR" property="actname" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    relation_activities_id, orgId, userId, sinUpTime, Admission
+    relation_activities_id, orgId, userId, sinUpTime, Admission, activitiesId, actName
   </sql>
   <select id="selectByExample" parameterType="org.jude.manageBack.pojo.RelationActivitiesExample" resultMap="BaseResultMap">
     select
@@ -75,7 +77,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from "relation_activities"
+    from relation_activities
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -101,9 +103,11 @@
   </delete>
   <insert id="insert" parameterType="org.jude.manageBack.pojo.RelationActivities">
     insert into "relation_activities" (relation_activities_id, orgId, userId, 
-      sinUpTime, Admission)
+      sinUpTime, Admission, activitiesId, 
+      actName)
     values (#{relationActivitiesId,jdbcType=INTEGER}, #{orgid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, 
-      #{sinuptime,jdbcType=TIMESTAMP}, #{admission,jdbcType=VARCHAR})
+      #{sinuptime,jdbcType=TIMESTAMP}, #{admission,jdbcType=VARCHAR}, #{activitiesid,jdbcType=INTEGER}, 
+      #{actname,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="org.jude.manageBack.pojo.RelationActivities">
     insert into "relation_activities"
@@ -123,6 +127,12 @@
       <if test="admission != null">
         Admission,
       </if>
+      <if test="activitiesid != null">
+        activitiesId,
+      </if>
+      <if test="actname != null">
+        actName,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="relationActivitiesId != null">
@@ -139,6 +149,12 @@
       </if>
       <if test="admission != null">
         #{admission,jdbcType=VARCHAR},
+      </if>
+      <if test="activitiesid != null">
+        #{activitiesid,jdbcType=INTEGER},
+      </if>
+      <if test="actname != null">
+        #{actname,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -166,6 +182,12 @@
       <if test="record.admission != null">
         Admission = #{record.admission,jdbcType=VARCHAR},
       </if>
+      <if test="record.activitiesid != null">
+        activitiesId = #{record.activitiesid,jdbcType=INTEGER},
+      </if>
+      <if test="record.actname != null">
+        actName = #{record.actname,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -177,7 +199,9 @@
       orgId = #{record.orgid,jdbcType=INTEGER},
       userId = #{record.userid,jdbcType=INTEGER},
       sinUpTime = #{record.sinuptime,jdbcType=TIMESTAMP},
-      Admission = #{record.admission,jdbcType=VARCHAR}
+      Admission = #{record.admission,jdbcType=VARCHAR},
+      activitiesId = #{record.activitiesid,jdbcType=INTEGER},
+      actName = #{record.actname,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -197,6 +221,12 @@
       <if test="admission != null">
         Admission = #{admission,jdbcType=VARCHAR},
       </if>
+      <if test="activitiesid != null">
+        activitiesId = #{activitiesid,jdbcType=INTEGER},
+      </if>
+      <if test="actname != null">
+        actName = #{actname,jdbcType=VARCHAR},
+      </if>
     </set>
     where relation_activities_id = #{relationActivitiesId,jdbcType=INTEGER}
   </update>
@@ -205,7 +235,9 @@
     set orgId = #{orgid,jdbcType=INTEGER},
       userId = #{userid,jdbcType=INTEGER},
       sinUpTime = #{sinuptime,jdbcType=TIMESTAMP},
-      Admission = #{admission,jdbcType=VARCHAR}
+      Admission = #{admission,jdbcType=VARCHAR},
+      activitiesId = #{activitiesid,jdbcType=INTEGER},
+      actName = #{actname,jdbcType=VARCHAR}
     where relation_activities_id = #{relationActivitiesId,jdbcType=INTEGER}
   </update>
 </mapper>

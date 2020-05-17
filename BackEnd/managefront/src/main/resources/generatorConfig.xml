@@ -52,7 +52,7 @@
 <!--        <table tableName="documents"></table>-->
 <!--        <table tableName="indeximgs"></table>-->
 <!--        <table tableName="relation_orgs"></table>-->
-<!--        <table tableName=" relation_activities"></table>-->
+        <table tableName=" relation_activities"></table>
 <!--        <table tableName=" relation_position"></table>-->
 <!--        <table tableName="messages_backups"></table>-->
 

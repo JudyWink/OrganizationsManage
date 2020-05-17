@@ -28,8 +28,10 @@ import PublishActivities from "../views/activities/PublishActivities";
 import UserPower from "../views/UserManager/UserPower";
 import IndexManager from "../views/index/IndexManager";
 import UploadDocument from "../views/document/UploadDocument";
-import ModifyPassword from "../views/login/ModifyPassword"
-import MessageSended from "../views/message/MessageSended"
+import ModifyPassword from "../views/login/ModifyPassword";
+import MessageSended from "../views/message/MessageSended";
+import myPushActs from "../views/activities/myPushActs";
+import havaOrgUsers from "../views/UserManager/havaOrgUsers"
 
 // 在vue中注入Router
 Vue.use(VueRouter)
@@ -73,6 +75,7 @@ const routes =[
   {
     path: '/personalInfo',
     component: PersonalInfo,
+    name:"PersonalInfo",
     meta:{
       keepalive:true
     }
@@ -108,6 +111,7 @@ const routes =[
   {
     path: '/ActivitiesProgress',
     component: ActivitiesProgress,
+    name:"ActivitiesProgress",
     meta:{
       keepalive:true
     }
@@ -140,6 +144,13 @@ const routes =[
       keepalive:true
     }
   },
+     {
+       path: '/myPushActs',
+       component: myPushActs,
+       meta:{
+         keepalive:true
+       }
+     },
   {
     path: '/organizationInfo',
     component: OrganizationInfo,
@@ -176,6 +187,13 @@ const routes =[
       keepalive:true
     }
   },
+     {
+       path: '/havaOrgUsers',
+       component: havaOrgUsers,
+       meta:{
+         keepalive:true
+       }
+     },
   {
     path: '/signupMembers',
     component: SignupMembers,

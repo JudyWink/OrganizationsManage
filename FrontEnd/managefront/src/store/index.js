@@ -66,9 +66,9 @@ const store = new Vuex.Store({
    state.token = null;
    state.userName = null;
    state.userType = null;
-   window.sessionStorage.removeItem('token');
-   window.sessionStorage.removeItem('userName');
-   window.sessionStorage.removeItem('userType');
+   state.userID = null;
+   state.orgID = null;
+   sessionStorage.clear();
    window.localStorage.removeItem('')
     }
   }

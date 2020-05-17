@@ -3,6 +3,10 @@ package org.jude.manageBack.pojo;
 import java.util.Date;
 
 public class Activities {
+    private String Singup;
+
+    private Integer count;
+
     private Integer activitityid;
 
     private String activitityname;
@@ -28,6 +32,22 @@ public class Activities {
     private Date signuptime;
 
     private Date signupendtime;
+
+    public String getSingup() {
+        return Singup;
+    }
+
+    public void setSingup(String Singup) {
+        this.Singup = Singup == null ? null : Singup.trim();
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 
     public Integer getActivitityid() {
         return activitityid;

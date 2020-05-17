@@ -8,6 +8,7 @@ import org.jude.manageBack.JsonRequestBody;
 import org.jude.manageBack.JsonResponseBody;
 import org.jude.manageBack.config.UserLoginToken;
 import org.jude.manageBack.pojo.Orgs;
+import org.jude.manageBack.pojo.RelationOrgs;
 import org.jude.manageBack.pojo.Users;
 import org.jude.manageBack.service.OrgService;
 import org.jude.manageBack.service.UserService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -51,10 +53,10 @@ public class UserController {
                     String token;
                     token = JWT.create().withAudience(user.getUseracount()).sign(Algorithm.HMAC256(user.getUserpassword()));
                     result.put("token", token);
-                    result.put("userType",user.getUsertype());
-                    result.put("userName",user.getUsername());
-                    result.put("userID",user.getUserid());
-                    result.put("orgID",user.getDefultorg());
+                    result.put("userType", user.getUsertype());
+                    result.put("userName", user.getUsername());
+                    result.put("userID", user.getUserid());
+                    result.put("orgID", user.getDefultorg());
                     code = 0;
                     msg = "登录成功";
                 } else {
@@ -79,17 +81,17 @@ public class UserController {
         Integer code = null;
         JsonResponseBody responseBody = new JsonResponseBody();
         JSONObject result = new JSONObject();
-        try{
+        try {
             int userID = data.getInteger("userID");
             Users user = this.userService.selectByuserID(userID);
             String orgID = user.getDefultorg();
-            if(!orgID.isEmpty()){
+            if (orgID != null) {
                 Orgs org = this.orgService.selectByorgID(Integer.parseInt(orgID));
                 user.setOrgname(org.getOrgname());
-            }else {
-                user.setOrgname("【你还没加入社团】");
+            } else {
+                user.setOrgname("【未加入社团】");
             }
-            result.put("user",user);
+            result.put("user", user);
         } catch (Exception e) {
             e.printStackTrace();
             msg = "查询用户信息出错";
@@ -161,8 +163,8 @@ public class UserController {
     }
 
 
-    //查询全部用户
-    @RequestMapping("/findAllUsers")
+    //查询无组织用户
+    @RequestMapping("/findNoOrgAllUsers")
     @ResponseBody
     @UserLoginToken
     public JsonResponseBody findAllUsers() throws Exception {
@@ -170,7 +172,7 @@ public class UserController {
         Iterator<Users> iterator = usersList.iterator();
         while (iterator.hasNext()) {
             Users users = iterator.next();
-            if (users.getUserid() == 1) {
+            if (users.getUserid() == 1 ||users.getDefultorg() != null) {
                 iterator.remove();//使用迭代器的删除方法删除
             }
         }
@@ -178,7 +180,7 @@ public class UserController {
         Integer code = null;
         JsonResponseBody responseBody = new JsonResponseBody();
         JSONObject result = new JSONObject();
-        result.put("usersList",usersList);
+        result.put("usersList", usersList);
         msg = "查询成功";
         code = 0;
         responseBody.setData(result);
@@ -186,6 +188,62 @@ public class UserController {
         responseBody.setCode(code);
         return responseBody;
     }
+
+    //查询有组织用户
+    @UserLoginToken
+    @RequestMapping("/findhaveOrgAllUsers")
+    @ResponseBody
+    public JsonResponseBody findhaveOrgAllUsers() throws Exception {
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        JsonResponseBody responseBody = new JsonResponseBody();
+        try {
+            List<Users> usersList = this.userService.findAllUsers();
+            Iterator<Users> iterator = usersList.iterator();
+            while (iterator.hasNext()) {
+                Users users = iterator.next();
+                if (users.getUserid() == 1 || users.getUserid() == 2 ||users.getDefultorg() == null) {
+                    iterator.remove();//使用迭代器的删除方法删除
+                }
+            }
+            List<JSONObject> userInfo = new ArrayList<>();
+            for (Users users:usersList) {
+                String orgID = users.getDefultorg();
+                List < RelationOrgs > relationOrgs = this.orgService.selectRelByorgID(Integer.valueOf(orgID));
+                Orgs org = this.orgService.selectByorgID(Integer.valueOf(orgID));
+                JSONObject userObject = new JSONObject();
+                userObject.put("orgName", org.getOrgname());
+                userObject.put("username", users.getUsername());
+                userObject.put("phone", users.getUserphone());
+                userObject.put("userid", users.getUserid());
+                for (RelationOrgs relationOrgsList : relationOrgs) {
+                    if(relationOrgsList.getUserid().equals(users.getUserid())) {
+                        userObject.put("department", relationOrgsList.getDepartment());
+                        userObject.put("position", relationOrgsList.getPosition());
+                        userObject.put("joinTime", relationOrgsList.getJointime());
+                    }
+                }
+                userInfo.add(userObject);
+            }
+            result.put("tableData",userInfo);
+            msg = "查询有组织用户成功";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "查询有组织用户失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+
 
     //更新用户信息
     @UserLoginToken
@@ -199,7 +257,7 @@ public class UserController {
         JsonResponseBody responseBody = new JsonResponseBody();
         JSONObject result = new JSONObject();
         Users user = new Users();
-        try{
+        try {
             user.setUserid(userInfo.getInteger("userid"));
             user.setUseracount(userInfo.getString("useracount"));
             user.setUserpassword(userInfo.getString("userpassword"));
@@ -217,7 +275,7 @@ public class UserController {
             user.setUserphone(userInfo.getString("userphone"));
             user.setUsersex(userInfo.getString("usersex"));
             user.setUserhobby(userInfo.getString("userhobby"));
-            Date nowtime =  new Date();
+            Date nowtime = new Date();
             user.setUpdatetime(nowtime);
             this.userService.updateUser(user);
         } catch (Exception e) {
@@ -275,7 +333,6 @@ public class UserController {
     }
 
 
-
     //模板
     @UserLoginToken
     @RequestMapping("/mb")
@@ -288,9 +345,7 @@ public class UserController {
         JSONObject result = new JSONObject();
 
 
-
-
-        result.put("sb","sb");
+        result.put("sb", "sb");
         msg = "成功";
         code = 0;
         responseBody.setData(result);

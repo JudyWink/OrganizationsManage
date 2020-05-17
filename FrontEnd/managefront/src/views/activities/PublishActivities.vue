@@ -120,6 +120,7 @@
                                 showClose: false,
                                 duration: 2000,
                             });
+                            _this.$refs["ruleForm"].resetFields();
                         }
                         if (response.data.code == 1) {
                             _this.$notify.error({

@@ -13,6 +13,10 @@ public class RelationActivities {
 
     private String admission;
 
+    private Integer activitiesid;
+
+    private String actname;
+
     public Integer getRelationActivitiesId() {
         return relationActivitiesId;
     }
@@ -51,5 +55,21 @@ public class RelationActivities {
 
     public void setAdmission(String admission) {
         this.admission = admission == null ? null : admission.trim();
+    }
+
+    public Integer getActivitiesid() {
+        return activitiesid;
+    }
+
+    public void setActivitiesid(Integer activitiesid) {
+        this.activitiesid = activitiesid;
+    }
+
+    public String getActname() {
+        return actname;
+    }
+
+    public void setActname(String actname) {
+        this.actname = actname == null ? null : actname.trim();
     }
 }

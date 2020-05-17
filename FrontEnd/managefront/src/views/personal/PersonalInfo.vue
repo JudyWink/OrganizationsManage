@@ -36,7 +36,7 @@
           <td colspan="2">
             <el-input :disabled="isNotmodify" v-model="user.userclass"></el-input>
           </td>
-          <td>
+          <td v-if="canModify == true">
             <el-button type="warning" icon="el-icon-edit" @click="dialogFormVisible = true" plain>修改密码</el-button>
           </td>
         </tr>
@@ -104,7 +104,7 @@
             <el-input :disabled="isNotmodify" type="textarea" v-model="user.userhobby"></el-input>
           </td>
         </tr>
-        <tr>
+        <tr v-if="canModify === true">
           <td colspan="4">
             <el-button type="primary" @click="modify">{{modifytext}}</el-button>
             <el-button type="success" @click="save">保存</el-button>
@@ -140,6 +140,7 @@
         name: "PersonalInfo",
         data() {
             return {
+                canModify : true,
                 wrongTip:"",
                 position:"",
                 user:"",
@@ -283,11 +284,15 @@
 
         },
         created() {
+            this.canModify = this.$route.params.canModify;
             const _this = this;
-            const userID = window.sessionStorage.getItem('userID');
+            let userID = window.sessionStorage.getItem('userID');
+            if(this.$route.params.userID != null){
+                userID = this.$route.params.userID;
+            }
             let data={
                 data:{
-                    userID:userID
+                    "userID":userID
                 }
             }
             this.$axios.post("/findUserInfo", JSON.stringify(data))

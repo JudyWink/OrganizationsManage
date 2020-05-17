@@ -3,8 +3,10 @@ package org.jude.manageBack.controller;
 import com.alibaba.fastjson.JSONObject;
 import org.jude.manageBack.JsonRequestBody;
 import org.jude.manageBack.JsonResponseBody;
+import org.jude.manageBack.config.UserLoginToken;
 import org.jude.manageBack.pojo.Activities;
 import org.jude.manageBack.pojo.Orgs;
+import org.jude.manageBack.pojo.RelationActivities;
 import org.jude.manageBack.service.ActivityService;
 import org.jude.manageBack.service.OrgService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,40 +30,51 @@ public class ActivityController {
     //查询所有活动
     @RequestMapping("/findAllActivities")
     @ResponseBody
-    public JsonResponseBody findAllOrgs() throws Exception {
-        List<Activities> ActivitiesList = this.activityService.findAllActivities();
-        for (Activities activity : ActivitiesList) {
-            int useid = activity.getOrgid();
-            Orgs org = this.orgService.selectByorgID(useid);
-
-            Date Signuptime = activity.getSignuptime();
-            Date Signupendtime = activity.getSignupendtime();
-            Date Activititystarttime = activity.getActivititystarttime();
-            Date Activitityendtime = activity.getActivitityendtime();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date nowtime =  new Date();
-            if (nowtime.after(Activitityendtime)){
-                activity.setActivititystatus("已结束");
-            }
-            else if (nowtime.before(Signupendtime)&&nowtime.after(Signuptime)){
-                activity.setActivititystatus("报名中");
-            }
-            else if (nowtime.before(Activititystarttime)&&nowtime.after(Signupendtime)){
-                activity.setActivititystatus("活动筹备中");
-            }
-            else if (nowtime.before(Activitityendtime)&&nowtime.after(Activititystarttime)){
-                activity.setActivititystatus("活动中");
-            }else {
-                activity.setActivititystatus("未开始");
-            }
-
-            activity.setOrgname(org.getOrgname());
-        }
+    public JsonResponseBody findAllOrgs(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        JSONObject result = new JSONObject();
         String msg = null;
         Integer code = null;
         JsonResponseBody responseBody = new JsonResponseBody();
-        JSONObject result = new JSONObject();
-        result.put("ActivitiesList", ActivitiesList);
+        try {
+            List<Activities> ActivitiesList = this.activityService.findAllActivities();
+            for (Activities activity : ActivitiesList) {
+                int activityID = activity.getActivitityid();
+                List<RelationActivities> relationActivitiesList = this.activityService.selectByactivityID(activityID);
+                if(!relationActivitiesList.isEmpty()){
+                    activity.setCount(relationActivitiesList.size());
+                }else {
+                    activity.setCount(0);
+                }
+                int useid = activity.getOrgid();
+                Orgs org = this.orgService.selectByorgID(useid);
+                activity.setOrgname(org.getOrgname());
+                Date Signuptime = activity.getSignuptime();
+                Date Signupendtime = activity.getSignupendtime();
+                Date Activititystarttime = activity.getActivititystarttime();
+                Date Activitityendtime = activity.getActivitityendtime();
+                Date nowtime = new Date();
+                if (nowtime.after(Activitityendtime)) {
+                    activity.setActivititystatus("已结束");
+                } else if (nowtime.before(Signupendtime) && nowtime.after(Signuptime)) {
+                    activity.setActivititystatus("报名中");
+                } else if (nowtime.before(Activititystarttime) && nowtime.after(Signupendtime)) {
+                    activity.setActivititystatus("活动筹备中");
+                } else if (nowtime.before(Activitityendtime) && nowtime.after(Activititystarttime)) {
+                    activity.setActivititystatus("活动中");
+                } else {
+                    activity.setActivititystatus("未开始");
+                }
+            }
+            result.put("ActivitiesList", ActivitiesList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "查询所有活动失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
         msg = "查询所有活动成功";
         code = 0;
         responseBody.setData(result);
@@ -71,6 +84,7 @@ public class ActivityController {
     }
 
     //通过日历查询所有活动
+    @UserLoginToken
     @RequestMapping("/CalendarFind")
     @ResponseBody
     public JsonResponseBody CalendarFind() throws Exception {
@@ -98,6 +112,7 @@ public class ActivityController {
     }
 
     //发布活动
+    @UserLoginToken
     @RequestMapping("/pushActivity")
     @ResponseBody
     public JsonResponseBody pushActivity(@RequestBody JsonRequestBody requestBody) throws Exception {
@@ -148,5 +163,147 @@ public class ActivityController {
         responseBody.setCode(code);
         return responseBody;
     }
+
+    //查找一个活动
+    @UserLoginToken
+    @RequestMapping("/findOneActivity")
+    @ResponseBody
+    public JsonResponseBody findOneActivity(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        JsonResponseBody responseBody = new JsonResponseBody();
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        try {
+            int userID = data.getInteger("userID");
+            int activityID = data.getInteger("activityID");
+            List<RelationActivities> relationActivitiesList = this.activityService.selectByactivityID(activityID);
+            Activities activitity = this.activityService.findActivityByID(activityID);
+            if(!relationActivitiesList.isEmpty()){
+                for(RelationActivities relationActivities:relationActivitiesList){
+                    int joinUser = relationActivities.getUserid();
+                    if(joinUser == userID){
+                        activitity.setSingup("false");
+                    }else {
+                        activitity.setSingup("true");
+                    }
+                }
+                result.put("count" ,relationActivitiesList.size());
+            }else {
+                activitity.setSingup("true");
+            }
+
+
+            int useid = activitity.getOrgid();
+            Orgs org = this.orgService.selectByorgID(useid);
+            activitity.setOrgname(org.getOrgname());
+            Date Signuptime = activitity.getSignuptime();
+            Date Signupendtime = activitity.getSignupendtime();
+            Date Activititystarttime = activitity.getActivititystarttime();
+            Date Activitityendtime = activitity.getActivitityendtime();
+            Date nowtime =  new Date();
+            if (nowtime.after(Activitityendtime)){
+                activitity.setActivititystatus("4");
+            }
+            else if (nowtime.before(Signupendtime)&&nowtime.after(Signuptime)){
+                activitity.setActivititystatus("2");
+            }
+            else if (nowtime.before(Activititystarttime)&&nowtime.after(Signupendtime)){
+                activitity.setActivititystatus("2");
+            }
+            else if (nowtime.before(Activitityendtime)&&nowtime.after(Activititystarttime)){
+                activitity.setActivititystatus("3");
+            }else {
+                activitity.setActivititystatus("1");
+            }
+
+            result.put("activitityInfo", activitity);
+            msg = "成功查询到活动";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "查询活动失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+    //查找参加的所有活动
+    @UserLoginToken
+    @RequestMapping("/findMyActivities")
+    @ResponseBody
+    public JsonResponseBody findMyActivities(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        JsonResponseBody responseBody = new JsonResponseBody();
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        try {
+            int userID = data.getInteger("userID");
+            List<RelationActivities> relationActivitiesList = this.activityService.selectByuserID(userID);
+            for(RelationActivities relationActivities:relationActivitiesList){
+                Activities activities = this.activityService.findActivityByID(relationActivities.getActivitiesid());
+                relationActivities.setActname(activities.getActivitityname());
+            }
+            result.put("ActivitiesList",relationActivitiesList);
+            msg = "查询参加的活动成功";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "查询活动失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+    //查找发布所有活动
+    @UserLoginToken
+    @RequestMapping("/findMyPushActivities")
+    @ResponseBody
+    public JsonResponseBody findMyPushActivities(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        JsonResponseBody responseBody = new JsonResponseBody();
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        try {
+            int orgID = data.getInteger("orgID");
+            List<Activities> activities = this.activityService.selectByorgID(orgID);
+            List<JSONObject> ActivitiesList = new ArrayList<>();
+            for (Activities activities1 :activities) {
+                JSONObject ActivitiesObject = new JSONObject();
+                ActivitiesObject.put("activitiesid", activities1.getActivitityid());
+                ActivitiesObject.put("actname",activities1.getActivitityname());
+                ActivitiesList.add(ActivitiesObject);
+            }
+            result.put("ActivitiesList", ActivitiesList);
+            msg = "查询发布的活动成功";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "查询活动失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
 
 }

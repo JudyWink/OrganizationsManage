@@ -1,6 +1,6 @@
 <template xmlns:c="http://www.w3.org/1999/html">
-  <div id="myActivities_box">
-    <div id="myActivities">
+  <div id="myPushActs_box">
+    <div id="myPushActs">
       <div>
         <div>
           <el-select @change="sb(value)" v-model="value" placeholder="请选择">
@@ -13,7 +13,7 @@
             </el-option>
           </el-select>
         </div>
-        <div v-if="activitityname == ''"><el-tag class="top_tag" effect="dark" type="danger">选一个你参加的活动吧！</el-tag></div>
+        <div v-if="activitityname == ''"><el-tag class="top_tag" effect="dark" type="danger">选一个你发布的活动吧！</el-tag></div>
       </div>
       <div v-if="activitityname != ''">
         <el-tag class="top_tag" effect="dark" type="danger">{{activitityname}}</el-tag>
@@ -54,7 +54,6 @@
 <script>
     import moment from 'moment'
     export default {
-        name: "myActivities",
         data() {
             return {
                 options: [],
@@ -124,10 +123,10 @@
             let _this = this;
             let data = {
                 data: {
-                    "userID": sessionStorage.getItem("userID"),
+                    "orgID": sessionStorage.getItem("orgID"),
                 }
             }
-            this.$axios.post('/findMyActivities', JSON.stringify(data))
+            this.$axios.post('/findMyPushActivities', JSON.stringify(data))
                 .then(function (response) {
                     if (response.data.code == 0) {
                         console.log(response.data.msg);
@@ -140,7 +139,7 @@
                 .catch(function (error) {
                     console.log(error)
                 });
-            }
+        }
 
 
     }
@@ -154,12 +153,12 @@
     width: 200px;
   }
 
-  #myActivities {
+  #myPushActs {
     width: 100%;
     margin-top: 30px;
   }
 
-  #myActivities_box {
+  #myPushActs_box {
     height: 420px;
     width: 85%;
     margin: auto;

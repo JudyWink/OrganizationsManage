@@ -1,6 +1,6 @@
 <template>
-  <div id="members_box">
-    <div id="members">
+  <div id="havaOrgUsers_box">
+    <div id="havaOrgUsers">
       <el-table
         :data="tableData"
         stripe
@@ -14,7 +14,7 @@
         </el-table-column>
         <el-table-column
           label="学生名"
-          width="200px"
+          width="130px"
           prop="username">
           <template slot-scope="scope">
             <el-link  @click="openUser(scope.row)" type="primary">{{ scope.row.username }}</el-link>
@@ -50,14 +50,19 @@
           </template>
         </el-table-column>
         <el-table-column
+          label="组织"
+          prop="orgName"
+          width="220px">
+        </el-table-column>
+        <el-table-column
           label="部门"
           prop="department"
-          width="200px">
+          width="150px">
         </el-table-column>
         <el-table-column
           label="职位"
           prop="position"
-          width="200px">
+          width="120px">
         </el-table-column>
         <el-table-column
           prop="phone"
@@ -80,11 +85,6 @@
               @click="sendMessage(scope.row)">通知
             </el-button>
             <el-button
-              type="primary"
-              size="mini"
-              @click="promoted">升职
-            </el-button>
-            <el-button
               size="mini"
               type="danger"
               @click="fire">踢出
@@ -93,15 +93,15 @@
         </el-table-column>
       </el-table>
     </div>
-    <span style="float: left">
-            选中:
-      <el-tag size="mini">{{this.multipleSelection.length}}</el-tag>
-      名成员
-      <el-button type="success" size="mini" @click="sendMessage">一键通知</el-button>
-    </span>
-    <span style="float: right">
-      共<el-tag size="mini">{{this.membersCount}}</el-tag>人
-    </span>
+<!--    <span style="float: left">-->
+<!--            选中:-->
+<!--      <el-tag size="mini">{{this.multipleSelection.length}}</el-tag>-->
+<!--      名成员-->
+<!--      <el-button type="success" size="mini" @click="sendMessage">一键通知</el-button>-->
+<!--    </span>-->
+<!--    <span style="float: right">-->
+<!--      共<el-tag size="mini">{{this.membersCount}}</el-tag>人-->
+<!--    </span>-->
   </div>
 </template>
 
@@ -218,12 +218,7 @@
         },
         created() {
             let _this = this;
-            let data = {
-                data: {
-                    "orgID": sessionStorage.getItem("orgID"),
-                }
-            }
-            this.$axios.post("/findOrgMembers",JSON.stringify(data))
+            this.$axios.post("/findhaveOrgAllUsers")
                 .then(function (response) {
                     if (response.data.code == 1) {
                         _this.$notify.warning({
@@ -247,12 +242,12 @@
 </script>
 
 <style>
-  #members {
+  #havaOrgUsers {
     width: 100%;
     margin: 10px auto;
   }
 
-  #members_box {
+  #havaOrgUsers_box {
     height: 600px;
     width: 85%;
     margin: auto;

@@ -9,29 +9,28 @@
         infinite-scroll-immediate=false
         @selection-change="handleSelectionChange">
         <el-table-column
-          type="index"
-          :index="indexMethod">
+          type="index">
         </el-table-column>
         <el-table-column
           prop="activititystarttime"
           label="开始时间"
           sortable
           :formatter="dateFormat"
-          width="130px">
+          width="160px">
         </el-table-column>
         <el-table-column
           prop="activitityendtime"
           label="结束时间"
           sortable
           :formatter="dateFormat"
-          width="130px">
+          width="160px">
         </el-table-column>
         <el-table-column
           prop="activitityname"
           label="活动名"
-          width="180px">
+          width="150px">
           <template slot-scope="scope">
-            <el-link icon="el-icon-view" @click="openMsg" type="primary">{{ scope.row.activitityname }}</el-link>
+            <el-link  @click="openMsg(scope.row)" type="primary">{{ scope.row.activitityname }}</el-link>
           </template>
         </el-table-column>
         <el-table-column
@@ -53,28 +52,18 @@
           prop="activitityscount"
           label="人数"
           width="130px">
+          <template slot-scope="scope">
+            <span>{{scope.row.count}}/{{ scope.row.activitityscount }}</span>
+          </template>
         </el-table-column>
         <el-table-column
           label="操作">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.activitityname=='校园十大歌手'|| scope.row.activitityname=='我是歌手'"
-                       type="warning"
-                       size="mini"
-                       disabled
-                       @click="openMsg">已报名
-            </el-button>
-            <el-button v-if="scope.row.activitityname!='校园十大歌手'&& scope.row.activitityname!='我是歌手'"
-              type="success"
-              size="mini"
-                       :disabled="userType ==='游客' || userType ==='系统管理员' || scope.row.activititystatus != '报名中' ? true : false"
-              @click="openMsg">报名
-            </el-button>
             <el-button
               icon="el-icon-view"
               size="mini"
-              type="primary"
-              :disabled="userType ==='游客' ? true : false"
-              @click="openMsg">详情
+              type="success"
+              @click="openMsg(scope.row)">查看详情
             </el-button>
           </template>
         </el-table-column>
@@ -98,6 +87,7 @@
                 msgCount: 1,
                 ActivitiesList:[],
                 multipleSelection: [],
+                count:0,
             }
         },
         methods: {
@@ -109,16 +99,23 @@
                 return moment(date).format("YYYY-MM-DD hh:mm")
             },
 
-            openMsg() {
-                this.$router.push('/ActivitiesProgress')
+            openMsg(value) {
+                sessionStorage.setItem("activitityid", value.activitityid);
+                this.$router.push("/ActivitiesProgress")
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
+
         },
         created() {
-            const _this = this;
-            this.$axios.post("/findAllActivities")
+            let _this = this;
+            let data = {
+                data: {
+                    "userID": sessionStorage.getItem("userID"),
+                }
+            }
+            this.$axios.post("/findAllActivities",JSON.stringify(data))
                 .then(function (response) {
                     if (response.data.code == 1) {
                         _this.$notify.warning({
@@ -128,15 +125,15 @@
                         });
                     }
                     if (response.data.code == 0) {
-                        _this.ActivitiesList = response.data.data.ActivitiesList
-                            console.log(response.data.msg)
-                        console.log(_this.ActivitiesList)
+                        _this.ActivitiesList =  response.data.data.ActivitiesList;
+                        console.log(response.data.msg)
                     }
                 })
                 .catch(function (error) {
                     console.log(error)
                 });
-        }
+        },
+
     }
 </script>
 

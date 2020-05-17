@@ -48,13 +48,13 @@
           prop="count"
           label="操作">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.orgName!='佛大话剧团'"
+            <el-button v-if="scope.row.orgid!= myorgID"
               type="success"
               size="mini"
                        :disabled="userType ==='游客' ? true : false"
               @click="SignUp">报名
             </el-button>
-            <el-button v-if="scope.row.orgName=='佛大话剧团'"
+            <el-button v-if="scope.row.orgid== myorgID"
                        type="warning"
                        size="mini"
                        disabled
@@ -64,7 +64,7 @@
               type="danger"
               size="mini"
               :disabled="userType ==='游客' ? true : false"
-              @click="Feedback">意见反馈
+              @click="openFeedback(scope.row)">意见反馈
             </el-button>
             <el-button
               icon="el-icon-view"
@@ -72,6 +72,35 @@
               type="primary"
               @click="openOrgInfo(scope.row)">详情
             </el-button>
+            <el-dialog ref="dialog"  :close-on-click-modal="false"  width="700px" :visible.sync="dialogFormVisible">
+              <el-form :model="Form" :rules="fromrules">
+                <el-form-item>
+                  <h2>向【{{org}}】负责人[<span style="color:red">{{Name}}</span>]发送消息</h2>
+                </el-form-item>
+                <el-form-item prop="title">
+                  <el-input
+                    v-model = "Form.title"
+                    placeholder="请输入消息标题"
+                    maxlength="10"
+                    show-word-limit
+                  ></el-input>
+                </el-form-item>
+                <el-form-item prop="text">
+                  <el-input
+                    v-model="Form.text"
+                    type="textarea"
+                    rows="4"
+                    placeholder="请输入消息内容"
+                    maxlength="100"
+                    show-word-limit
+                  ></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button  type="primary" @click="send">发 送</el-button>
+                  <el-button type="success" @click="dialogFormVisible = false">取 消</el-button>
+                </el-form-item>
+              </el-form>
+            </el-dialog>
           </template>
         </el-table-column>
       </el-table>
@@ -89,9 +118,29 @@
         name: "allActivities",
         data() {
             return {
+                dialogFormVisible:false,
+                Name:"",
+                org:"",
+                myorgID:"",
+                MessageType:"",
+                messageInfo:{},
+                ReceiveID:"",
+                Form: {
+                    title: "",
+                    text: "",
+                },
+                fromrules:{
+                    title: [
+                        { required: true, message: '请输入消息标题', trigger: 'blur' },
+                        { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+                    ],
+                    text: [
+                        { required: true, message: '请输入消息内容', trigger: 'blur' },
+                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
+                    ],
+                },
                 orgsList:[],
                 userType: window.sessionStorage.getItem('userType'),
-                Count: 1,
                 multipleSelection: [],
             }
         },
@@ -99,16 +148,56 @@
             SignUp(){
                 this.$message.error('报名');
             },
-            Feedback(){
-                this.$message.error('意见反馈');
+            openFeedback(value){
+                this.Form = {type:"意见反馈"};
+                this.org = value.orgname;
+                this.Name = value.leadername;
+                this.ReceiveID = value.orgleader;
+                this.dialogFormVisible = true;
             },
+
+            send(){
+                if(this.Form.text == null || this.Form.text.length > 100 ||this.Form.text.length <1){
+                    return false;
+                }if(this.Form.title == null || this.Form.title.length > 10 ||this.Form.title.length <1){
+                    return false;
+                }
+                let _this = this;
+                let data = {
+                    data:{
+                        "msg":this.Form,
+                        "ReceiveID":this.ReceiveID,
+                        "userID": sessionStorage.getItem('userID'),
+                    }
+                };
+                this.$axios.post("/senddMessage",JSON.stringify(data))
+                    .then(function (response) {
+                        if (response.data.code == 1) {
+                            _this.$notify.warning({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                        }
+                        if (response.data.code == 0) {
+                            _this.$notify.success({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                            _this.dialogFormVisible = false;
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
+            },
+
+
             openOrgInfo(row) {
-                sessionStorage.setItem("orgID", row.orgid);
+                sessionStorage.setItem("orgIDInfo", row.orgid);
                 this.$router.push({
                         name:"OrganizationInfo",
-                        params: {
-                            org: row,
-                        }
                 })
 
             },
@@ -118,6 +207,7 @@
             },
         },
         created() {
+             this.myorgID = sessionStorage.getItem("orgID");
             const _this = this;
             this.$axios.post("/findAllOrgs")
                 .then(function (response) {
@@ -130,7 +220,6 @@
                     }
                     if (response.data.code == 0) {
                         _this.orgsList = response.data.data.orgsList
-                        _this.Count = _this.orgsList.length,
                             console.log(response.data.msg)
                     }
                 })

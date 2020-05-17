@@ -119,6 +119,7 @@
                 this.$store.commit("SET_TOKEN", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiLmuLjlrqIifQ.oA44T_HJGQBdVkaN-NFaykRM7rureZT2bsr93QlEpTk");
                 this.$store.commit( "SET_NAME", "游客");
                 this.$store.commit( "SET_TYPE","游客");
+                this.$store.commit( "SET_USERID","1");
                 this.$router.push('/index')
             }
         },

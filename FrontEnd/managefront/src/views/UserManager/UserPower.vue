@@ -14,8 +14,11 @@
       </el-table-column>
       <el-table-column
         label="学生名"
-        width="160px"
+        width="200px"
         prop="username">
+        <template slot-scope="scope">
+          <el-link  @click="openUser(scope.row)" type="primary">{{ scope.row.username }}</el-link>
+        </template>
       </el-table-column>
       <el-table-column
         label="学院"
@@ -176,6 +179,16 @@
                     });
             },
 
+            openUser(value){
+                this.$router.push({
+                    name: 'PersonalInfo',
+                    params: {
+                        canModify: false,
+                        userID:value.userid,
+                    }
+                })
+            },
+
             empower() {
                 this.$message.error('授权');
             },
@@ -185,7 +198,7 @@
         },
         created() {
             const _this = this;
-            this.$axios.post("/findAllUsers")
+            this.$axios.post("/findNoOrgAllUsers")
                 .then(function (response) {
                     if (response.data.code == 1) {
                         _this.$notify.warning({

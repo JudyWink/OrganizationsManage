@@ -3,6 +3,8 @@ package org.jude.manageBack.pojo;
 import java.util.Date;
 
 public class Orgs {
+    private String orgMmuberCount;
+
     private Integer orgid;
 
     private String orgname;
@@ -22,6 +24,14 @@ public class Orgs {
     private String orgcampus;
 
     private String leadername;
+
+    public String getorgMmuberCount() {
+        return orgMmuberCount;
+    }
+
+    public void setorgMmuberCount(String orgMmuberCount) {
+        this.orgMmuberCount = orgMmuberCount == null ? null : orgMmuberCount.trim();
+    }
 
     public Integer getOrgid() {
         return orgid;
