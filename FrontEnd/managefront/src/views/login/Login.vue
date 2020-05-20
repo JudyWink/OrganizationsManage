@@ -15,7 +15,7 @@
       <div style="width: 95%; margin-top: 10px;margin-bottom: 40px">
         <input type="checkbox" v-model="rememberINPUT" id="rememberMe">
         <span class="rember-me">记住密码</span>
-        <span class="forget-key"><a href="/forgetPassword">忘记密码</a></span>
+<!--        <span class="forget-key"><a href="/forgetPassword">忘记密码</a></span>-->
       </div>
       <div>
         <el-button type="success" @click="login" class="login_style">登录</el-button>

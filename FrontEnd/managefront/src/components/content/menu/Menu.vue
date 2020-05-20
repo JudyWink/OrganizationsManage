@@ -35,6 +35,7 @@
         <template slot="title">活动管理</template>
         <el-menu-item index="/publishActivities">发布活动</el-menu-item>
         <el-menu-item index="/allActivities">所有活动</el-menu-item>
+        <el-menu-item index="/myPushActs">已发布活动</el-menu-item>
       </el-submenu>
 
 
@@ -45,11 +46,7 @@
         </el-menu-item>
         <el-menu-item index="/messageSended">
           发信箱</el-menu-item>
-
       </el-submenu>
-
-
-
       <el-submenu index="8" v-if="userType === '社团负责人'">
         <template slot="title">社团信息</template>
         <el-menu-item index="/OrganizationSetting">社团主页图片</el-menu-item>
@@ -63,7 +60,7 @@
 
 
       <el-menu-item index="/calendar">社团日历</el-menu-item>
-      <el-menu-item style="float: right;" @click="signout"><i class="el-icon-switch-button"></i></el-menu-item>
+      <el-menu-item style="float: right;" @click="signout"><i style="color:black" class="el-icon-switch-button"></i></el-menu-item>
       <el-menu-item style="float: right;" index="/personalInfo">你好，【{{userType}}】{{userName}}</el-menu-item>
     </el-menu>
 

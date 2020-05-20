@@ -24,6 +24,12 @@ public interface ActivityService {
     //通过id查找活动
     public Activities findActivityByID(int activityID) throws Exception;
 
+    //增加一个活动关系
+    public void insertrelationActivities(RelationActivities relationActivities)throws Exception;
+
     //发布活动
     public void pushActivity(Activities activities) throws Exception;
+
+    //根据活动关系id删除一个活动关系
+    public void delrelationActivities(int relationid)throws Exception;
 }

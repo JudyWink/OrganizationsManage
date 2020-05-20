@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.jude.manageBack.JsonRequestBody;
 import org.jude.manageBack.JsonResponseBody;
 import org.jude.manageBack.config.UserLoginToken;
-import org.jude.manageBack.pojo.Indeximgs;
-import org.jude.manageBack.pojo.Orgs;
-import org.jude.manageBack.pojo.RelationOrgs;
-import org.jude.manageBack.pojo.Users;
+import org.jude.manageBack.pojo.*;
 import org.jude.manageBack.service.IndexService;
 import org.jude.manageBack.service.OrgService;
 import org.jude.manageBack.service.UserService;
@@ -45,7 +42,7 @@ public class OrgContorller {
                 iterator.remove();//使用迭代器的删除方法删除
             }
         }
-        for(Orgs Org: orgsList){
+        for (Orgs Org : orgsList) {
             int useid = Org.getOrgleader();
             Users user = this.userService.selectByuserID(useid);
             int orgID = Org.getOrgid();
@@ -57,7 +54,7 @@ public class OrgContorller {
         Integer code = null;
         JsonResponseBody responseBody = new JsonResponseBody();
         JSONObject result = new JSONObject();
-        result.put("orgsList",orgsList);
+        result.put("orgsList", orgsList);
         msg = "查询所有社团成功";
         code = 0;
         responseBody.setData(result);
@@ -75,14 +72,14 @@ public class OrgContorller {
         Integer code = null;
         JsonResponseBody responseBody = new JsonResponseBody();
         JSONObject result = new JSONObject();
-        try{
-            if (data.containsKey("orgID")) {
+        try {
+            if (data.containsKey("orgID") && !requestBody.getData().getString("orgID").equals("")) {
                 int orgID = data.getInteger("orgID");
                 Orgs org = this.orgService.selectByorgID(orgID);
                 result.put("org", org);
                 msg = "根据ID查询社团成功";
                 code = 0;
-            }else {
+            } else {
                 Orgs org = new Orgs();
                 org.setOrghistory("无");
                 org.setOrgintroduce("无");
@@ -114,7 +111,7 @@ public class OrgContorller {
         JsonResponseBody responseBody = new JsonResponseBody();
         JSONObject result = new JSONObject();
         try {
-            if (requestBody.getData().containsKey("orgID")) {
+            if (requestBody.getData().containsKey("orgID") && !requestBody.getData().getString("orgID").equals("")) {
                 int orgID = requestBody.getData().getInteger("orgID");
                 List<Indeximgs> imgsINFO = this.indexService.findImgsbyOrg(orgID);
                 List<String> IndexImgsUrls = new ArrayList<String>();
@@ -131,7 +128,7 @@ public class OrgContorller {
                     msg = "数据库中没找到社团图片信息";
                     code = 1;
                 }
-            }else {
+            } else {
                 msg = "你还没加入社团";
                 code = 1;
             }
@@ -148,7 +145,6 @@ public class OrgContorller {
         responseBody.setCode(code);
         return responseBody;
     }
-
 
 
     //设置社团图片
@@ -196,16 +192,16 @@ public class OrgContorller {
                 int userID = relationOrgsList.getUserid();
                 Users users = this.userService.selectByuserID(userID);
                 JSONObject userObject = new JSONObject();
-                userObject.put("username",users.getUsername());
-                userObject.put("phone",users.getUserphone());
-                userObject.put("userid",users.getUserid());
-                userObject.put("department",relationOrgsList.getDepartment());
-                userObject.put("position",relationOrgsList.getPosition());
-                userObject.put("joinTime",relationOrgsList.getJointime());
+                userObject.put("username", users.getUsername());
+                userObject.put("phone", users.getUserphone());
+                userObject.put("userid", users.getUserid());
+                userObject.put("department", relationOrgsList.getDepartment());
+                userObject.put("position", relationOrgsList.getPosition());
+                userObject.put("joinTime", relationOrgsList.getJointime());
                 usersList.add(userObject);
             }
-            result.put("tableData",usersList);
-            result.put("membersCount",usersList.size());
+            result.put("tableData", usersList);
+            result.put("membersCount", usersList.size());
             msg = "查找社团成员成功";
             code = 0;
         } catch (Exception e) {
@@ -221,4 +217,169 @@ public class OrgContorller {
         responseBody.setCode(code);
         return responseBody;
     }
+
+    //查找社团成员
+    @UserLoginToken
+    @RequestMapping("/promotedMembers")
+    @ResponseBody
+    public JsonResponseBody promotedMembers(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        JsonResponseBody responseBody = new JsonResponseBody();
+        try {
+            int userID = data.getInteger("userID");
+            int orgID = data.getInteger("orgID");
+            String department = data.getString("department");
+            String Position = data.getString("Position");
+            RelationOrgs relationOrgs = new RelationOrgs();
+            relationOrgs.setUserid(userID);
+            relationOrgs.setOrgid(orgID);
+            relationOrgs.setDepartment(department);
+            relationOrgs.setPosition(Position);
+            this.orgService.updaterelationOrgsOneInfo(relationOrgs, userID);
+            msg = "设置成员部门信息成功";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "设置成员部门信息失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+    //查找社团成员
+    @UserLoginToken
+    @RequestMapping("/signUpOrg")
+    @ResponseBody
+    public JsonResponseBody signUpOrg(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        JsonResponseBody responseBody = new JsonResponseBody();
+        try {
+            int userID = data.getInteger("userID");
+            int orgID = data.getInteger("orgID");
+            Signuporg signuporg = new Signuporg();
+            signuporg.setUserid(userID);
+            signuporg.setOrgid(orgID);
+            signuporg.setSignuporgtime(new Date());
+            signuporg.setIsnotadmission("否");
+            this.orgService.insertsignUpOrg(signuporg);
+            msg = "报名社团成功";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "报名社团失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+
+    //查询报名社团学生
+    @RequestMapping("/findsignUpUser")
+    @ResponseBody
+    @UserLoginToken
+    public JsonResponseBody findsignUpUser(@RequestBody JsonRequestBody requestBody) throws Exception {
+        List<Users> usersList = new ArrayList<>();
+        List<Signuporg> signuporgs = this.orgService.findAllsignUpOrg();
+        JSONObject data = requestBody.getData();
+        JsonResponseBody responseBody = new JsonResponseBody();
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        try {
+            int OrgID = data.getInteger("orgID");
+            Iterator<Signuporg> iterator = signuporgs.iterator();
+            while (iterator.hasNext()) {
+                Signuporg signuporg = iterator.next();
+                int signuporgID = signuporg.getOrgid();
+                String admission = signuporg.getIsnotadmission();
+                if (signuporgID != OrgID || !admission.equals("否")) {
+                    iterator.remove();//使用迭代器的删除方法删除
+                }
+            }
+            for(Signuporg signuporg:signuporgs){
+                int userID = signuporg.getUserid();
+                Users users = this.userService.selectByuserID(userID);
+                users.setUpdatetime(signuporg.getSignuporgtime());
+                users.setUserphoto(String.valueOf(signuporg.getSignupid()));
+                usersList.add(users);
+            }
+            result.put("usersList", usersList);
+        }catch (Exception e){
+            msg = "查询报名学生失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        msg = "查询报名学生成功";
+        code = 0;
+        responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+
+    //授权学生加入社团
+    @UserLoginToken
+    @RequestMapping("/empowerOrg")
+    @ResponseBody
+    public JsonResponseBody empowerOrg(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        String msg = null;
+        Integer code = null;
+        JsonResponseBody responseBody = new JsonResponseBody();
+        Date nowtime = new Date();
+        try {
+            int signupID = data.getInteger("signupID");
+            int userID = data.getInteger("userID");
+            int orgID = data.getInteger("orgID");
+            Users newuser = new Users();
+            newuser.setDefultorg(String.valueOf(orgID));
+            newuser.setUpdatetime(nowtime);
+            this.userService.updateUserOneInfo(newuser, userID);
+            RelationOrgs relationOrgs = new RelationOrgs();
+            relationOrgs.setJointime(nowtime);
+            relationOrgs.setOrgid(orgID);
+            relationOrgs.setUserid(userID);
+            relationOrgs.setPosition("成员");
+            this.orgService.insertrelationOrgs(relationOrgs);
+            Signuporg newsignuporg = new Signuporg();
+            newsignuporg.setIsnotadmission("是");
+            newsignuporg.setAdmissiontime(nowtime);
+            this.orgService.updateSignuporg(newsignuporg,signupID);
+            msg = "授权学生加入社团成功";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "授权学生加入社团失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+
 }

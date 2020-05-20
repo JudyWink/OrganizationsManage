@@ -51,10 +51,9 @@ public class UserServiceImpl implements UserService {
     //修改用户的某个信息
     @Override
     public void updateUserOneInfo(Users user,int userID)throws Exception {
-        UsersExample example = new UsersExample();
-        UsersExample.Criteria criteria = example.createCriteria();
-        criteria.andUseridEqualTo(userID);
-        this.usersMapper.updateByExampleSelective(user,example);
+        UsersExample usersExample = new UsersExample();
+        usersExample.createCriteria().andUseridEqualTo(userID);
+        this.usersMapper.updateByExampleSelective(user,usersExample);
     }
 
 }

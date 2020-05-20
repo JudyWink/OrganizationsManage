@@ -9,19 +9,19 @@
           <el-input v-model="ruleForm.activitityName"></el-input>
         </el-form-item>
         <el-form-item label="活动地点" prop="activitityPlace">
-            <el-input v-model="ruleForm.activitityPlace"></el-input>
+          <el-input v-model="ruleForm.activitityPlace"></el-input>
         </el-form-item>
         <el-form-item label="报名时间" required>
           <el-form-item prop="signupTime">
-          <el-col :span="1">
-          <el-date-picker
-            v-model="ruleForm.signupTime"
-            type="datetimerange"
-            value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"
-            start-placeholder="报名开始日期"
-            end-placeholder="报名结束日期">
-          </el-date-picker>
-          </el-col>
+            <el-col :span="1">
+              <el-date-picker
+                v-model="ruleForm.signupTime"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"
+                start-placeholder="报名开始日期"
+                end-placeholder="报名结束日期">
+              </el-date-picker>
+            </el-col>
           </el-form-item>
         </el-form-item>
         <el-form-item label="活动时间" required>
@@ -41,12 +41,12 @@
           <el-input v-model.number="ruleForm.activititysCount"></el-input>
         </el-form-item>
         <el-form-item label="活动类型">
-          <el-radio-group v-model="ruleForm.activitityType" >
-            <el-radio  label="娱乐"></el-radio>
-            <el-radio  label="讲座"></el-radio>
-            <el-radio  label="比赛"></el-radio>
-            <el-radio  label="公益活动"></el-radio>
-            <el-radio  label="表演"></el-radio>
+          <el-radio-group v-model="ruleForm.activitityType">
+            <el-radio label="娱乐"></el-radio>
+            <el-radio label="讲座"></el-radio>
+            <el-radio label="比赛"></el-radio>
+            <el-radio label="公益活动"></el-radio>
+            <el-radio label="表演"></el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="活动介绍" prop="activitityDescribe">
@@ -70,41 +70,49 @@
                 ruleForm: {
                     activitityName: '',
                     activitityPlace: '',
-                    signupTime:'',
-                    activitityTime: '',
+                    signupTime: [],
+                    activitityTime: [],
                     activititysCount: '',
                     activitityType: '',
                     activitityDescribe: '',
-                    orgID : '',
+                    orgID: '',
                 },
                 rules: {
                     activitityName: [
-                        { required: true, message: '请输入活动名称', trigger: 'blur' },
-                        { min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur' }
+                        {required: true, message: '请输入活动名称', trigger: 'blur'},
+                        {min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur'}
                     ],
                     activitityPlace: [
-                        { required: true, message: '请输入活动地点', trigger: 'blur' }
+                        {required: true, message: '请输入活动地点', trigger: 'blur'}
                     ],
                     signupTime: [
-                        { type: 'date', required: true, message: '请选择报名时间', trigger: 'blur' }
+                        {type: 'array', required: true, message: '请选择报名时间', trigger: 'blur'}
                     ],
                     activitityTime: [
-                        { type: 'date', required: true, message: '请选择活动时间', trigger: 'blur' }
+                        {type: 'array', required: true, message: '请选择活动时间', trigger: 'blur'}
                     ],
                     activititysCount: [
-                        { type: 'number', required: true, message: '请输入正确的活动人数' }
+                        {type: 'number', required: true, message: '请输入正确的活动人数'}
                     ],
                     activitityType: [
-                        { required: true, message: '请选择活动类型', trigger: 'change' }
+                        {required: true, message: '请选择活动类型', trigger: 'change'}
                     ],
                     activitityDescribe: [
-                        { required: true, message: '请输入活动介绍', trigger: 'blur' }
+                        {required: true, message: '请输入活动介绍', trigger: 'blur'}
                     ]
                 }
             };
         },
         methods: {
             submitForm() {
+                if (Date.parse(this.ruleForm.activitityTime[0]) <Date.parse(this.ruleForm.signupTime[1])) {
+                    this.$notify.error({
+                        message: "报名时间需要在活动时间之前",
+                        showClose: false,
+                        duration: 2000,
+                    });
+                    return false;
+                }
                 let _this = this
                 let data ={
                     data:{
@@ -157,8 +165,8 @@
   }
 
   #top {
-    color: 	#1E90FF;
-    font-family:STHupo;
+    color: #1E90FF;
+    font-family: STHupo;
   }
 
 </style>

@@ -84,24 +84,60 @@
               size="mini"
               @click="sendMessage(scope.row)">通知
             </el-button>
-            <el-button
+            <el-button v-if="scope.row.position === '社团负责人'"
               size="mini"
+                       disabled
               type="danger"
-              @click="fire">踢出
+              @click="fire(scope.row)">踢出
             </el-button>
+            <el-button v-if="scope.row.position != '社团负责人'"
+                       size="mini"
+
+                       type="danger"
+                       @click="fire(scope.row)">踢出
+            </el-button>
+            <el-dialog ref="dialog"  :close-on-click-modal="false"  width="700px" :visible.sync="dialogmanyFormVisible">
+              <el-form :model="manyForm" :rules="manyfromrules">
+                <el-form-item>
+                  <h2>批量向[<span style="color:red">{{manyCount}}</span>]位用户发送消息</h2>
+                </el-form-item>
+                <el-form-item prop="manytitle">
+                  <el-input
+                    v-model = "manyForm.manytitle"
+                    placeholder="请输入消息标题"
+                    maxlength="10"
+                    show-word-limit
+                  ></el-input>
+                </el-form-item>
+                <el-form-item prop="manytext">
+                  <el-input
+                    v-model="manyForm.manytext"
+                    type="textarea"
+                    rows="4"
+                    placeholder="请输入消息内容"
+                    maxlength="100"
+                    show-word-limit
+                  ></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button  type="primary" @click="manysend">批量发送</el-button>
+                  <el-button type="success" @click="dialogmanyFormVisible = false">取 消</el-button>
+                </el-form-item>
+              </el-form>
+            </el-dialog>
           </template>
         </el-table-column>
       </el-table>
     </div>
-<!--    <span style="float: left">-->
-<!--            选中:-->
-<!--      <el-tag size="mini">{{this.multipleSelection.length}}</el-tag>-->
-<!--      名成员-->
-<!--      <el-button type="success" size="mini" @click="sendMessage">一键通知</el-button>-->
-<!--    </span>-->
-<!--    <span style="float: right">-->
-<!--      共<el-tag size="mini">{{this.membersCount}}</el-tag>人-->
-<!--    </span>-->
+    <span style="float: left">
+            选中:
+      <el-tag size="mini">{{this.multipleSelection.length}}</el-tag>
+      名成员
+      <el-button type="success" size="mini" @click="opensendMany">一键通知</el-button>
+    </span>
+    <span style="float: right">
+      共<el-tag size="mini">{{this.membersCount}}</el-tag>人
+    </span>
   </div>
 </template>
 
@@ -135,6 +171,23 @@
                 position:"",
                 ReceiveID:"",
                 tableData: [],
+                manyUseID:[],
+                dialogmanyFormVisible:false,
+                manyForm: {
+                    manytitle: "",
+                    manytext: "",
+                },
+                manyfromrules:{
+                    manytitle: [
+                        { required: true, message: '请输入消息标题', trigger: 'blur' },
+                        { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+                    ],
+                    manytext: [
+                        { required: true, message: '请输入消息内容', trigger: 'blur' },
+                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
+                    ],
+                },
+                manyCount:"",
                 multipleSelection: [],
             }
         },
@@ -201,20 +254,96 @@
                     });
             },
 
-
-
-            promoted() {
-                this.$message.error('升职');
-            },
-            fire() {
-                this.$message.error('解雇');
+            fire(value) {
+                this.$confirm('是否要把['+value.username+']踢出社团, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let _this = this;
+                    let data = {
+                        data: {
+                            "userID": value.userid,
+                        }
+                    };
+                this.$axios.post("/fire",JSON.stringify(data))
+                    .then(function (response) {
+                        if (response.data.code == 1) {
+                            _this.$notify.warning({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                        }
+                        if (response.data.code == 0) {
+                            _this.$notify.success({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                            _this.$router.push("/test1");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
+                }).catch(() => {
+                    this.$notify.warning({
+                        showClose: false,
+                        duration: 1500,
+                        message: '已取消'
+                    });
+                });
             },
             handleSelectionChange(val) {
+                this.manyUseID = [];
                 this.multipleSelection = val;
+                this.manyCount = val.length;
+                for(let i=0; i<val.length; i++){
+                    this.manyUseID.push(val[i].userid);
+                }
             },
-            // load() {
-            //     // this.$message.success('加载下一页');
-            // }
+            opensendMany(){
+                this.manyForm = {type:"通知"};
+                this.dialogmanyFormVisible = true
+
+            },
+            manysend(){
+                if(this.manyForm.manytext == null || this.manyForm.manytext.length > 100 ||this.manyForm.manytext.length <1){
+                    return false;
+                }if(this.manyForm.manytitle == null || this.manyForm.manytitle.length > 10 ||this.manyForm.manytitle.length <1){
+                    return false;
+                }
+                let _this = this;
+                let data = {
+                    data:{
+                        "msg":this.manyForm,
+                        "ReceiveID":this.manyUseID,
+                        "userID": sessionStorage.getItem('userID'),
+                    }
+                };
+                this.$axios.post("/sendManyMessage",JSON.stringify(data))
+                    .then(function (response) {
+                        if (response.data.code == 1) {
+                            _this.$notify.warning({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                        }
+                        if (response.data.code == 0) {
+                            _this.$notify.success({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                            _this.dialogmanyFormVisible = false;
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
+            },
         },
         created() {
             let _this = this;

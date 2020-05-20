@@ -1,14 +1,17 @@
 package org.jude.manageBack.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.catalina.User;
 import org.jude.manageBack.JsonRequestBody;
 import org.jude.manageBack.JsonResponseBody;
 import org.jude.manageBack.config.UserLoginToken;
 import org.jude.manageBack.pojo.Activities;
 import org.jude.manageBack.pojo.Orgs;
 import org.jude.manageBack.pojo.RelationActivities;
+import org.jude.manageBack.pojo.Users;
 import org.jude.manageBack.service.ActivityService;
 import org.jude.manageBack.service.OrgService;
+import org.jude.manageBack.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +29,8 @@ public class ActivityController {
     private ActivityService activityService;
     @Autowired
     private OrgService orgService;
+    @Autowired
+    private UserService userService;
 
     //查询所有活动
     @RequestMapping("/findAllActivities")
@@ -190,10 +195,9 @@ public class ActivityController {
                 }
                 result.put("count" ,relationActivitiesList.size());
             }else {
+                result.put("count" ,0);
                 activitity.setSingup("true");
             }
-
-
             int useid = activitity.getOrgid();
             Orgs org = this.orgService.selectByorgID(useid);
             activitity.setOrgname(org.getOrgname());
@@ -300,6 +304,146 @@ public class ActivityController {
             return responseBody;
         }
         responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+    //报名活动
+    @UserLoginToken
+    @RequestMapping("/actSingup")
+    @ResponseBody
+    public JsonResponseBody actSingup(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        JsonResponseBody responseBody = new JsonResponseBody();
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        try {
+            int userID = data.getInteger("userID");
+            int activityID = data.getInteger("activityID");
+            Activities activities = this.activityService.findActivityByID(activityID);
+            List<RelationActivities> relationActivitiesList = this.activityService.selectByactivityID(activityID);
+            Date Signuptime = activities.getSignuptime();
+            Date Signupendtime = activities.getSignupendtime();
+            int count = activities.getActivitityscount();
+            Date notime = new Date();
+            if(notime.before(Signupendtime)&& notime.after(Signuptime)){
+                if(!relationActivitiesList.isEmpty() && relationActivitiesList.size()>count){
+                    msg = "报名人数已满";
+                    code = 1;
+                    responseBody.setMsg(msg);
+                    responseBody.setCode(code);
+                    return responseBody;
+                }else {
+                    RelationActivities relationActivities = new RelationActivities();
+                    relationActivities.setUserid(userID);
+                    relationActivities.setSinuptime(notime);
+                    relationActivities.setActivitiesid(activityID);
+                    this.activityService.insertrelationActivities(relationActivities);
+                    msg = "报名活动成功";
+                    code = 0;
+                }
+            }else {
+                msg = "不在报名时间段内";
+                code = 1;
+                responseBody.setMsg(msg);
+                responseBody.setCode(code);
+                return responseBody;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "报名活动失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+    //查找报名了该活动的学生
+    @UserLoginToken
+    @RequestMapping("/findSingupStudents")
+    @ResponseBody
+    public JsonResponseBody findSingupStudents(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        JsonResponseBody responseBody = new JsonResponseBody();
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        try {
+            int activityID = data.getInteger("activityID");
+            List<RelationActivities> relationActivitiesList = this.activityService.selectByactivityID(activityID);
+            List<JSONObject> usersList = new ArrayList<>();
+            for (RelationActivities relationActivities:relationActivitiesList){
+                int userID = relationActivities.getUserid();
+                Users users = this.userService.selectByuserID(userID);
+                JSONObject userInfo = new JSONObject();
+                String orgID = users.getDefultorg();
+                if (orgID != null) {
+                    if (orgID.equals("")) {
+                        userInfo.put("orgname", "【未加入社团】");
+                    } else {
+                        Orgs orgs = this.orgService.selectByorgID(Integer.valueOf(orgID));
+                        userInfo.put("orgname", orgs.getOrgname());
+                    }
+                }else {
+                    userInfo.put("orgname", "【未加入社团】");
+                }
+                userInfo.put("username",users.getUsername());
+                userInfo.put("useracademy",users.getUseracademy());
+                userInfo.put("userclass",users.getUserclass());
+                userInfo.put("userphone",users.getUserphone());
+                userInfo.put("usernumber",users.getUsernumber());
+                userInfo.put("Sinuptime",relationActivities.getSinuptime());
+                userInfo.put("userid",users.getUserid());
+                userInfo.put("relationid",relationActivities.getRelationActivitiesId());
+                usersList.add(userInfo);
+            }
+            result.put("usersList",usersList);
+            msg = "查找报名该活动的学生成功";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "查找报名该活动的学生失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+    //查找报名了该活动的学生
+    @UserLoginToken
+    @RequestMapping("/fireFromActivity")
+    @ResponseBody
+    public JsonResponseBody fireFromActivity(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        JsonResponseBody responseBody = new JsonResponseBody();
+        JSONObject result = new JSONObject();
+        String msg = null;
+        Integer code = null;
+        try {
+            int relationid = data.getInteger("relationid");
+            this.activityService.delrelationActivities(relationid);
+            msg = "成功将学生移除本活动";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "将学生移除本活动失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
         responseBody.setMsg(msg);
         responseBody.setCode(code);
         return responseBody;

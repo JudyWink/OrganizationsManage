@@ -86,8 +86,12 @@ public class UserController {
             Users user = this.userService.selectByuserID(userID);
             String orgID = user.getDefultorg();
             if (orgID != null) {
-                Orgs org = this.orgService.selectByorgID(Integer.parseInt(orgID));
-                user.setOrgname(org.getOrgname());
+                if(orgID.equals("")){
+                    user.setOrgname("【未加入社团】");
+                }else {
+                    Orgs org = this.orgService.selectByorgID(Integer.parseInt(orgID));
+                    user.setOrgname(org.getOrgname());
+                }
             } else {
                 user.setOrgname("【未加入社团】");
             }
@@ -172,8 +176,13 @@ public class UserController {
         Iterator<Users> iterator = usersList.iterator();
         while (iterator.hasNext()) {
             Users users = iterator.next();
-            if (users.getUserid() == 1 ||users.getDefultorg() != null) {
-                iterator.remove();//使用迭代器的删除方法删除
+            String orgID = users.getDefultorg();
+            if (users.getUserid() == 1 || orgID != null ){
+                if (orgID.equals("")){
+
+                }else {
+                    iterator.remove();//使用迭代器的删除方法删除
+                }
             }
         }
         String msg = null;
@@ -203,14 +212,15 @@ public class UserController {
             Iterator<Users> iterator = usersList.iterator();
             while (iterator.hasNext()) {
                 Users users = iterator.next();
-                if (users.getUserid() == 1 || users.getUserid() == 2 ||users.getDefultorg() == null) {
+                if (users.getUserid() == 1 || users.getUserid() == 2 || users.getDefultorg() == null || "".equals(users.getDefultorg()) ){
                     iterator.remove();//使用迭代器的删除方法删除
                 }
             }
             List<JSONObject> userInfo = new ArrayList<>();
-            for (Users users:usersList) {
+            List<RelationOrgs> relationOrgs = new ArrayList<>();
+            for (Users users : usersList) {
                 String orgID = users.getDefultorg();
-                List < RelationOrgs > relationOrgs = this.orgService.selectRelByorgID(Integer.valueOf(orgID));
+                relationOrgs = this.orgService.selectRelByorgID(Integer.valueOf(orgID));
                 Orgs org = this.orgService.selectByorgID(Integer.valueOf(orgID));
                 JSONObject userObject = new JSONObject();
                 userObject.put("orgName", org.getOrgname());
@@ -218,7 +228,7 @@ public class UserController {
                 userObject.put("phone", users.getUserphone());
                 userObject.put("userid", users.getUserid());
                 for (RelationOrgs relationOrgsList : relationOrgs) {
-                    if(relationOrgsList.getUserid().equals(users.getUserid())) {
+                    if (relationOrgsList.getUserid().equals(users.getUserid())) {
                         userObject.put("department", relationOrgsList.getDepartment());
                         userObject.put("position", relationOrgsList.getPosition());
                         userObject.put("joinTime", relationOrgsList.getJointime());
@@ -226,7 +236,8 @@ public class UserController {
                 }
                 userInfo.add(userObject);
             }
-            result.put("tableData",userInfo);
+            result.put("tableData", userInfo);
+            result.put("membersCount",usersList.size());
             msg = "查询有组织用户成功";
             code = 0;
         } catch (Exception e) {
@@ -242,7 +253,6 @@ public class UserController {
         responseBody.setCode(code);
         return responseBody;
     }
-
 
 
     //更新用户信息
@@ -331,6 +341,77 @@ public class UserController {
         responseBody.setCode(code);
         return responseBody;
     }
+
+    //将学生踢出社团
+    @UserLoginToken
+    @RequestMapping("/fire")
+    @ResponseBody
+    public JsonResponseBody fire(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        String msg = null;
+        Integer code = null;
+        JsonResponseBody responseBody = new JsonResponseBody();
+        try {
+            int userID = data.getInteger("userID");
+            this.orgService.delrelationOrgsbyuserID(userID);
+            Users newuser = new Users();
+            newuser.setDefultorg("");
+            this.userService.updateUserOneInfo(newuser, userID);
+            msg = "将学生踢出社团成功";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "将学生踢出社团失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+    //社团负责人授权成功
+    @UserLoginToken
+    @RequestMapping("/empower")
+    @ResponseBody
+    public JsonResponseBody empower(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        String msg = null;
+        Integer code = null;
+        JsonResponseBody responseBody = new JsonResponseBody();
+        try {
+            int userID = data.getInteger("userID");
+            int orgID = data.getInteger("orgID");
+            Users newuser = new Users();
+            newuser.setDefultorg(String.valueOf(orgID));
+            newuser.setUsertype("社团负责人");
+            this.userService.updateUserOneInfo(newuser, userID);
+            RelationOrgs relationOrgs = new RelationOrgs();
+            Date nowtime = new Date();
+            relationOrgs.setJointime(nowtime);
+            relationOrgs.setOrgid(orgID);
+            relationOrgs.setUserid(userID);
+            relationOrgs.setPosition("社团负责人");
+            this.orgService.insertrelationOrgs(relationOrgs);
+            msg = "社团负责人授权成功";
+            code = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "社团负责人授权失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+
+
 
 
     //模板

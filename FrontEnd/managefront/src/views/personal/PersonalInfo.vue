@@ -284,11 +284,11 @@
 
         },
         created() {
-            this.canModify = this.$route.params.canModify;
             const _this = this;
             let userID = window.sessionStorage.getItem('userID');
             if(this.$route.params.userID != null){
                 userID = this.$route.params.userID;
+                this.canModify = this.$route.params.canModify;
             }
             let data={
                 data:{
@@ -308,6 +308,9 @@
                 .catch(function (error) {
                     console.log(error)
                 });
+        },
+        beforeDestroy() {
+            this.canModify = true;
         }
 
     }

@@ -272,6 +272,54 @@ public class MessageController {
         return responseBody;
     }
 
+    //批量发送消息
+    @UserLoginToken
+    @RequestMapping("/sendManyMessage")
+    @ResponseBody
+    public JsonResponseBody sendManyMessage(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        String msg = null;
+        Integer code = null;
+        JsonResponseBody responseBody = new JsonResponseBody();
+        try {
+            JSONObject messages = data.getJSONObject("msg");
+            String ReceiveID = data.getString("ReceiveID");
+            ReceiveID = ReceiveID.replaceAll("\\[","");
+            ReceiveID = ReceiveID.replaceAll("]","");
+            ReceiveID = ReceiveID.replaceAll(" ","");
+            String[] split  = ReceiveID.split(",");
+            int LaunchID = data.getInteger("userID");
+            String text = messages.getString("manytext");
+            String title = messages.getString("manytitle");
+            String type = messages.getString("type");
+            Date nowtime =  new Date();
+            Messages newmessage = new Messages();
+            newmessage.setMessagecreatetime(nowtime);
+            newmessage.setMessagelaunch(LaunchID);
+            newmessage.setMessagetype(type);
+            newmessage.setMessagestatus("未读");
+            newmessage.setMessagetext(text);
+            newmessage.setMessagetitle(title);
+            for(int i = 0; i<split.length; i++){
+                newmessage.setMessagereceive(split[i]);
+                this.messageService.inserMessages(newmessage);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "消息批量发送失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        msg = "消息批量发送成功";
+        code = 0;
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+
     //删除消息
     @UserLoginToken
     @RequestMapping("/deleteMessages")

@@ -52,7 +52,7 @@
               type="success"
               size="mini"
                        :disabled="userType ==='游客' ? true : false"
-              @click="SignUp">报名
+              @click="SignUp(scope.row)">报名
             </el-button>
             <el-button v-if="scope.row.orgid== myorgID"
                        type="warning"
@@ -145,8 +145,48 @@
             }
         },
         methods: {
-            SignUp(){
-                this.$message.error('报名');
+            SignUp(value){
+                this.$confirm('是否要报名参加['+value.orgname+'], 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let _this = this;
+                    let data = {
+                        data: {
+                            "userID": sessionStorage.getItem("userID"),
+                            "orgID": value.orgid,
+                        }
+                    };
+                    this.$axios.post("/signUpOrg",JSON.stringify(data))
+                        .then(function (response) {
+                            if (response.data.code == 1) {
+                                _this.$notify.warning({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                            }
+                            if (response.data.code == 0) {
+                                _this.$notify.success({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
+                }).catch(() => {
+                    this.$notify.warning({
+                        showClose: false,
+                        duration: 1500,
+                        message: '已取消'
+                    });
+                });
+
+
             },
             openFeedback(value){
                 this.Form = {type:"意见反馈"};
@@ -207,7 +247,7 @@
             },
         },
         created() {
-             this.myorgID = sessionStorage.getItem("orgID");
+            this.myorgID = sessionStorage.getItem("orgID");
             const _this = this;
             this.$axios.post("/findAllOrgs")
                 .then(function (response) {

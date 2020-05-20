@@ -92,7 +92,7 @@
     where relation_activities_id = #{relationActivitiesId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from "relation_activities"
+    delete from relation_activities
     where relation_activities_id = #{relationActivitiesId,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="org.jude.manageBack.pojo.RelationActivitiesExample">
@@ -102,7 +102,7 @@
     </if>
   </delete>
   <insert id="insert" parameterType="org.jude.manageBack.pojo.RelationActivities">
-    insert into "relation_activities" (relation_activities_id, orgId, userId, 
+    insert into relation_activities (relation_activities_id, orgId, userId,
       sinUpTime, Admission, activitiesId, 
       actName)
     values (#{relationActivitiesId,jdbcType=INTEGER}, #{orgid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, 

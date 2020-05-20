@@ -3,6 +3,8 @@ package org.jude.manageBack.pojo;
 import java.util.Date;
 
 public class Documents {
+    private String username;
+
     private Integer documentid;
 
     private String documentname;
@@ -16,6 +18,14 @@ public class Documents {
     private Integer downloadcount;
 
     private String documenturl;
+
+    public String getusername() {
+        return username;
+    }
+
+    public void setusername(String username) {
+        this.username = username == null ? null : username.trim();
+    }
 
     public Integer getDocumentid() {
         return documentid;

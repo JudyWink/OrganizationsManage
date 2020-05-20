@@ -37,7 +37,7 @@
       </el-row>
         <el-row v-if="this.type == '学生'" class="row">
           <el-button disabled v-if="active != '2' && Singup == 'true'" type="danger">不在报名时间</el-button>
-        <el-button v-if="Singup == 'true'&& active == '2'" type="success">活动报名</el-button>
+        <el-button v-if="Singup == 'true'&& active == '2'" type="success" @click="ActSingup">活动报名</el-button>
           <el-button v-if="Singup == 'false'" disabled type="danger">已报名</el-button>
         </el-row>
 
@@ -76,6 +76,37 @@
             }
         },
         methods: {
+            ActSingup(){
+                let _this = this;
+                let data = {
+                    data: {
+                        "userID" : sessionStorage.getItem("userID"),
+                        "activityID": sessionStorage.getItem("activitityid"),
+                    }
+                };
+                this.$axios.post('/actSingup', JSON.stringify(data))
+                    .then(function (response) {
+                        if (response.data.code == 0) {
+                            _this.$notify.success({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                            _this.Singup = 'false';
+                        }
+                        if (response.data.code == 1) {
+                            _this.$notify.warning({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
+
+            },
 
         },
         filters:{
@@ -94,7 +125,7 @@
                         "userID" : sessionStorage.getItem("userID"),
                         "activityID": sessionStorage.getItem("activitityid"),
                     }
-                }
+                };
                 this.$axios.post('/findOneActivity', JSON.stringify(data))
                     .then(function (response) {
                         if (response.data.code == 0) {
@@ -112,7 +143,6 @@
                             _this.Singup = response.data.data.activitityInfo.singup;
                             _this.signupendtime = response.data.data.activitityInfo.signupendtime;
                             _this.count = response.data.data.count;
-
                             console.log(response.data.msg);
                         }
                         if (response.data.code == 1) {

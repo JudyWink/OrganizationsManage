@@ -56,9 +56,21 @@ public class ActivityServiceImpl implements ActivityService {
         return this.activitiesMapper.selectByPrimaryKey(activityID);
     }
 
+    //增加一个活动关系
+    @Override
+    public void insertrelationActivities(RelationActivities relationActivities)throws Exception{
+        this.relationActivitiesMapper.insert(relationActivities);
+    }
+
     //发布活动
     @Override
     public void pushActivity(Activities activities) throws Exception{
         this.activitiesMapper.insert(activities);
+    }
+
+    //根据活动关系id删除一个活动关系
+    @Override
+    public void delrelationActivities(int relationid)throws Exception{
+        this.relationActivitiesMapper.deleteByPrimaryKey(relationid);
     }
 }

@@ -6,8 +6,7 @@
         stripe
         style="width: 100%"
         v-el-table-infinite-scroll
-        infinite-scroll-immediate=false
-        @selection-change="handleSelectionChange">
+        infinite-scroll-immediate=false>
         <template slot="empty">
           你还没发送过消息
         </template>
