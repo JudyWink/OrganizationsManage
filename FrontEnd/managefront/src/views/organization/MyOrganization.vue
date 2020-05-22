@@ -67,14 +67,15 @@
             let _this = this;
             let data = {
                 data: {
-                    "orgID": sessionStorage.getItem("orgID"),
                 }
             };
-            if (sessionStorage.getItem("orgID") === ""){
+            if (sessionStorage.getItem("orgID") != "null"){
                 data = {
                     data: {
+                        "orgID": sessionStorage.getItem("orgID"),
                     }
                 };
+                console.log(sessionStorage.getItem("orgID"))
             }
             this.$axios.post('/findOneOrg', JSON.stringify(data))
                 .then(function (response) {

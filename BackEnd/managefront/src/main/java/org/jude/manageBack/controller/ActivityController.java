@@ -1,7 +1,6 @@
 package org.jude.manageBack.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.catalina.User;
 import org.jude.manageBack.JsonRequestBody;
 import org.jude.manageBack.JsonResponseBody;
 import org.jude.manageBack.config.UserLoginToken;
@@ -89,7 +88,6 @@ public class ActivityController {
     }
 
     //通过日历查询所有活动
-    @UserLoginToken
     @RequestMapping("/CalendarFind")
     @ResponseBody
     public JsonResponseBody CalendarFind() throws Exception {
@@ -170,7 +168,6 @@ public class ActivityController {
     }
 
     //查找一个活动
-    @UserLoginToken
     @RequestMapping("/findOneActivity")
     @ResponseBody
     public JsonResponseBody findOneActivity(@RequestBody JsonRequestBody requestBody) throws Exception {
@@ -207,16 +204,16 @@ public class ActivityController {
             Date Activitityendtime = activitity.getActivitityendtime();
             Date nowtime =  new Date();
             if (nowtime.after(Activitityendtime)){
-                activitity.setActivititystatus("4");
+                activitity.setActivititystatus("5");
             }
             else if (nowtime.before(Signupendtime)&&nowtime.after(Signuptime)){
                 activitity.setActivititystatus("2");
             }
             else if (nowtime.before(Activititystarttime)&&nowtime.after(Signupendtime)){
-                activitity.setActivititystatus("2");
+                activitity.setActivititystatus("3");
             }
             else if (nowtime.before(Activitityendtime)&&nowtime.after(Activititystarttime)){
-                activitity.setActivititystatus("3");
+                activitity.setActivititystatus("4");
             }else {
                 activitity.setActivititystatus("1");
             }

@@ -41,4 +41,10 @@ public class DocumentServiceImpl implements DocumentService {
         return this.documentsMapper.selectByPrimaryKey(documentID);
     }
 
+    //删除文件信息
+    @Override
+    public void deleteDocuments(int documentID) throws Exception {
+         this.documentsMapper.deleteByPrimaryKey(documentID);
+    }
+
 }

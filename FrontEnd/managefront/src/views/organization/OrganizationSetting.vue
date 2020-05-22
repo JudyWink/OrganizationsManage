@@ -1,6 +1,6 @@
 <template>
-  <div id="OrgIndexManager_box">
-    <div id="OrgIndexManager">
+  <div id="OrganizationSetting_box">
+    <div id="OrganizationSetting">
       <el-form :model="form">
         <el-form-item>
           <el-upload
@@ -232,7 +232,7 @@
 </script>
 
 <style>
-  #OrgIndexManager_box {
+  #OrganizationSetting_box {
     margin: auto;
     width: 50%;
     height: auto;
@@ -241,7 +241,7 @@
     background-color: white;
   }
 
-  #OrgIndexManager {
+  #OrganizationSetting {
     width: 80%;
     margin: auto;
   }

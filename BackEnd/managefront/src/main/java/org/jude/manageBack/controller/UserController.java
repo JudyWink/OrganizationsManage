@@ -3,13 +3,13 @@ package org.jude.manageBack.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import org.apache.catalina.User;
 import org.jude.manageBack.JsonRequestBody;
 import org.jude.manageBack.JsonResponseBody;
 import org.jude.manageBack.config.UserLoginToken;
 import org.jude.manageBack.pojo.Orgs;
 import org.jude.manageBack.pojo.RelationOrgs;
 import org.jude.manageBack.pojo.Users;
+import org.jude.manageBack.service.IMailService;
 import org.jude.manageBack.service.OrgService;
 import org.jude.manageBack.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class UserController {
@@ -30,6 +28,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private OrgService orgService;
+    @Autowired
+    private IMailService iMailService;
 
     //登录
     @RequestMapping("/Login")
@@ -44,7 +44,7 @@ public class UserController {
         String userPassword = data.getString("userPassword");
         List<Users> usersList = this.userService.selectByuserAcount(userAcount);
         if (usersList.isEmpty()) {
-            msg = "还没注册";
+            msg = "改账号还没注册";
             code = 1;
         }
         for (Users user : usersList) {
@@ -57,6 +57,12 @@ public class UserController {
                     result.put("userName", user.getUsername());
                     result.put("userID", user.getUserid());
                     result.put("orgID", user.getDefultorg());
+                    String userEmail = user.getUseremail();
+                    if (userEmail != null && userEmail.length() != 0) {
+                        result.put("userEmail", userEmail);
+                    } else {
+                        result.put("userEmail", "无");
+                    }
                     code = 0;
                     msg = "登录成功";
                 } else {
@@ -86,9 +92,9 @@ public class UserController {
             Users user = this.userService.selectByuserID(userID);
             String orgID = user.getDefultorg();
             if (orgID != null) {
-                if(orgID.equals("")){
+                if (orgID.equals("")) {
                     user.setOrgname("【未加入社团】");
-                }else {
+                } else {
                     Orgs org = this.orgService.selectByorgID(Integer.parseInt(orgID));
                     user.setOrgname(org.getOrgname());
                 }
@@ -177,10 +183,10 @@ public class UserController {
         while (iterator.hasNext()) {
             Users users = iterator.next();
             String orgID = users.getDefultorg();
-            if (users.getUserid() == 1 || orgID != null ){
-                if (orgID.equals("")){
+            if (users.getUserid() == 1 || orgID != null) {
+                if (orgID.equals("")) {
 
-                }else {
+                } else {
                     iterator.remove();//使用迭代器的删除方法删除
                 }
             }
@@ -212,7 +218,7 @@ public class UserController {
             Iterator<Users> iterator = usersList.iterator();
             while (iterator.hasNext()) {
                 Users users = iterator.next();
-                if (users.getUserid() == 1 || users.getUserid() == 2 || users.getDefultorg() == null || "".equals(users.getDefultorg()) ){
+                if (users.getUserid() == 1 || users.getUserid() == 2 || users.getDefultorg() == null || "".equals(users.getDefultorg())) {
                     iterator.remove();//使用迭代器的删除方法删除
                 }
             }
@@ -237,7 +243,7 @@ public class UserController {
                 userInfo.add(userObject);
             }
             result.put("tableData", userInfo);
-            result.put("membersCount",usersList.size());
+            result.put("membersCount", usersList.size());
             msg = "查询有组织用户成功";
             code = 0;
         } catch (Exception e) {
@@ -296,7 +302,7 @@ public class UserController {
             responseBody.setCode(code);
             return responseBody;
         }
-        msg = "成功";
+        msg = "信息修改成功";
         code = 0;
         responseBody.setData(result);
         responseBody.setMsg(msg);
@@ -313,7 +319,6 @@ public class UserController {
         String msg = null;
         Integer code = null;
         JsonResponseBody responseBody = new JsonResponseBody();
-        JSONObject result = new JSONObject();
         String pass = data.getString("pass");
         String password = data.getString("password");
         int userID = data.getInteger("userID");
@@ -411,25 +416,92 @@ public class UserController {
     }
 
 
-
-
-
-    //模板
-    @UserLoginToken
-    @RequestMapping("/mb")
+    //发送邮件
+    @RequestMapping("/sendEmail")
     @ResponseBody
-    public JsonResponseBody mb(@RequestBody JsonRequestBody requestBody) throws Exception {
+    public JsonResponseBody sendEmail(@RequestBody JsonRequestBody requestBody) throws Exception {
         JSONObject data = requestBody.getData();
         String msg = null;
         Integer code = null;
         JsonResponseBody responseBody = new JsonResponseBody();
         JSONObject result = new JSONObject();
+        String SYMBOLS = "0123456789";
+        Random RANDOM = new SecureRandom();
+        try {
+            String userAcount = data.getString("userAcount");
+            String email = data.getString("email");
 
-
-        result.put("sb", "sb");
-        msg = "成功";
-        code = 0;
+            char[] nonceChars = new char[6];
+            for (int index = 0; index < nonceChars.length; ++index) {
+                nonceChars[index] = SYMBOLS.charAt(RANDOM.nextInt(SYMBOLS.length()));
+            }
+            String VerificationCode = String.valueOf(nonceChars);
+            List<Users> users = this.userService.selectByuserAcount(userAcount);
+            Users users1 = users.get(0);
+            String userEmail = users1.getUseremail();
+            if (userEmail != null && userEmail.length() != 0) {
+                if (email.equals(userEmail)) {
+                    this.iMailService.sendSimpleMail(email, "社团管理系统修改密码", "用户账户[" + userAcount + "]申请忘记密码,验证码是:[" + VerificationCode + "]");
+                    result.put("code", VerificationCode);
+                    msg = "发送验证码成功，请到登录邮箱接收";
+                    code = 0;
+                } else {
+                    msg = "账户与邮箱不匹配";
+                    code = 1;
+                    responseBody.setMsg(msg);
+                    responseBody.setCode(code);
+                    return responseBody;
+                }
+            } else {
+                msg = "该账户还未设置邮箱，请联系管理员";
+                code = 1;
+                responseBody.setMsg(msg);
+                responseBody.setCode(code);
+                return responseBody;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "发送验证码失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
         responseBody.setData(result);
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+
+    //忘记密码
+    @RequestMapping("/forgetPassword")
+    @ResponseBody
+    public JsonResponseBody forgetPassword(@RequestBody JsonRequestBody requestBody) throws Exception {
+        JSONObject data = requestBody.getData();
+        String msg = null;
+        Integer code = null;
+        JsonResponseBody responseBody = new JsonResponseBody();
+        try {
+            String password = data.getString("password");
+            String userAcount = data.getString("userAcount");
+            List<Users> users = this.userService.selectByuserAcount(userAcount);
+            Users users1 = users.get(0);
+            int userID = users1.getUserid();
+            Users newuser = new Users();
+            newuser.setUserpassword(password);
+            newuser.setUpdatetime(new Date());
+            this.userService.updateUserOneInfo(newuser, userID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "新密码设置失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        msg = "新密码设置成功，请记住新密码";
+        code = 0;
         responseBody.setMsg(msg);
         responseBody.setCode(code);
         return responseBody;

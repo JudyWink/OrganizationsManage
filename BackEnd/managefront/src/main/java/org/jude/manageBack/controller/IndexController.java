@@ -59,6 +59,7 @@ public class IndexController {
         return responseBody;
     }
 
+    //上传图片
     @UserLoginToken
     @RequestMapping("/upLoadIndexImgs")
     @ResponseBody
@@ -84,11 +85,11 @@ public class IndexController {
     }
 
 
-    //模板
+    //删除图片
     @UserLoginToken
     @RequestMapping("/deleteIndexImgs")
     @ResponseBody
-    public JsonResponseBody mb(@RequestBody JsonRequestBody requestBody) throws Exception {
+    public JsonResponseBody deleteIndexImgs(@RequestBody JsonRequestBody requestBody) throws Exception {
         JSONObject data = requestBody.getData();
         String msg = null;
         Integer code = null;
@@ -103,11 +104,10 @@ public class IndexController {
             msg = "错误";
             code = 1;
         }
-
-
         responseBody.setMsg(msg);
         responseBody.setCode(code);
         return responseBody;
     }
+
 
 }

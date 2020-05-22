@@ -1,6 +1,6 @@
 <template>
-  <div id="allActivities_box">
-    <div id="allActivities">
+  <div id="AllOrganizations_box">
+    <div id="AllOrganizations">
       <el-table
         :data="orgsList"
         stripe
@@ -271,12 +271,12 @@
 </script>
 
 <style>
-  #allActivities {
+  #AllOrganizations {
     width: 100%;
     margin: 10px auto;
   }
 
-  #allActivities_box {
+  #AllOrganizations_box {
     height: 600px;
     width: 85%;
     margin: auto;

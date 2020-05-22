@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
@@ -112,7 +111,7 @@ public class DocumentController {
         return responseBody;
     }
 
-
+    //下载文件
     @RequestMapping("/downloadDocuments")
     @ResponseBody
     public void download(@RequestBody JsonRequestBody requestBody,HttpServletResponse response) {
@@ -156,4 +155,35 @@ public class DocumentController {
             e.printStackTrace();
         }
     }
+
+    //删除文件
+    @UserLoginToken
+    @RequestMapping("/deleteDocuments")
+    @ResponseBody
+    public JsonResponseBody deleteDocuments(@RequestBody JsonRequestBody requestBody) throws Exception {
+        String msg = null;
+        Integer code = null;
+        JSONObject result = new JSONObject();
+        JsonResponseBody responseBody = new JsonResponseBody();
+        JSONObject data = requestBody.getData();
+        try {
+            int documentid = data.getInteger("documentid");
+            this.documentService.deleteDocuments(documentid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = "删除文件失败";
+            code = 1;
+            responseBody.setMsg(msg);
+            responseBody.setCode(code);
+            return responseBody;
+        }
+        msg = "删除文件成功";
+        code = 0;
+        responseBody.setMsg(msg);
+        responseBody.setCode(code);
+        return responseBody;
+    }
+
+
+
 }

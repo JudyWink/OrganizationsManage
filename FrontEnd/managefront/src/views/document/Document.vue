@@ -5,53 +5,64 @@
         :data="tableData"
         stripe
         style="width: 100%"
+        height="380px"
         v-el-table-infinite-scroll
         infinite-scroll-immediate=false>
         <el-table-column
-          type="index"
-          :index="indexMethod">
+          type="index">
         </el-table-column>
         <el-table-column
-          prop="documentUploadTime"
+          prop="documentuploadtime"
           label="上传时间"
-          >
+          :formatter="dateFormat"
+          width="180px"
+        >
         </el-table-column>
         <el-table-column
-          prop="documentName"
+          prop="documentname"
           label="文件名"
-          width="450px">
+          width="200px">
         </el-table-column>
         <el-table-column
-          prop="documentOwner"
-          label="上传者">
+          prop="username"
+          label="上传者"
+          width="130px">
         </el-table-column>
         <el-table-column
-          prop="documentType"
-          label="文件分类">
+          prop="documenttype"
+          label="文件分类"
+          width="130px">
         </el-table-column>
+        <el-table-column
+          prop="downloadcount"
+          label="下载次数"
+          width="130px"
+        >
+        </el-table-column>
+
         <el-table-column
           label="操作"
-          >
+        >
           <template slot-scope="scope">
             <el-button
               size="mini"
-              type="danger"
-              @click="downloadDocument(scope.$index)">下载
+              type="success"
+              @click="downloadDocument(scope.row)">下载
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="documentDownloadCount"
-          label="下载次数"
-          >
-        </el-table-column>
+
       </el-table>
+      <span style="float: right">
+            共<el-tag size="mini">{{this.documentCount}}</el-tag>个
+          </span>
     </div>
   </div>
 </template>
 
 <script>
     import elTableInfiniteScroll from 'el-table-infinite-scroll';
+    import moment from 'moment'
 
     export default {
         directives: {
@@ -60,53 +71,74 @@
         name: "Document",
         data() {
             return {
-                tableData: [
-                    {
-                        documentUploadTime: '2016-05-02',
-                        documentName: '科室借用申请表.word',
-                        documentOwner: '小明',
-                        documentType: '申请表',
-                        documentDownloadCount:'10',
-                    },
-                    {
-                        documentUploadTime: '2016-05-02',
-                        documentName: '社团组织招新时间表.word',
-                        documentOwner: '梁书记',
-                        documentType: '通知',
-                        documentDownloadCount:'76',
-                    },{
-                        documentUploadTime: '2016-05-02',
-                        documentName: '测试.word',
-                        documentOwner: '管理员',
-                        documentType: '申请表',
-                        documentDownloadCount:'2',
-                    },{
-                        documentUploadTime: '2016-05-02',
-                        documentName: '社团负责人申请表.word',
-                        documentOwner: '管理员',
-                        documentType: '申请表',
-                        documentDownloadCount:'138',
-                    },{
-                        documentUploadTime: '2016-05-02',
-                        documentName: '社团管理系统使用注意事项.pdf',
-                        documentOwner: '管理员',
-                        documentType: '文档',
-                        documentDownloadCount:'10',
-                    },{
-                        documentUploadTime: '2016-05-02',
-                        documentName: '社团管理系统操作手册.pdf',
-                        documentOwner: '管理员',
-                        documentType: '文档',
-                        documentDownloadCount:'80',
-                    },
-                ]
+                documentCount: 0,
+                tableData: [],
             }
         },
         methods: {
-            downloadDocument(){
-                this.$message.error("下载")
-            }
+            dateFormat(row, column){
+                let date = row[column.property]
+                if (date == undefined) {
+                    return ''
+                }
+                return moment(date).format("YYYY-MM-DD hh:mm")
+            },
 
+            downloadDocument(value) {
+                const _this = this;
+                let data = {
+                    data: {
+                        "documentID":value.documentid,
+                        "documenturl": value.documenturl,
+                        "fileName": value.documentname,
+                    }
+                };
+                this.$axios.post("/downloadDocuments",JSON.stringify(data),{responseType: 'blob'})
+                    .then(function (response) {
+                        console.log(response)
+                        var blob = new Blob([response.data])
+                        var downloadElement = document.createElement('a');
+                        var href = window.URL.createObjectURL(blob); //创建下载的链接
+                        downloadElement.href = href;
+                        downloadElement.download = value.documentname; //下载后文件名
+                        document.body.appendChild(downloadElement);
+                        downloadElement.click(); //点击下载
+                        document.body.removeChild(downloadElement); //下载完成移除元素
+                        window.URL.revokeObjectURL(href); //释放掉blob对象
+                        _this.$router.push("/test7");
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
+
+            },
+        },
+        created() {
+            const _this = this;
+            let data = {
+                data: {
+                    "userID": sessionStorage.getItem("userID"),
+                }
+            }
+            this.$axios.post("/findAllDocuments",JSON.stringify(data))
+                .then(function (response) {
+                    if (response.data.code == 1) {
+                        _this.$notify.error({
+                            message: response.data.msg,
+                            showClose: false,
+                            duration: 1500,
+                        });
+                    }
+                    if (response.data.code == 0) {
+                        let tableData = response.data.data.tableData
+                        console.log(response.data.msg)
+                        _this.tableData = tableData
+                        _this.documentCount = response.data.data.documentCount
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
         }
     }
 </script>
@@ -120,7 +152,7 @@
 
   #document_box {
     height: 600px;
-    width: 85%;
+    width: 65%;
     margin: auto;
   }
 

@@ -10,6 +10,7 @@ const store = new Vuex.Store({
     userType: window.sessionStorage.getItem('userType'),
     userID : window.sessionStorage.getItem('userID'),
     orgID : window.sessionStorage.getItem('orgID'),
+    userEmail : window.sessionStorage.getItem('userEmail'),
     password: window.localStorage.getItem('password'),
     account : window.localStorage.getItem('account'),
     sb : window.sessionStorage.getItem('sb'),
@@ -45,6 +46,10 @@ const store = new Vuex.Store({
         state.orgID = value;
         window.sessionStorage.setItem('orgID',value);
     },
+    SET_EMAIL(state,value){
+      state.userEmail = value;
+      window.sessionStorage.setItem('userEmail',value);
+    },
 
     REMEMBER_ACCOUNT(state,account){
     state.account = account;
@@ -68,6 +73,7 @@ const store = new Vuex.Store({
    state.userType = null;
    state.userID = null;
    state.orgID = null;
+   state.userEmail = null;
    sessionStorage.clear();
    window.localStorage.removeItem('')
     }

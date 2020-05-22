@@ -38,7 +38,7 @@
           </el-form-item>
         </el-form-item>
         <el-form-item label="活动允许人数" prop="activititysCount">
-          <el-input v-model.number="ruleForm.activititysCount"></el-input>
+          <el-input onkeyup="value=value.replace(/[^\d]/g,'')" v-model.number="ruleForm.activititysCount"></el-input>
         </el-form-item>
         <el-form-item label="活动类型">
           <el-radio-group v-model="ruleForm.activitityType">
@@ -80,7 +80,7 @@
                 rules: {
                     activitityName: [
                         {required: true, message: '请输入活动名称', trigger: 'blur'},
-                        {min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur'}
+                        {min: 2, max: 8, message: '长度在 2 到 12 个字符', trigger: 'blur'}
                     ],
                     activitityPlace: [
                         {required: true, message: '请输入活动地点', trigger: 'blur'}
@@ -105,6 +105,27 @@
         },
         methods: {
             submitForm() {
+                if(this.ruleForm.activitityName.length>12 &&this.ruleForm.activitityName.length<1){
+                    return false;
+                }
+                if(this.ruleForm.activitityPlace.length<1){
+                    return false;
+                }
+                if(this.ruleForm.signupTime.length<1){
+                    return false;
+                }
+                if(this.ruleForm.activitityTime.length<1){
+                    return false;
+                }
+                if(this.ruleForm.activititysCount.length<1){
+                    return false;
+                }
+                if(this.ruleForm.activitityType.length<1){
+                    return false;
+                }
+                if(this.ruleForm.activitityDescribe.length<1){
+                    return false;
+                }
                 if (Date.parse(this.ruleForm.activitityTime[0]) <Date.parse(this.ruleForm.signupTime[1])) {
                     this.$notify.error({
                         message: "报名时间需要在活动时间之前",

@@ -15,7 +15,7 @@
       <div style="width: 95%; margin-top: 10px;margin-bottom: 40px">
         <input type="checkbox" v-model="rememberINPUT" id="rememberMe">
         <span class="rember-me">记住密码</span>
-<!--        <span class="forget-key"><a href="/forgetPassword">忘记密码</a></span>-->
+        <span class="forget-key"><a href="/forgetPassword">忘记密码</a></span>
       </div>
       <div>
         <el-button type="success" @click="login" class="login_style">登录</el-button>
@@ -44,6 +44,7 @@
                 userPassword: '',
                 userID:'',
                 orgID:'',
+                useremail:'',
                 error: {
                     userAcount: '',
                     userPassword: ''
@@ -82,6 +83,7 @@
                                 _this.userType = response.data.data.userType;
                                 _this.userID = response.data.data.userID;
                                 _this.orgID = response.data.data.orgID;
+                                _this.userEmail = response.data.data.userEmail;
                                 if (_this.rememberINPUT == true){
                                     _this.$store.commit("REMEMBER_ACCOUNT",_this.userAcount);
                                     _this.$store.commit("REMEMBER_PASSWORD",_this.userPassword);
@@ -98,6 +100,9 @@
                                     _this.$store.commit("SET_USERID", _this.userID);
                                     //保存用户社团
                                     _this.$store.commit("SET_ORGID", _this.orgID);
+                                    //保存用户邮箱
+                                    _this.$store.commit("SET_EMAIL", _this.userEmail);
+
 
                                 _this.$notify.success({
                                     message: response.data.msg,

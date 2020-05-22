@@ -33,13 +33,22 @@
                     }
                     if (response.data.code == 0) {
                         _this.urls = response.data.data.IndexImgsUrls;
-
-
                     }
                 })
                 .catch(function (error) {
                     console.log(error)
                 });
+            if (sessionStorage.getItem('userType') != "游客") {
+                const email =sessionStorage.getItem("userEmail");
+                if (email === '无'){
+                    this.$message({
+                        message: '请完善你的个人信息',
+                        type: 'warning',
+                        duration: 8000,
+                        showClose:true
+                    });
+                }
+            }
         }
     }
 </script>

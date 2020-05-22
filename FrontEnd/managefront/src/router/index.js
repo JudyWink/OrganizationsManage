@@ -15,6 +15,7 @@ import Test3 from "../views/test/Test3";
 import Test4 from "../views/test/Test4";
 import Test5 from "../views/test/Test5";
 import Test6 from "../views/test/Test6";
+import Test7 from "../views/test/Test7";
 import PersonalInfo from "../views/personal/PersonalInfo";
 import Document from  "../views/document/Document"
 import Message from "../views/message/Message";
@@ -107,6 +108,13 @@ const routes =[
        keepalive:false
        }
        },
+     {
+           path: '/test7',
+           component: Test7,
+           meta:{
+           keepalive:false
+           }
+           },
    {
    path: '/login',
     component: Login,

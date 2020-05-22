@@ -10,7 +10,7 @@
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span class="top_h1" style="float: left">社团历史</span>
-          <el-button ref v-if="userType === '社团负责人'" style="float: right; padding: 3px 0" type="text" @click="modify()">修改</el-button>
+<!--          <el-button ref v-if="userType === '社团负责人'" style="float: right; padding: 3px 0" type="text" @click="modify()">修改</el-button>-->
         </div>
         <div class="text item">
           {{orgHistory}}
@@ -23,7 +23,7 @@
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span class="top_h1" style="float: left">社团介绍</span>
-          <el-button v-if="userType === '社团负责人'" style="float: right; padding: 3px 0" type="text" @click="modify()">修改</el-button>
+<!--          <el-button v-if="userType === '社团负责人'" style="float: right; padding: 3px 0" type="text" @click="modify()">修改</el-button>-->
         </div>
         <div class="text item">
           {{orgIntroduce}}

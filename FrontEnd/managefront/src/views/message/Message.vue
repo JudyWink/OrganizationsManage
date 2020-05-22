@@ -1,6 +1,6 @@
 <template>
-  <div id="document_box">
-    <div id="document">
+  <div id="Message_box">
+    <div id="Message">
       <el-table
         :data="tableData"
         stripe
@@ -293,6 +293,7 @@
                                     showClose: false,
                                     duration: 1500,
                                 });
+                                _this.$router.replace("/test");
                             }
                         })
                         .catch(function (error) {
@@ -379,12 +380,12 @@
 </script>
 
 <style>
-  #document {
+  #Message {
     width: 100%;
     margin: 10px auto;
   }
 
-  #document_box {
+  #Message_box {
     width: 85%;
     margin: auto;
   }

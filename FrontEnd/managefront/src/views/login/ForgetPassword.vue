@@ -1,6 +1,6 @@
 <template>
-  <div class="login_box">
-    <div class="login">
+  <div class="ForgetPassword_box">
+    <div class="ForgetPassword">
       <a href="/">
         <img style="width: 75px;height: 75px" src="../../assets/img/logo.png">
       </a>
@@ -27,7 +27,7 @@
           </td>
           <pre>  </pre>
           <td>
-            <el-input placeholder="验证码" v-model="code" class="input_style"></el-input>
+            <el-input placeholder="验证码" v-model="codenum" class="input_style"></el-input>
           </td>
         </tr>
       </div>
@@ -49,7 +49,8 @@
                 userNewPassword1: '',
                 userNewPassword2: '',
                 email: '',
-                code: '',
+                codenum: '',
+                VerificationCode:"",
                 disabled: false,
                 interval:undefined,
                 totalCount:0,
@@ -73,32 +74,82 @@
                 if (this.userNewPassword1 != this.userNewPassword2) {
                     await this.$message.error('两次输入密码不正确');
                 }
-                if (this.code.length == 0) {
+                if (this.codenum.length == 0) {
                     await this.$message.error('请输入验证码');
                 } else {
-                    // this.$axios.post('/login', JSON.stringify(userData))
-                    //     .then(function (response) {
-                    //         console.log(response)
-                    //     })
-                    //     .catch(function (error) {
-                    //         console.log(error)
-                    //     });
-                    // this.$router.push('/login')
+                    if(this.VerificationCode != this.codenum){
+                        this.$message.error('验证码不正确');
+                        return false;
+                    }
+                    let _this = this;
+                    let data = {
+                        data: {
+                            "password": this.userNewPassword2,
+                            "userAcount" : this.userAcount,
+                        }
+                    }
+                    this.$axios.post('/forgetPassword', JSON.stringify(data))
+                        .then(function (response) {
+                            if (response.data.code == 1) {
+                                _this.$notify.warning({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                });
+                            }
+                            if (response.data.code == 0) {
+                                _this.$notify.success({
+                                    message: response.data.msg,
+                                    showClose: false,
+                                    duration: 1500,
+                                })
+                            }
+                        }).catch(function (error) {
+                            console.log(error)
+                        });
+                    this.$router.push('/login')
                 }
             },
             getlogin(){
-                // 按钮60秒倒计时
-                this.disabled=true
-                this.totalCount=60
-                this.changetype = "warning"
-                this.changestyle = "color: black"
-                this.interval=setInterval(()=>{
-                    this.totalCount--
-                    if(this.totalCount === 0){
-                        clearInterval(this.interval)
-                        this.disabled=false
+                let _this = this;
+                let data = {
+                    data: {
+                        "userAcount": this.userAcount,
+                        "email" : this.email,
                     }
-                },1000);
+                }
+                this.$axios.post("/sendEmail",JSON.stringify(data))
+                    .then(function (response) {
+                        if (response.data.code == 1) {
+                            _this.$notify.warning({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                        }
+                        if (response.data.code == 0) {
+                            _this.$notify.success({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            });
+                            _this.disabled=true
+                            _this.totalCount=60
+                            _this.changetype = "warning"
+                            _this.changestyle = "color: black"
+                            _this.interval=setInterval(()=>{
+                                _this.totalCount--
+                                if(_this.totalCount === 0){
+                                    clearInterval(_this.interval)
+                                    _this.disabled=false
+                                }
+                            },1000);
+                            _this.VerificationCode = response.data.data.code
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
             }
 
         },
@@ -107,7 +158,7 @@
 
 <style>
 
-  .login_box {
+  .ForgetPassword_box {
     margin: auto;
     width: 350px;
     height: 430px;
@@ -116,7 +167,7 @@
     background-color: white;
   }
 
-  .login {
+  .ForgetPassword {
     width: 300px;
     margin: auto;
   }

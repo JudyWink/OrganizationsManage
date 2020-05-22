@@ -1,6 +1,6 @@
 <template>
-  <div id="document_box">
-    <div id="document">
+  <div id="MessageSended_box">
+    <div id="MessageSended">
       <el-table
         :data="tableData"
         stripe
@@ -126,12 +126,12 @@
 </script>
 
 <style>
-  #document {
+  #MessageSended {
     width: 100%;
     margin: 10px auto;
   }
 
-  #document_box {
+  #MessageSended_box {
     width: 85%;
     margin: auto;
   }

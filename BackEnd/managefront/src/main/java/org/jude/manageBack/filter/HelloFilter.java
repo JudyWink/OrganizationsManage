@@ -28,7 +28,6 @@ public class HelloFilter implements Filter {
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
             response.setHeader("Access-Control-Max-Age", "3600");
             response.setHeader("Access-Control-Allow-Headers", "Content-Type,Token,Authorization,ybg");
-
             filterChain.doFilter(servletRequest, servletResponse);
             System.out.println("跨域请求通过");
 //        }

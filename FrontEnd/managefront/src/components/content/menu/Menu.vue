@@ -25,8 +25,8 @@
         <el-menu-item index="/allActivities">所有活动</el-menu-item>
         <el-menu-item index="/myActivities">参加的活动</el-menu-item>
       </el-submenu>
-      <el-menu-item  v-if="userType === '游客'" index="/allActivities">所有活动</el-menu-item>
-      <el-submenu  index="5" v-if="userType === '系统管理员'">
+      <el-menu-item v-if="userType === '游客'" index="/allActivities">所有活动</el-menu-item>
+      <el-submenu index="5" v-if="userType === '系统管理员'">
         <template slot="title">权限管理</template>
         <el-menu-item index="/userPower">无组织学生</el-menu-item>
         <el-menu-item index="/havaOrgUsers">社团学生</el-menu-item>
@@ -39,13 +39,16 @@
       </el-submenu>
 
 
-      <el-submenu  v-if="userType != '游客'" index="7">
-        <template slot="title"><el-badge :is-dot=isDot class="item">消息中心 </el-badge></template>
+      <el-submenu v-if="userType != '游客'" index="7">
+        <template slot="title">
+          <el-badge :is-dot=isDot class="item">消息中心</el-badge>
+        </template>
         <el-menu-item index="/message">
           收信箱
         </el-menu-item>
         <el-menu-item index="/messageSended">
-          发信箱</el-menu-item>
+          发信箱
+        </el-menu-item>
       </el-submenu>
       <el-submenu index="8" v-if="userType === '社团负责人'">
         <template slot="title">社团信息</template>
@@ -55,13 +58,16 @@
 
       <el-menu-item v-if="userType === '学生'" index="/personalInfo">个人信息</el-menu-item>
       <el-menu-item v-if="userType === '学生'|| userType === '游客'" index="/Document">文件下载</el-menu-item>
-      <el-menu-item  v-if="userType === '系统管理员'" index="/indexManager">首页管理</el-menu-item>
+      <el-menu-item v-if="userType === '系统管理员'" index="/indexManager">首页管理</el-menu-item>
       <el-menu-item v-if="userType === '系统管理员' || userType === '社团负责人'" index="/uploadDocument">文件管理</el-menu-item>
 
 
       <el-menu-item index="/calendar">社团日历</el-menu-item>
-      <el-menu-item style="float: right;" @click="signout"><i style="color:black" class="el-icon-switch-button"></i></el-menu-item>
-      <el-menu-item style="float: right;" index="/personalInfo">你好，【{{userType}}】{{userName}}</el-menu-item>
+      <el-menu-item style="float: right;" @click="signout"><i style="color:black" class="el-icon-switch-button"></i>
+      </el-menu-item>
+      <el-menu-item v-if="userType === '游客'" style="float: right;">你好,{{userName}}</el-menu-item>
+      <el-menu-item v-if="userType != '游客'" style="float: right;" index="/personalInfo">你好，【{{userType}}】{{userName}}
+      </el-menu-item>
     </el-menu>
 
   </div>
@@ -74,12 +80,12 @@
             return {
                 userName: window.sessionStorage.getItem('userName'),
                 userType: window.sessionStorage.getItem('userType'),
-                isDot : false,
+                isDot: false,
             }
         },
         methods: {
             //退出登录
-            signout(){
+            signout() {
                 this.$router.push('/login');
                 this.$store.commit("LOGOUT");
                 this.$notify.success({

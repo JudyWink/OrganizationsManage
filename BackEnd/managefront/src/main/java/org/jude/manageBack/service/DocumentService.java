@@ -20,4 +20,7 @@ public interface DocumentService {
     //通过ID查询文件信息
     public Documents findOneDocumentInfo(int documentID) throws Exception;
 
+    //删除文件信息
+    public void deleteDocuments(int documentID) throws Exception;
+
 }

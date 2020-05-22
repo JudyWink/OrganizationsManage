@@ -1,64 +1,64 @@
 <template>
   <div id="Uploaddocument_box">
     <div id="Uploaddocument">
-            <el-table
-              :data="tableData"
-              stripe
-              style="width: 100%"
-              height="380px"
-              v-el-table-infinite-scroll
-              infinite-scroll-immediate=false>
-              <el-table-column
-                type="index">
-              </el-table-column>
-              <el-table-column
-                prop="documentuploadtime"
-                label="上传时间"
-                :formatter="dateFormat"
-                width="150px"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="documentname"
-                label="文件名"
-                width="200px">
-              </el-table-column>
-              <el-table-column
-                prop="username"
-                label="上传者"
-                width="130px">
-              </el-table-column>
-              <el-table-column
-                prop="documenttype"
-                label="文件分类"
-                width="130px">
-              </el-table-column>
-              <el-table-column
-                prop="downloadcount"
-                label="下载次数"
-                width="130px"
-              >
-              </el-table-column>
+      <el-table
+        :data="tableData"
+        stripe
+        style="width: 100%"
+        height="380px"
+        v-el-table-infinite-scroll
+        infinite-scroll-immediate=false>
+        <el-table-column
+          type="index">
+        </el-table-column>
+        <el-table-column
+          prop="documentuploadtime"
+          label="上传时间"
+          :formatter="dateFormat"
+          width="150px"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="documentname"
+          label="文件名"
+          width="200px">
+        </el-table-column>
+        <el-table-column
+          prop="username"
+          label="上传者"
+          width="130px">
+        </el-table-column>
+        <el-table-column
+          prop="documenttype"
+          label="文件分类"
+          width="130px">
+        </el-table-column>
+        <el-table-column
+          prop="downloadcount"
+          label="下载次数"
+          width="130px"
+        >
+        </el-table-column>
 
-              <el-table-column
-                label="操作"
-              >
-                <template slot-scope="scope">
-                  <el-button
-                    size="mini"
-                    type="success"
-                    @click="downloadDocument(scope.row)">下载
-                  </el-button>
-                  <el-button
-                    size="mini"
-                    type="danger"
-                    @click="deleteDocument(scope.row)">删除
-                  </el-button>
-                </template>
-              </el-table-column>
+        <el-table-column
+          label="操作"
+        >
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="success"
+              @click="downloadDocument(scope.row)">下载
+            </el-button>
+            <el-button v-if="userType === '系统管理员'"
+              size="mini"
+              type="danger"
+              @click="deleteDocument(scope.row)">删除
+            </el-button>
+          </template>
+        </el-table-column>
 
-            </el-table>
-            <span style="float: right">
+      </el-table>
+      <span style="float: right">
             共<el-tag size="mini">{{this.documentCount}}</el-tag>个
           </span>
     </div>
@@ -90,13 +90,14 @@
         name: "UploadDocument",
         data() {
             return {
+                userType :sessionStorage.getItem('userType'),
                 documentCount: 0,
                 tableData: [],
                 fileList: [],
             }
         },
         methods: {
-            dateFormat(row, column){
+            dateFormat(row, column) {
                 let date = row[column.property]
                 if (date == undefined) {
                     return ''
@@ -105,14 +106,15 @@
             },
 
             downloadDocument(value) {
+                const _this = this;
                 let data = {
                     data: {
-                        "documentID":value.documentid,
+                        "documentID": value.documentid,
                         "documenturl": value.documenturl,
                         "fileName": value.documentname,
                     }
                 };
-                this.$axios.post("/downloadDocuments",JSON.stringify(data),{responseType: 'blob'})
+                this.$axios.post("/downloadDocuments", JSON.stringify(data), {responseType: 'blob'})
                     .then(function (response) {
                         console.log(response)
                         var blob = new Blob([response.data])
@@ -121,6 +123,7 @@
                         downloadElement.href = href;
                         downloadElement.download = value.documentname; //下载后文件名
                         document.body.appendChild(downloadElement);
+                        _this.$router.push("/test5");
                         downloadElement.click(); //点击下载
                         document.body.removeChild(downloadElement); //下载完成移除元素
                         window.URL.revokeObjectURL(href); //释放掉blob对象
@@ -130,8 +133,46 @@
                     });
 
             },
-            deleteDocument() {
-                this.$message.error("删除")
+            deleteDocument(value) {
+                this.$confirm('是否要删除['+value.documentname+']?, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const _this = this;
+                    let data = {
+                        data: {
+                            "documentid": value.documentid
+                        }
+                    }
+                this.$axios.post("/deleteDocuments", JSON.stringify(data))
+                    .then(function (response) {
+                        if (response.data.code == 1) {
+                            _this.$notify.error({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            })
+                        }
+                        if (response.data.code == 0) {
+                            _this.$notify.success({
+                                message: response.data.msg,
+                                showClose: false,
+                                duration: 1500,
+                            })
+                            _this.$router.push("/test5");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
+                }).catch(() => {
+                    this.$notify.warning({
+                        showClose: false,
+                        duration: 1500,
+                        message: '已取消'
+                    });
+                });
             },
             newSubmitForm() {
                 this.$refs.newupload.submit()
@@ -142,7 +183,7 @@
                 fd.append('file', file);
                 fd.append('userID', sessionStorage.getItem("userID"));
                 fd.append('fileName', file.name);
-                newVideo(fd) .then(function (response) {
+                newVideo(fd).then(function (response) {
                     if (response.data.code == 0) {
                         _this.$notify.success({
                             message: response.data.msg,
@@ -175,7 +216,7 @@
                     "userID": sessionStorage.getItem("userID"),
                 }
             }
-            this.$axios.post("/findAllDocuments",JSON.stringify(data))
+            this.$axios.post("/findAllDocuments", JSON.stringify(data))
                 .then(function (response) {
                     if (response.data.code == 1) {
                         _this.$notify.error({
@@ -197,18 +238,19 @@
         }
     }
     import axios from 'axios';
-    export function newVideo (data) {
+
+    export function newVideo(data) {
         return axios({
             method: 'post',
             baseURL: 'http://127.0.0.1:8021/uploadDocument',
-            timeout:  5000,
+            timeout: 5000,
             data: data,
-            headers:{
-                common:{
-                    'Token' : sessionStorage.getItem('token'),
+            headers: {
+                common: {
+                    'Token': sessionStorage.getItem('token'),
                 },
-                post:{
-                    'Content-Type':'application/json',
+                post: {
+                    'Content-Type': 'application/json',
                 },
             }
         })
