@@ -65,7 +65,7 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
 <!--            6.0版本以上驱动要使用com.mysql.cj.jdbc.Driver-->
-            <version>8.0.19</version>
+            <version>8.0.28</version>
         </dependency>
 <!--        引入Lombok简化代码-->
         <dependency>
@@ -124,7 +124,7 @@
                     <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
-                        <version>8.0.19</version>
+                        <version>8.0.28</version>
                     </dependency>
                 </dependencies>
                 <!--配置文件的位置-->
